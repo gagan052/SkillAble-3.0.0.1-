@@ -67,6 +67,10 @@ const GigSchema = new Schema(
       type: Number,
       default: 0,
     },
+    savedBy: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

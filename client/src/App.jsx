@@ -13,6 +13,8 @@ import Orders from "./pages/orders/Orders";
 import Messages from "./pages/messages/Messages";
 import Message from "./pages/message/Message";
 import MyGigs from "./pages/myGigs/MyGigs";
+import Explore from "./pages/explore/Explore";
+import SavedGigs from "./pages/saved/SavedGigs";
 import {
   QueryClient,
   QueryClientProvider,
@@ -86,6 +88,14 @@ function App() {
         {
           path: "/success",
           element: <Success />,
+        },
+        {
+          path: "/explore",
+          element: <Explore />,
+        },
+        {
+          path: "/saved",
+          element: <SavedGigs />,
         },
       ],
     },

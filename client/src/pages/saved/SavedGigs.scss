@@ -1,0 +1,67 @@
+.savedGigs {
+  padding: 20px 0px;
+  display: flex;
+  justify-content: center;
+  color: #555;
+
+  .container {
+    width: 1400px;
+    padding: 20px 0px;
+
+    h1 {
+      color: #323232;
+      font-weight: 300;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #999;
+      font-weight: 300;
+      margin-bottom: 20px;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .loading {
+      width: 100%;
+      text-align: center;
+      padding: 50px;
+      font-size: 18px;
+      color: #555;
+    }
+
+    .error {
+      width: 100%;
+      text-align: center;
+      padding: 50px;
+      color: #ff0000;
+      font-size: 18px;
+    }
+
+    .empty {
+      width: 100%;
+      text-align: center;
+      padding: 50px;
+
+      img {
+        width: 200px;
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        color: #323232;
+        font-weight: 300;
+        margin-bottom: 10px;
+      }
+
+      p {
+        color: #999;
+        font-weight: 300;
+      }
+    }
+  }
+} 

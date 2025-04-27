@@ -92,7 +92,7 @@ function Navbar() {
         </div>
         <div className="links">
           <span onClick={() => scrollToFeaturesDark()}>SkillAble Business</span>
-          <span onClick={() => scrollToExplore()}>Explore</span>
+          <Link className="link" to="/explore"><span>Explore</span></Link>
           <span>English</span>
           {!currentUser?.isSeller && <span>Become a Seller</span>}
           {currentUser ? (
@@ -116,6 +116,9 @@ function Navbar() {
                   </Link>
                   <Link className="link" to="/messages">
                     Messages
+                  </Link>
+                  <Link className="link" to="/saved">
+                    Saved Gigs
                   </Link>
                   <Link className="link" onClick={handleLogout}>
                     Logout

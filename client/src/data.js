@@ -185,7 +185,7 @@ export const cards = [
 // ];
 
 {
-     id: 1,
+     id: 1,
      title: "AI Artists",
      desc: "AI Generative",
      img: " https://images.pexels.com/photos/8386437/pexels-photo-8386437.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",

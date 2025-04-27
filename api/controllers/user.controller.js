@@ -1,5 +1,7 @@
 import User from "../models/user.model.js";
+import Gig from "../models/gig.model.js";
 import createError from "../utils/createError.js";
+import mongoose from "mongoose";
 
 export const deleteUser = async (req, res, next) => {
   try {
@@ -25,6 +27,7 @@ export const deleteUser = async (req, res, next) => {
     next(err);
   }
 };
+
 export const getUser = async (req, res, next) => {
   try {
     if (!req.params.id) {

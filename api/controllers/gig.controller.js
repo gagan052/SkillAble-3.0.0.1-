@@ -1,4 +1,5 @@
 import Gig from "../models/gig.model.js";
+import User from "../models/user.model.js";
 import createError from "../utils/createError.js";
 
 export const createGig = async (req, res, next) => {
@@ -51,8 +52,21 @@ export const getGigs = async (req, res, next) => {
     }),
     ...(q.search && { title: { $regex: q.search, $options: "i" } }),
   };
+  
+  // Pagination parameters
+  const page = parseInt(q.page) || 0;
+  const limit = parseInt(q.limit) || 10;
+  const skip = page * limit;
+  
   try {
-    const gigs = await Gig.find(filters).sort({ [q.sort]: -1 });
+    const gigs = await Gig.find(filters)
+      .sort({ [q.sort || "createdAt"]: -1 })
+      .skip(skip)
+      .limit(limit);
+      
+    // Get total count for pagination info
+    const total = await Gig.countDocuments(filters);
+    
     res.status(200).send(gigs);
   } catch (err) {
     next(err);

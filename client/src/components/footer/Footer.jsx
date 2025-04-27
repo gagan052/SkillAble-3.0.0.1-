@@ -69,15 +69,20 @@ function Footer() {
         <div className="bottom">
           <div className="left">
             <h2>SkillAble</h2>
-            <span>© SkillAble International Ltd. 2023</span>
+            <span>© SkillAble International Ltd. 2025</span>
           </div>
           <div className="right">
             <div className="social">
-              <img src="/img/twitter.png" alt="" />
-              <img src="/img/facebook.png" alt="" />
-              <img src="/img/linkedin.png" alt="" />
-              <img src="/img/pinterest.png" alt="" />
-              <img src="/img/instagram.png" alt="" />
+              <img src="/img/twitter.png" alt="Twitter" />
+              <img src="/img/facebook.png" alt="Facebook" />
+              <a href="https://www.linkedin.com/in/gagan-saini-90b2a71b0/" target="_blank" rel="noreferrer">
+                <img src="/img/linkedin.png" alt="LinkedIn" />
+              </a>
+              <img src="/img/pinterest.png" alt="Pinterest" />
+              <img src="/img/instagram.png" alt="Instagram" />
+              <a href="https://github.com/gagan052" target="_blank" rel="noreferrer">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" style={{width: "24px", height: "24px"}} />
+              </a>
             </div>
             <div className="link">
               <img src="/img/language.png" alt="" />

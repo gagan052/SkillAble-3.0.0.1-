@@ -6,6 +6,7 @@ import Slide from "../../components/slide/Slide";
 import CatCard from "../../components/catCard/CatCard";
 import ProjectCard from "../../components/projectCard/ProjectCard";
 import { cards, projects } from "../../data";
+import TeamSection from "../../components/teamSection/TeamSection";
 import Footer from "../../components/footer/Footer";
 
 function Home() {
@@ -192,6 +193,8 @@ function Home() {
           <ProjectCard key={card.id} card={card} />
         ))}
       </Slide>
+
+      <TeamSection />
 
       <Footer />
     </div>
