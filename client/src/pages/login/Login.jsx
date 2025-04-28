@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Login.scss";
 import newRequest from "../../utils/newRequest";
-// import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -15,10 +14,11 @@ function Login() {
     e.preventDefault();
     try {
       const res = await newRequest.post("/auth/login", { username, password });
+      // Store the user info and token in localStorage
       localStorage.setItem("currentUser", JSON.stringify(res.data));
-      navigate("/")
+      navigate("/");
     } catch (err) {
-      setError(err.response.data);
+      setError(err.response?.data || "Something went wrong!");
     }
   };
 
@@ -42,7 +42,7 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit">Login</button>
-        {error && error}
+        {error && <div className="error">{error}</div>}
       </form>
     </div>
   );

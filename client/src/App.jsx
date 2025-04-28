@@ -13,7 +13,11 @@ import Orders from "./pages/orders/Orders";
 import Messages from "./pages/messages/Messages";
 import Message from "./pages/message/Message";
 import MyGigs from "./pages/myGigs/MyGigs";
+
 import Dashboard from "./pages/dashboard/Dashboard";
+
+import Explore from "./pages/explore/Explore";
+import SavedGigs from "./pages/saved/SavedGigs";
 import {
   QueryClient,
   QueryClientProvider,
@@ -29,7 +33,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <Navbar />
           <Outlet />
-          {/* <Footer /> */}
+          <Footer />
         </QueryClientProvider>
       </div>
     );
@@ -91,6 +95,14 @@ function App() {
         {
           path: "/dashboard",
           element: <Dashboard />,
+        },
+        {
+          path: "/explore",
+          element: <Explore />,
+        },
+        {
+          path: "/saved",
+          element: <SavedGigs />
         },
       ],
     },

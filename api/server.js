@@ -8,7 +8,11 @@ import conversationRoute from "./routes/conversation.route.js";
 import messageRoute from "./routes/message.route.js";
 import reviewRoute from "./routes/review.route.js";
 import authRoute from "./routes/auth.route.js";
+<<<<<<< HEAD
 import followRoute from "./routes/follow.route.js";
+=======
+import savedGigRoute from "./routes/savedGig.route.js";
+>>>>>>> e1e06d2d9e3fd921c703e1cf2d365f7972f3e731
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -51,7 +55,11 @@ app.use("/api/orders", orderRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
 app.use("/api/reviews", reviewRoute);
+<<<<<<< HEAD
 app.use("/api/follows", followRoute);
+=======
+app.use("/api/saved-gigs", savedGigRoute);
+>>>>>>> e1e06d2d9e3fd921c703e1cf2d365f7972f3e731
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

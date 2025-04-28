@@ -8,21 +8,16 @@ function Navbar() {
   const [open, setOpen] = useState(false);
 
   const { pathname } = useLocation();
-
-  const isActive = () => {
-    window.scrollY > 0 ? setActive(true) : setActive(false);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", isActive);
-    return () => {
-      window.removeEventListener("scroll", isActive);
-    };
-  }, []);
-
+  const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const handleScroll = () => {
+      setActive(window.scrollY > 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -34,106 +29,66 @@ function Navbar() {
     }
   };
 
-  const scrollToFeaturesDark = () => {
-    // Navigate to home page if not already there
+  const scrollToSection = (selector) => {
     if (pathname !== "/") {
       navigate("/");
-      // Wait for navigation to complete before scrolling
       setTimeout(() => {
-        const featuresDarkSection = document.querySelector(".features.dark");
-        if (featuresDarkSection) {
-          featuresDarkSection.scrollIntoView({ behavior: "smooth" });
-        }
+        const section = document.querySelector(selector);
+        section?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     } else {
-      // Already on home page, just scroll
-      const featuresDarkSection = document.querySelector(".features.dark");
-      if (featuresDarkSection) {
-        featuresDarkSection.scrollIntoView({ behavior: "smooth" });
-      }
+      const section = document.querySelector(selector);
+      section?.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  const scrollToExplore = () => {
-    // Navigate to home page if not already there
-    if (pathname !== "/") {
-      navigate("/");
-      // Wait for navigation to complete before scrolling
-      setTimeout(() => {
-        const exploreSection = document.getElementById("explore");
-        if (exploreSection) {
-          exploreSection.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 100);
-    } else {
-      // Already on home page, just scroll
-      const exploreSection = document.getElementById("explore");
-      if (exploreSection) {
-        exploreSection.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
       <div className="container">
+        {/* Logo */}
         <div className="logo">
           <Link className="link" to="/" onClick={scrollToTop}>
             <span className="text">SkillAble</span>
           </Link>
           <span className="dot">.</span>
         </div>
+
+        {/* Links */}
         <div className="links">
-          <span onClick={() => scrollToFeaturesDark()}>SkillAble Business</span>
-          <span onClick={() => scrollToExplore()}>Explore</span>
+          <span onClick={() => scrollToSection(".features.dark")}>SkillAble Business</span>
+          <span onClick={() => scrollToSection("#explore")}>Explore</span>
           <span>English</span>
           {!currentUser?.isSeller && <span>Become a Seller</span>}
+          
           {currentUser ? (
             <div className="user">
-              <img 
-                src={currentUser.img || "/img/noavatar.jpg"} 
-                alt="" 
-                onClick={() => navigate("/dashboard")} 
+              <img
+                src={currentUser.img || "/img/noavatar.jpg"}
+                alt=""
+                onClick={() => navigate("/dashboard")}
                 style={{ cursor: "pointer" }}
               />
-              <span onClick={() => setOpen(!open)}>{currentUser?.username}</span>
+              <span onClick={() => setOpen(!open)}>{currentUser.username}</span>
               {open && (
                 <div className="options">
-                  <Link className="link" to="/dashboard">
-                    Dashboard
-                  </Link>
                   {currentUser.isSeller && (
                     <>
-                      <Link className="link" to="/mygigs">
-                        Gigs
-                      </Link>
-                      <Link className="link" to="/add">
-                        Add New Gig
-                      </Link>
+                      <Link className="link" to="/mygigs">Gigs</Link>
+                      <Link className="link" to="/add">Add New Gig</Link>
                     </>
                   )}
-                  <Link className="link" to="/orders">
-                    Orders
-                  </Link>
-                  <Link className="link" to="/messages">
-                    Messages
-                  </Link>
-                  <Link className="link" onClick={handleLogout}>
-                    Logout
-                  </Link>
+                  <Link className="link" to="/orders">Orders</Link>
+                  <Link className="link" to="/messages">Messages</Link>
+                  <Link className="link" to="/saved">Saved Gigs</Link>
+                  <span className="link" onClick={handleLogout}>Logout</span>
                 </div>
               )}
             </div>
           ) : (
             <>
-              <Link to="/login" className="link">Login</Link>
+              <Link className="link" to="/login">Login</Link>
               <Link className="link" to="/register">
                 <button>Register</button>
               </Link>
@@ -141,110 +96,41 @@ function Navbar() {
           )}
         </div>
       </div>
+
+      {/* Menu Section */}
       {(active || pathname !== "/") && (
         <>
           <hr />
           <div className="menu-container">
             <div className="menu">
               {/* First set of menu items */}
-              <Link className="link menuLink" to="/gigs?cat=graphics_design">
-                Graphics & Design
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=video_animation">
-                Video & Animation
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=writing_translation">
-                Writing & Translation
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=ai_services">
-                AI Services
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=digital_marketing">
-                Digital Marketing
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=music_audio">
-                Music & Audio
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=programming_tech">
-                Programming & Tech
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=business">
-                Business
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=lifestyle">
-                Lifestyle
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=photography">
-                Photography
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=data">
-                Data
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=voice_over">
-                Voice Over
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=video_explainer">
-                Video Explainer
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=social_media">
-                Social Media
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=seo">
-                SEO
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=illustration">
-                Illustration
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=logo_design">
-                Logo Design
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=wordpress">
-                WordPress
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=web_mobile_design">
-                Web & Mobile Design
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=packaging_design">
-                Packaging Design
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=book_design">
-                Book Design
-              </Link>
-              
-              {/* Duplicate set of menu items for continuous scrolling */}
-              <Link className="link menuLink" to="/gigs?cat=graphics_design">
-                Graphics & Design
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=video_animation">
-                Video & Animation
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=writing_translation">
-                Writing & Translation
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=ai_services">
-                AI Services
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=digital_marketing">
-                Digital Marketing
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=music_audio">
-                Music & Audio
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=programming_tech">
-                Programming & Tech
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=business">
-                Business
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=lifestyle">
-                Lifestyle
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=photography">
-                Photography
-              </Link>
-              <Link className="link menuLink" to="/gigs?cat=data">
-                Data
-              </Link>
+              {[
+                { label: "Graphics & Design", path: "graphics_design" },
+                { label: "Video & Animation", path: "video_animation" },
+                { label: "Writing & Translation", path: "writing_translation" },
+                { label: "AI Services", path: "ai_services" },
+                { label: "Digital Marketing", path: "digital_marketing" },
+                { label: "Music & Audio", path: "music_audio" },
+                { label: "Programming & Tech", path: "programming_tech" },
+                { label: "Business", path: "business" },
+                { label: "Lifestyle", path: "lifestyle" },
+                { label: "Photography", path: "photography" },
+                { label: "Data", path: "data" },
+                { label: "Voice Over", path: "voice_over" },
+                { label: "Video Explainer", path: "video_explainer" },
+                { label: "Social Media", path: "social_media" },
+                { label: "SEO", path: "seo" },
+                { label: "Illustration", path: "illustration" },
+                { label: "Logo Design", path: "logo_design" },
+                { label: "WordPress", path: "wordpress" },
+                { label: "Web & Mobile Design", path: "web_mobile_design" },
+                { label: "Packaging Design", path: "packaging_design" },
+                { label: "Book Design", path: "book_design" },
+              ].map(({ label, path }) => (
+                <Link className="link menuLink" key={path} to={`/gigs?cat=${path}`}>
+                  {label}
+                </Link>
+              ))}
             </div>
           </div>
           <hr />

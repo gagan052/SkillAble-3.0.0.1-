@@ -40,6 +40,10 @@ const userSchema = new Schema({
     type: Number,
     default: 0
   },
+  following: {
+    type: [String],
+    default: []
+  },
 },{
   timestamps:true
 });

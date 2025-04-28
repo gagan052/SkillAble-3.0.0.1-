@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Gig.scss";
 import Slider from "infinite-react-carousel";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
 import FollowButton from "../../components/followButton/FollowButton";
 
 function Gig() {
   const { id } = useParams();
+  const [isSaved, setIsSaved] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const queryClient = useQueryClient();
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["gig"],
@@ -19,6 +24,71 @@ function Gig() {
   });
 
   const userId = data?.userId;
+
+  // Check if gig is saved by current user
+  useQuery({
+    queryKey: ["savedGig", id],
+    queryFn: () => {
+      if (!currentUser) return { isSaved: false };
+      return newRequest.get(`/saved-gigs/check/${id}`).then((res) => {
+        setIsSaved(res.data.isSaved);
+        return res.data;
+      });
+    },
+    enabled: !!currentUser && !!id,
+  });
+
+  // Check if user is following the seller
+  useQuery({
+    queryKey: ["following", userId],
+    queryFn: () => {
+      if (!currentUser || !userId) return { isFollowing: false };
+      return newRequest.get(`/users/${currentUser._id}`).then((res) => {
+        const isFollowing = res.data.following?.includes(userId) || false;
+        setIsFollowing(isFollowing);
+        return { isFollowing };
+      });
+    },
+    enabled: !!currentUser && !!userId,
+  });
+
+  // Save gig mutation
+  const saveGigMutation = useMutation({
+    mutationFn: (gigId) => {
+      return newRequest.put(`/saved-gigs/toggle/${gigId}`);
+    },
+    onSuccess: (response) => {
+      setIsSaved(response.data.isSaved);
+      queryClient.invalidateQueries(["savedGig", id]);
+      queryClient.invalidateQueries(["savedGigs"]);
+    },
+  });
+
+  // Handle save gig
+  const handleSaveGig = () => {
+    if (!currentUser) {
+      alert("You need to be logged in to save gigs!");
+      return;
+    }
+    
+    saveGigMutation.mutate(id);
+  };
+
+  // Handle share gig
+  const handleShareGig = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: data.title,
+        text: data.shortDesc,
+        url: window.location.href,
+      })
+      .catch((error) => console.log('Error sharing:', error));
+    } else {
+      // Fallback for browsers that don't support the Web Share API
+      navigator.clipboard.writeText(window.location.href);
+      alert("Link copied to clipboard!");
+    }
+  };
 
   const {
     isLoading: isLoadingUser,
@@ -143,9 +213,30 @@ function Gig() {
           </div>
           <div className="right">
             <div className="price">
+              
               <h3>{data.shortTitle}</h3>
               <h2>$ {data.price}</h2>
+              
             </div>
+            <div className="gig-actions">
+              <button 
+                className={`action-btn save-btn ${isSaved ? "saved" : ""}`}
+                onClick={handleSaveGig}
+                title={isSaved ? "Unsave" : "Save"}
+              >
+                <img src={isSaved ? "/img/bookmark-fill.png" : "/img/bookmark-line.png"} alt="Save" />
+                {isSaved ? "Saved" : "Save"}
+              </button>
+              <button 
+                className="action-btn share-btn"
+                onClick={handleShareGig}
+                title="Share"
+              >
+                <img src="/img/share-line.png" alt="Share" />
+                Share
+              </button>
+            </div>
+
             <p>{data.shortDesc}</p>
             <div className="details">
               <div className="item">
