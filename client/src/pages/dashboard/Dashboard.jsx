@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "./Dashboard.scss";
 import { useNavigate, Link } from "react-router-dom";
 import newRequest from "../../utils/newRequest";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import { formatDistance } from 'date-fns';
 import { AiOutlineUser, AiOutlineUserAdd } from 'react-icons/ai';
 
@@ -96,6 +96,42 @@ function Dashboard() {
     },
     enabled: !!currentUser,
   });
+
+  // Fetch user data for all saved gigs using useQueries
+  const savedGigsUserQueries = useQueries({
+    queries: (savedGigsData || [])
+      .filter(gig => gig?.gigId?.userId) // Filter out items with missing userId
+      .map(gig => ({
+        queryKey: ["user", gig.gigId.userId],
+        queryFn: async () => {
+          try {
+            const res = await newRequest.get(`/users/${gig.gigId.userId}`);
+            return {
+              userId: gig.gigId.userId,
+              userData: res.data
+            };
+          } catch (error) {
+            console.error(`Error fetching user ${gig.gigId.userId}:`, error);
+            return {
+              userId: gig.gigId.userId,
+              userData: null
+            };
+          }
+        },
+        enabled: !!gig.gigId?.userId,
+      })),
+  });
+
+  // Create a map of userId -> userData for easy lookup
+  const userDataMap = useMemo(() => {
+    const map = {};
+    savedGigsUserQueries.forEach(query => {
+      if (query.data?.userId && query.data?.userData) {
+        map[query.data.userId] = query.data.userData;
+      }
+    });
+    return map;
+  }, [savedGigsUserQueries]);
 
   // Fetch followers/following with details
   const { data: followersData, isLoading: followersLoading, error: followersError } = useQuery({
@@ -226,11 +262,25 @@ function Dashboard() {
                   return null;
                 }
                 
+                // Get user data from the map
+                const sellerData = userDataMap[gig.gigId.userId];
+                
                 return (
                   <Link to={`/gig/${gig.gigId._id}`} className="gig-item" key={gig._id}>
                     <div className="gig-image">
                       <img src={gig.gigId.cover || "/img/noimage.jpg"} alt={gig.gigId.title || "Gig"} />
                     </div>
+                    
+                    {sellerData && (
+                      <div className="user">
+                        <img src={sellerData.img || "/img/noavatar.jpg"} alt={sellerData.username || "User"} />
+                        <div className="user-info">
+                          <span className="username">{sellerData.username}</span>
+                          <span className="followers">{sellerData.followersCount || 0} followers</span>
+                        </div>
+                      </div>
+                    )}
+                    
                     <div className="gig-info">
                       <h4>{gig.gigId.title || "Untitled Gig"}</h4>
                       <p>${gig.gigId.price || 0}</p>
