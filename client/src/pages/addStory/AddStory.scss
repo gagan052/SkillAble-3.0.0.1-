@@ -1,0 +1,309 @@
+.add-story {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  background-color: #f9f9f9;
+  min-height: calc(100vh - 200px);
+  
+  .container {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    
+    @media (max-width: 640px) {
+      padding: 20px;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    
+    h1 {
+      margin-bottom: 10px;
+      color: #333;
+      font-size: 28px;
+    }
+    
+    .info {
+      color: #666;
+      margin-bottom: 25px;
+      font-size: 16px;
+    }
+    
+    .error {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+    
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      
+      .image-upload {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        
+        .upload-area {
+          width: 100%;
+          height: 300px;
+          border: 2px dashed #1dbf73;
+          border-radius: 8px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          background-color: #f9f9f9;
+          
+          &:hover {
+            background-color: #f0f0f0;
+          }
+          
+          .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            
+            .upload-icon {
+              font-size: 40px;
+              color: #1dbf73;
+              font-style: normal;
+            }
+            
+            p {
+              font-size: 16px;
+            }
+          }
+        }
+        
+        .crop-container {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 15px;
+          
+          .crop-tool {
+            width: 100%;
+            max-height: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            
+            .preview-image {
+              max-width: 100%;
+              max-height: 500px;
+              display: block;
+            }
+          }
+          
+          .crop-instructions {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            
+            p {
+              font-size: 14px;
+              color: #666;
+              text-align: center;
+              margin: 0;
+            }
+          }
+        }
+        
+        .change-image {
+          background-color: #f0f0f0;
+          color: #333;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: all 0.2s ease;
+          
+          &:hover {
+            background-color: #e0e0e0;
+          }
+        }
+      }
+      
+      .text-input, .duration-selection {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        
+        label {
+          font-weight: 500;
+          color: #333;
+          font-size: 16px;
+        }
+      }
+      
+      .text-input {
+        textarea {
+          height: 100px;
+          padding: 12px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          resize: vertical;
+          font-family: inherit;
+          font-size: 16px;
+          
+          &:focus {
+            outline: none;
+            border-color: #1dbf73;
+          }
+        }
+        
+        .char-count {
+          align-self: flex-end;
+          font-size: 12px;
+          color: #666;
+        }
+      }
+      
+      .duration-selection {
+        select {
+          padding: 12px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 16px;
+          background-color: white;
+          
+          &:focus {
+            outline: none;
+            border-color: #1dbf73;
+          }
+          
+          option {
+            padding: 8px;
+          }
+        }
+      }
+      
+      .buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+        
+        button {
+          flex: 1;
+          padding: 12px;
+          border-radius: 4px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 16px;
+          
+          &.cancel {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            
+            &:hover:not(:disabled) {
+              background-color: #e0e0e0;
+            }
+          }
+          
+          &.submit {
+            background-color: #1dbf73;
+            color: white;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            &:hover:not(:disabled) {
+              background-color: #19a463;
+            }
+            
+            &:disabled {
+              background-color: #a5d8c0;
+              cursor: not-allowed;
+            }
+            
+            .loading-spinner {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              
+              .spinner {
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-top-color: white;
+                animation: spin 1s linear infinite;
+              }
+            }
+          }
+          
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* React Crop Overrides */
+  :global(.ReactCrop) {
+    &:focus {
+      outline: none;
+    }
+  }
+  
+  /* Responsive Styles */
+  @media screen and (max-width: 480px) {
+    padding: 0;
+    
+    .container {
+      max-width: 100%;
+      min-height: 100vh;
+      
+      form {
+        .image-upload {
+          .crop-container {
+            .crop-tool {
+              max-height: 400px;
+              
+              .preview-image {
+                max-height: 400px;
+              }
+            }
+          }
+        }
+        
+        .text-input {
+          textarea {
+            height: 80px;
+          }
+        }
+        
+        .buttons {
+          button {
+            padding: 10px;
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
+}

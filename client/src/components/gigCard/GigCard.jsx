@@ -25,6 +25,10 @@ const GigCard = ({ item }) => {
     queryKey: ["savedGig", item._id],
     queryFn: () => newRequest.get(`/saved-gigs/check/${item._id}`).then((res) => res.data),
     enabled: !!currentUser,
+     retry: 1,
+    onError: (error) => {
+      console.error("Error checking saved status:", error);
+    }
   });
 
   // Update saved status when savedGigStatus changes
@@ -48,7 +52,12 @@ const GigCard = ({ item }) => {
     },
     onError: (error) => {
       console.error("Error saving gig:", error);
-      alert("Failed to save gig. Please try again.");
+      // More user-friendly error message
+      if (error.response && error.response.status === 401) {
+        alert("You need to be logged in to save gigs!");
+      } else {
+        alert("Failed to save gig. Please try again.");
+      }
     }
   });
   
@@ -62,6 +71,9 @@ const GigCard = ({ item }) => {
       return;
     }
     
+    // Disable the button during the mutation to prevent multiple clicks
+    if (saveGigMutation.isLoading) return;
+    
     saveGigMutation.mutate(item._id);
   };
   
@@ -70,25 +82,43 @@ const GigCard = ({ item }) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (navigator.share) {
-      navigator.share({
-        title: item.title,
-        text: item.shortDesc,
-        url: window.location.origin + `/gig/${item._id}`,
-      })
-      .catch((error) => console.log('Error sharing:', error));
-    } else {
-      // Fallback for browsers that don't support the Web Share API
-      const url = window.location.origin + `/gig/${item._id}`;
-      navigator.clipboard.writeText(url);
-      alert("Link copied to clipboard!");
+    try {
+      if (navigator.share) {
+        navigator.share({
+          title: item.title || 'Check out this gig',
+          text: item.shortDesc || 'Found an interesting gig',
+          url: window.location.origin + `/gig/${item._id}`,
+        })
+        .catch((error) => {
+          console.log('Error sharing:', error);
+          // Fallback if share fails
+          copyToClipboard();
+        });
+      } else {
+        // Fallback for browsers that don't support the Web Share API
+        copyToClipboard();
+      }
+    } catch (error) {
+      console.error('Share error:', error);
+      copyToClipboard();
     }
+  };
+  
+  // Helper function to copy URL to clipboard
+  const copyToClipboard = () => {
+    const url = window.location.origin + `/gig/${item._id}`;
+    navigator.clipboard.writeText(url)
+      .then(() => alert("Link copied to clipboard!"))
+      .catch(err => {
+        console.error('Failed to copy:', err);
+        alert("Couldn't copy link. The URL is: " + url);
+      });
   };
 
   return (
     <Link to={`/gig/${item._id}`} className="link">
       <div className="gigCard">
-        <img src={item.cover} alt="imageNotLoaded" />
+        <img src={item.cover || "/img/noavatar.jpg"} alt="Gig Cover" />
         <div className="info">
           {isLoading ? (
             "loading"
@@ -96,7 +126,7 @@ const GigCard = ({ item }) => {
             "Something went wrong!"
           ) : (
             <div className="user">
-              <img src={data.img || "/img/noavatar.jpg"} alt="" />
+              <img src={data.img || "/img/noavatar.jpg"} alt="User Avatar" />
               <div className="user-info">
                 <span className="username">{data.username}</span>
                 <span className="followers">{data.followersCount || 0} followers</span>
@@ -104,18 +134,19 @@ const GigCard = ({ item }) => {
               <FollowButton userId={item.userId} size="small" />
             </div>
           )}
-          <p className="desc">{item.desc}</p>
+          <p className="desc">{item.shortDesc || item.desc || "No description available"}</p>
           <div className="star">
-            <img src="/img/star.png" alt="" />
+            <img src="/img/star.png" alt="Rating Star" />
             <span>
-              {!isNaN(item.totalStars / item.starNumber) &&
-                Math.round(item.totalStars / item.starNumber)}
+              {!isNaN(item.totalStars / item.starNumber) && item.starNumber > 0
+                ? Math.round(item.totalStars / item.starNumber)
+                : "New"}
             </span>
           </div>
         </div>
         <hr />
         <div className="detail">
-          <img src="./img/heart.png" alt="" />
+          {/* Action buttons */}
           <div className="actions">
             <img 
               src={isSaved ? "/img/bookmark-fill.png" : "/img/bookmark-line.png"} 

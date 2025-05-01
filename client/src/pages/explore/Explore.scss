@@ -7,6 +7,24 @@
     width: 1400px;
     padding: 0 20px;
 
+    .stories-section {
+      margin-bottom: 30px;
+      background: white;
+      border-radius: 10px;
+      padding: 15px 20px 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      height: auto;
+      min-height: auto;
+      overflow: hidden;
+      
+      h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color: #333;
+        padding-left: 5px;
+      }
+    }
+
     h1 {
       margin-bottom: 10px;
       color: #404145;
@@ -20,13 +38,13 @@
     }
 
     .cards {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 20px;
-
-      @media (max-width: 1200px) {
-        justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       }
     }
 
@@ -62,6 +80,45 @@
       background-color: #f5f5f5;
       border-radius: 5px;
       font-size: 20px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .container {
+      padding: 0 15px;
+      
+      .stories-section {
+        padding: 12px 15px;
+        margin-bottom: 25px;
+      }
+      
+      .para {
+        font-size: 16px;
+        margin-bottom: 25px;
+      }
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    padding: 20px 0;
+    
+    .container {
+      padding: 0 10px;
+      
+      .stories-section {
+        padding: 10px 12px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+      
+      h1 {
+        font-size: 22px;
+      }
+      
+      .para {
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
     }
   }
 }

@@ -3,6 +3,8 @@
   justify-content: center;
   color: #666;
   margin: 50px 0px;
+  width: 100%;
+  overflow-x: hidden;
 
   img {
     width: 24px;
@@ -10,20 +12,49 @@
   }
 
   .container {
-    width: 1400px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 20px;
+    
     .top {
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 30px;
+      
       .item {
         display: flex;
         flex-direction: column;
         gap: 20px;
+        
         h2 {
           font-size: 16px;
           color: #555;
         }
+        
         span {
           font-weight: 300;
+        }
+      }
+      
+      @media (max-width: 991px) {
+        .item {
+          width: calc(33.33% - 20px);
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .item {
+          width: calc(50% - 15px);
+        }
+      }
+      
+      @media (max-width: 576px) {
+        flex-direction: column;
+        
+        .item {
+          width: 100%;
+          gap: 10px;
         }
       }
     }
@@ -32,11 +63,18 @@
       margin: 50px 0px;
       height: 0;
       border: 1px solid #ebe9e9;
+      
+      @media (max-width: 768px) {
+        margin: 30px 0;
+      }
     }
+    
     .bottom {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
 
       .left {
         width: max-content;
@@ -48,16 +86,29 @@
           font-size: 13px;
           white-space: nowrap;
         }
+        
+        @media (max-width: 576px) {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
       }
+      
       .right {
         width: max-content;
         display: flex;
         align-items: center;
         gap: 30px;
+        flex-wrap: wrap;
 
         .social {
           display: flex;
           gap: 20px;
+          flex-wrap: wrap;
+          
+          @media (max-width: 576px) {
+            gap: 15px;
+          }
         }
 
         .link {
@@ -65,6 +116,20 @@
           align-items: center;
           gap: 10px;
         }
+        
+        @media (max-width: 768px) {
+          gap: 20px;
+        }
+        
+        @media (max-width: 576px) {
+          width: 100%;
+          justify-content: flex-start;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   }

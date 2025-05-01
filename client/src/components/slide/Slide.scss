@@ -3,6 +3,8 @@
   justify-content: center;
   padding: 50px 0px;
   // background-color: yellow;
+  width: 94%;
+  overflow-x: hidden;
   
   .container {
     width: 100%;
@@ -29,5 +31,29 @@
 
   .carousel-prev {
     left: -0px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .slide {
+    padding: 30px 0px;
+    
+    .carousel-prev,
+    .carousel-next {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .slide {
+    padding: 20px 0px;
+    
+    .carousel-prev,
+    .carousel-next {
+      width: 35px;
+      height: 35px;
+    }
   }
 }

@@ -13,6 +13,7 @@ import Orders from "./pages/orders/Orders";
 import Messages from "./pages/messages/Messages";
 import Message from "./pages/message/Message";
 import MyGigs from "./pages/myGigs/MyGigs";
+import AddStory from "./pages/addStory/AddStory";
 
 import Dashboard from "./pages/dashboard/Dashboard";
 
@@ -33,7 +34,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <Navbar />
           <Outlet />
-          <Footer />
+          {/* <Footer /> */}
         </QueryClientProvider>
       </div>
     );
@@ -95,6 +96,10 @@ function App() {
         {
           path: "/dashboard",
           element: <Dashboard />,
+        },
+        {
+          path: "/add-story",
+          element: <AddStory />,
         },
         {
           path: "/explore",

@@ -150,7 +150,7 @@
 
 @media screen and (max-width: 1200px) {
   .gigCard {
-    max-width: 100%;
+    max-width: 300px;
     margin-bottom: 35px;
 
     .info {
@@ -183,6 +183,7 @@
 
 @media screen and (max-width: 768px) {
   .gigCard {
+    max-width: 100%;
     margin-bottom: 30px;
 
     img {
@@ -226,7 +227,9 @@
 
 @media screen and (max-width: 480px) {
   .gigCard {
+    max-width: 100%;
     margin-bottom: 25px;
+    min-height: 350px;
 
     img {
       height: 180px;
@@ -245,6 +248,10 @@
         .user-info {
           .username {
             font-size: 12px;
+          }
+          
+          .followers {
+            font-size: 11px;
           }
         }
       }

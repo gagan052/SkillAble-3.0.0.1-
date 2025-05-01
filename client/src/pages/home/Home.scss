@@ -4,6 +4,8 @@
     display: flex;
     justify-content: center;
     padding: 100px 0px;
+    width: 100%;
+    overflow-x: hidden;
 
     &.dark {
       background-color: #0d084d;
@@ -45,6 +47,7 @@
       display: flex;
       align-items: center;
       gap: 200px;
+      
       .item {
         display: flex;
         flex-direction: column;
@@ -84,25 +87,19 @@
         }
 
         video{
-          width: 500px;
+          width: 100%;
+          max-width: 500px;
         }
       }
     }
-
-    //   &.reverse {
-    //     background-color: #0d084d;
-    //     color: white;
-    //     .container {
-    //       flex-direction: row-reverse;
-    //     }
-    //   }
   }
 
   .explore {
     display: flex;
     justify-content: center;
     padding: 100px 0px;
-    // background-color: yellow;
+    width: 100%;
+    overflow-x: hidden;
 
     .container {
       width: 100%;
@@ -115,7 +112,6 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
-        // align-items: center;
         flex-wrap: wrap;
 
         .item {
@@ -128,7 +124,6 @@
           justify-content: center;
           text-align: center;
           cursor: pointer;
-          // background-color: grey;
 
           img {
             width: 50px;
@@ -150,6 +145,112 @@
             .line{
               width: 80px;
               background-color: #1dbf73;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .home {
+    .features {
+      padding: 80px 0;
+      
+      .container {
+        gap: 100px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .home {
+    .features {
+      padding: 60px 0;
+      
+      .container {
+        flex-direction: column;
+        gap: 50px;
+        
+        .item {
+          width: 100%;
+          
+          &:first-child, &:last-child {
+            flex: 1;
+          }
+          
+          p {
+            font-size: 16px;
+            line-height: 24px;
+          }
+          
+          .title {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+    
+    .explore {
+      padding: 60px 0;
+      
+      .container {
+        .items {
+          justify-content: center;
+          gap: 20px;
+          
+          .item {
+            width: 160px;
+            height: 120px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .home {
+    .features {
+      padding: 40px 0;
+      
+      .container {
+        gap: 30px;
+        
+        .item {
+          p {
+            font-size: 14px;
+            line-height: 22px;
+            letter-spacing: 0.5px;
+          }
+          
+          .title {
+            font-size: 14px;
+          }
+        }
+      }
+      
+      &.dark button {
+        width: 100%;
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    }
+    
+    .explore {
+      padding: 40px 0;
+      
+      .container {
+        .items {
+          .item {
+            width: 140px;
+            height: 100px;
+            
+            img {
+              width: 40px;
+              height: 40px;
             }
           }
         }

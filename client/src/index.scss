@@ -8,6 +8,7 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  scroll-padding-top: 130px;
 }
 
 body {
@@ -15,6 +16,7 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   background-color: #fafafa;
+  padding-top: 130px;
 }
 
 .app {
@@ -81,11 +83,16 @@ input, textarea, select {
     max-width: 100%;
     padding: 0 15px;
   }
+
+  body {
+    padding-top: 120px;
+  }
 }
 
 @media screen and (max-width: 768px) {
   html {
     font-size: 14px;
+    scroll-padding-top: 70px;
   }
   
   .container {
@@ -106,6 +113,10 @@ input, textarea, select {
 
   button {
     padding: 0.625rem 1.25rem;
+  }
+
+  body {
+    padding-top: 70px;
   }
 }
 
@@ -132,5 +143,9 @@ input, textarea, select {
 
   button {
     padding: 0.5rem 1rem;
+  }
+
+  body {
+    padding-top: 60px;
   }
 } 
