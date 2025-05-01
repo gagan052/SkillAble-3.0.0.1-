@@ -219,17 +219,25 @@ function Dashboard() {
                 <button onClick={() => navigate("/gigs")}>Explore Gigs</button>
               </div>
             ) : (
-              savedGigsData.map((gig) => (
-                <Link to={`/gig/${gig.gigId._id}`} className="gig-item" key={gig._id}>
-                  <div className="gig-image">
-                    <img src={gig.gigId.cover || "/img/noimage.jpg"} alt={gig.gigId.title} />
-                  </div>
-                  <div className="gig-info">
-                    <h4>{gig.gigId.title}</h4>
-                    <p>${gig.gigId.price}</p>
-                  </div>
-                </Link>
-              ))
+              savedGigsData.map((gig) => {
+                // Skip rendering if gigId is missing or invalid
+                if (!gig.gigId) {
+                  console.warn("Found saved gig with missing gigId:", gig);
+                  return null;
+                }
+                
+                return (
+                  <Link to={`/gig/${gig.gigId._id}`} className="gig-item" key={gig._id}>
+                    <div className="gig-image">
+                      <img src={gig.gigId.cover || "/img/noimage.jpg"} alt={gig.gigId.title || "Gig"} />
+                    </div>
+                    <div className="gig-info">
+                      <h4>{gig.gigId.title || "Untitled Gig"}</h4>
+                      <p>${gig.gigId.price || 0}</p>
+                    </div>
+                  </Link>
+                );
+              }).filter(Boolean) // Filter out any null items (skipped gigs)
             )}
           </div>
         );
