@@ -21,13 +21,50 @@ function Explore() {
     queryKey: ["explore-gigs", search],
     queryFn: async ({ pageParam = 0 }) => {
       const res = await newRequest.get(`/gigs?page=${pageParam}&limit=9${search ? `&${search.substring(1)}` : ''}`);
+      console.log('API response:', res.data);
+      console.log('API response type:', typeof res.data, Array.isArray(res.data) ? '(array)' : '(not array)');
+      
+      // Handle different API response formats
+      if (Array.isArray(res.data)) {
+        console.log('API returned array of gigs directly');
+        return res.data;
+      } else if (res.data && res.data.gigs && Array.isArray(res.data.gigs)) {
+        console.log('Gigs found in response object:', res.data.gigs.length);
+        return res.data;
+      } else if (res.data && typeof res.data === 'object') {
+        // If we can't find a gigs property but the response is an object,
+        // check if the object itself might be a single gig or contains gig-like objects
+        console.log('Examining response object for gig-like data');
+        const keys = Object.keys(res.data);
+        console.log('Response object keys:', keys);
+        
+        // If this appears to be a single gig, wrap it in an object with gigs array
+        if (res.data._id && (res.data.title || res.data.desc)) {
+          console.log('Response appears to be a single gig, wrapping in array');
+          return { gigs: [res.data], page: pageParam, totalPages: pageParam + 1 };
+        }
+      }
+      
+      // Default fallback - return data as is
       return res.data;
     },
     getNextPageParam: (lastPage, allPages) => {
-      // Only return next page if the last page has items
-      return lastPage.length > 0 ? allPages.length : undefined;
+      // Check if there are more pages based on the pagination info
+      if (!lastPage) return undefined;
+      
+      // Handle both array and object with gigs property response formats
+      if (Array.isArray(lastPage)) {
+        // If API returns an array directly
+        return allPages.length < 10 ? allPages.length : undefined; // Simple pagination limit
+      } else if (lastPage.gigs) {
+        // If API returns an object with pagination info
+        return lastPage.page < lastPage.totalPages - 1 ? lastPage.page + 1 : undefined;
+      }
+      
+      return undefined;
     },
   });
+
 
   // Handle scroll event for infinite scrolling
   const handleScroll = useCallback(() => {
@@ -62,8 +99,39 @@ function Explore() {
     };
   }, [handleScroll, fetchNextPage, hasNextPage]);
 
-  // Flatten the pages data for rendering
-  const gigs = data?.pages.flatMap((page) => page) || [];
+  // Extract gigs from the response and flatten the pages data for rendering
+  const gigs = data?.pages.flatMap((page) => {
+    // Handle different API response formats
+    if (Array.isArray(page)) {
+      return page; // If API returns array of gigs directly
+    } else if (page && page.gigs && Array.isArray(page.gigs)) {
+      return page.gigs; // If API returns object with gigs property
+    } else if (page && typeof page === 'object') {
+      // If the API returns an object without a gigs property, try to extract gig-like objects
+      const possibleGigs = Object.values(page).filter(item => 
+        item && typeof item === 'object' && item._id && 
+        (item.title || item.desc || item.userId)
+      );
+      if (possibleGigs.length > 0) return possibleGigs;
+    }
+    console.log('Could not extract gigs from page:', page);
+    return [];
+  }) || [];
+  
+  // Log the extracted gigs for debugging
+  useEffect(() => {
+    if (gigs.length > 0) {
+      console.log('Extracted gigs:', gigs.slice(0, 3));
+      // Verify that gigs have the required properties for rendering
+      const validGigs = gigs.filter(gig => gig && gig._id && (gig.title || gig.desc));
+      if (validGigs.length !== gigs.length) {
+        console.warn('Some gigs may be missing required properties:', 
+          gigs.length - validGigs.length, 'invalid gigs found');
+      }
+    } else {
+      console.log('No gigs extracted from API response');
+    }
+  }, [gigs]);
   
   // Debug logging
   useEffect(() => {
@@ -71,8 +139,21 @@ function Explore() {
       console.log('Explore data updated:', { 
         pagesCount: data.pages.length,
         totalGigs: gigs.length,
-        hasNextPage
+        hasNextPage,
+        firstPageData: data.pages[0]
       });
+      
+      // Log detailed structure of first page to understand format
+      const firstPage = data.pages[0];
+      if (firstPage) {
+        console.log('First page structure:', {
+          isArray: Array.isArray(firstPage),
+          hasGigsProperty: !Array.isArray(firstPage) && 'gigs' in firstPage,
+          keys: Object.keys(firstPage),
+          gigsCount: Array.isArray(firstPage) ? firstPage.length : 
+                    (firstPage.gigs ? firstPage.gigs.length : 'no gigs property')
+        });
+      }
     }
   }, [data, gigs.length, hasNextPage]);
   

@@ -42,10 +42,15 @@ function Featured() {
     "Web Design",
     "Digital Marketing",
     "Programming & Tech",
-    "AI Services"
+    
   ];
 
   const handleSubmit = () => {
+    // if (!input.trim()) {
+    //   // Don't search if input is empty
+    //   return;
+    // }
+    
     // Check if the input matches any of the categories
     const matchedCategory = allOptions.find(
       option => option.toLowerCase() === input.toLowerCase()
@@ -57,8 +62,11 @@ function Featured() {
       navigate(`/gigs?cat=${categoryParam}`);
     } else {
       // If not a category, use as general search term
-      navigate(`/gigs?search=${input}`);
+      const searchTerm = encodeURIComponent(input.trim());
+      navigate(`/gigs?search=${searchTerm}`);
     }
+    
+    console.log("Search submitted:", input);
   };
   
   // Filter options based on user input
@@ -74,7 +82,7 @@ function Featured() {
       const filtered = allOptions.filter(option =>
         option.toLowerCase().includes(userInput.toLowerCase())
       );
-      setFilteredOptions(filtered);
+      setFilteredOptions(filtered.length > 0 ? filtered : []);
     }
   };
   
@@ -105,6 +113,7 @@ function Featured() {
                 onChange={handleInputChange}
                 onInput={handleInputSelect}
                 value={input}
+                onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
               />
               <datalist id="browsers">
                 {filteredOptions.map((option, index) => (

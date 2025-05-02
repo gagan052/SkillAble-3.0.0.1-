@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import newRequest from "../../utils/newRequest";
 import "./Navbar.scss";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaBell } from "react-icons/fa";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 function Navbar() {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -24,6 +26,37 @@ function Navbar() {
       }),
     enabled: !!currentUser,
   });
+  
+  // Fetch notifications
+  const { data: notificationData, refetch: refetchNotifications } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: () =>
+      newRequest.get("/notifications").then((res) => {
+        setNotifications(res.data);
+        return res.data;
+      }),
+    enabled: !!currentUser,
+  });
+  
+  // Mark notification as read
+  const handleMarkAsRead = async (notificationId) => {
+    try {
+      await newRequest.put(`/notifications/${notificationId}/read`);
+      refetchNotifications();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  // Mark all notifications as read
+  const handleMarkAllAsRead = async () => {
+    try {
+      await newRequest.put("/notifications/read-all");
+      refetchNotifications();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -39,6 +72,7 @@ function Navbar() {
   useEffect(() => {
     // Close mobile menu when path changes
     setMobileOpen(false);
+    setNotificationOpen(false);
   }, [pathname]);
 
   const handleLogout = async () => {
@@ -99,18 +133,56 @@ function Navbar() {
           {!currentUser?.isSeller && <span>Become a Seller</span>}
           
           {currentUser ? (
-            <div className="user">
-              <img
-                src={currentUser.img || "/img/noavatar.jpg"}
-                alt=""
-                onClick={() => {
-                  navigate("/dashboard");
-                  setMobileOpen(false);
-                }}
-                style={{ cursor: "pointer" }}
-              />
-              <span onClick={() => setOpen(!open)}>{currentUser.username}</span>
-              {open && (
+            <>
+              <div className="notification">
+                <div className="icon" onClick={() => setNotificationOpen(!notificationOpen)}>
+                  <FaBell />
+                  {notifications?.length > 0 && <span className="count">{notifications.length}</span>}
+                </div>
+                {notificationOpen && (
+                  <div className="notification-dropdown">
+                    <div className="notification-header">
+                      <h3>Notifications</h3>
+                      {notifications?.length > 0 && (
+                        <button className="mark-all-read" onClick={handleMarkAllAsRead}>
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    {notifications?.length > 0 ? (
+                      <div className="notification-list">
+                        {notifications.map((notification) => (
+                          <div 
+                            key={notification._id} 
+                            className={`notification-item ${notification.isRead ? 'read' : 'unread'}`}
+                            onClick={() => handleMarkAsRead(notification._id)}
+                          >
+                            <div className="notification-content">
+                              <p>{notification.message}</p>
+                              <span className="time">{new Date(notification.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            {!notification.isRead && <div className="unread-indicator"></div>}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="no-notifications">No notifications yet</p>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="user">
+                <img
+                  src={currentUser.img || "/img/noavatar.jpg"}
+                  alt=""
+                  onClick={() => {
+                    navigate("/dashboard");
+                    setMobileOpen(false);
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+                <span onClick={() => setOpen(!open)}>{currentUser.username}</span>
+                {open && (
                 <div className="options">
                   {currentUser.isSeller && (
                     <>
@@ -128,6 +200,7 @@ function Navbar() {
                 </div>
               )}
             </div>
+            </>
           ) : (
             <>
               <Link className="link" to="/login" onClick={() => setMobileOpen(false)}>Login</Link>
@@ -139,12 +212,11 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Menu Section */}
-      {(active || pathname !== "/") && (
-        <>
-          <hr />
-          <div className="menu-container">
-            <div className="menu">
+      {/* Menu Section - Only visible when scrolled */}
+      <div className={active || pathname !== "/" ? "menu-section visible" : "menu-section"}>
+        <hr />
+        <div className="menu-container">
+          <div className="menu">
               {/* Menu items */}
               {[
                 { label: "Graphics & Design", path: "graphics_design" },
@@ -215,8 +287,7 @@ function Navbar() {
             </div>
           </div>
           <hr />
-        </>
-      )}
+        </div>
     </div>
   );
 }

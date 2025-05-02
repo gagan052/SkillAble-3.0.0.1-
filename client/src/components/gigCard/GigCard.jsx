@@ -7,25 +7,56 @@ import newRequest from "../../utils/newRequest";
 import FollowButton from "../followButton/FollowButton";
 
 const GigCard = ({ item }) => {
+  // Enhanced validation for gig item
+  if (!item) {
+    console.error('Missing gig item');
+    return null;
+  }
+  
+  // Log the item structure to help with debugging
+  console.log('GigCard received item:', item);
+  
+  // Check for required properties
+  if (!item._id) {
+    console.error('Invalid gig item (missing _id):', item);
+    return null;
+  }
+  
+  // Ensure all required properties exist with fallbacks
+  const safeItem = {
+    ...item,
+    title: item.title || 'Untitled Gig',
+    cover: item.cover || '/img/noimage.jpg',
+    price: item.price || 0,
+    userId: item.userId || '',
+    totalStars: item.totalStars || 0,
+    starNumber: item.starNumber || 0
+  };
   const [isSaved, setIsSaved] = useState(false);
   const queryClient = useQueryClient();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   
   const { isLoading, error, data } = useQuery({
-    queryKey: [item.userId],
-    queryFn: () =>
-      newRequest.get(`/users/${item.userId}`).then((res) => {
+    queryKey: [safeItem.userId],
+    queryFn: () => {
+      if (!safeItem.userId) {
+        console.log('No userId available for user query');
+        return Promise.resolve(null);
+      }
+      return newRequest.get(`/users/${safeItem.userId}`).then((res) => {
         return res.data;
-      }),
+      });
+    },
+    enabled: !!safeItem.userId,
   });
 
 
   // Check if gig is saved by current user
   const { data: savedGigStatus } = useQuery({
-    queryKey: ["savedGig", item._id],
-    queryFn: () => newRequest.get(`/saved-gigs/check/${item._id}`).then((res) => res.data),
-    enabled: !!currentUser,
-     retry: 1,
+    queryKey: ["savedGig", safeItem._id],
+    queryFn: () => newRequest.get(`/saved-gigs/check/${safeItem._id}`).then((res) => res.data),
+    enabled: !!currentUser && !!safeItem._id,
+    retry: 1,
     onError: (error) => {
       console.error("Error checking saved status:", error);
     }
@@ -74,7 +105,7 @@ const GigCard = ({ item }) => {
     // Disable the button during the mutation to prevent multiple clicks
     if (saveGigMutation.isLoading) return;
     
-    saveGigMutation.mutate(item._id);
+    saveGigMutation.mutate(safeItem._id);
   };
   
   // Handle share gig
@@ -85,9 +116,9 @@ const GigCard = ({ item }) => {
     try {
       if (navigator.share) {
         navigator.share({
-          title: item.title || 'Check out this gig',
-          text: item.shortDesc || 'Found an interesting gig',
-          url: window.location.origin + `/gig/${item._id}`,
+          title: safeItem.title || 'Check out this gig',
+          text: safeItem.shortDesc || 'Found an interesting gig',
+          url: window.location.origin + `/gig/${safeItem._id}`,
         })
         .catch((error) => {
           console.log('Error sharing:', error);
@@ -106,7 +137,7 @@ const GigCard = ({ item }) => {
   
   // Helper function to copy URL to clipboard
   const copyToClipboard = () => {
-    const url = window.location.origin + `/gig/${item._id}`;
+    const url = window.location.origin + `/gig/${safeItem._id}`;
     navigator.clipboard.writeText(url)
       .then(() => alert("Link copied to clipboard!"))
       .catch(err => {
@@ -116,9 +147,9 @@ const GigCard = ({ item }) => {
   };
 
   return (
-    <Link to={`/gig/${item._id}`} className="link">
+    <Link to={`/gig/${safeItem._id}`} className="link">
       <div className="gigCard">
-        <img src={item.cover || "/img/noavatar.jpg"} alt="Gig Cover" />
+        <img src={safeItem.cover || "/img/noavatar.jpg"} alt="Gig Cover" />
         <div className="info">
           {isLoading ? (
             "loading"
@@ -126,20 +157,20 @@ const GigCard = ({ item }) => {
             "Something went wrong!"
           ) : (
             <div className="user">
-              <img src={data.img || "/img/noavatar.jpg"} alt="User Avatar" />
+              <img src={data?.img || "/img/noavatar.jpg"} alt="User Avatar" />
               <div className="user-info">
-                <span className="username">{data.username}</span>
-                <span className="followers">{data.followersCount || 0} followers</span>
+                <span className="username">{data?.username || "User"}</span>
+                <span className="followers">{data?.followersCount || 0} followers</span>
               </div>
-              <FollowButton userId={item.userId} size="small" />
+              <FollowButton userId={safeItem.userId} size="small" />
             </div>
           )}
-          <p className="desc">{item.shortDesc || item.desc || "No description available"}</p>
+          <p className="desc">{safeItem.shortDesc || safeItem.desc || "No description available"}</p>
           <div className="star">
             <img src="/img/star.png" alt="Rating Star" />
             <span>
-              {!isNaN(item.totalStars / item.starNumber) && item.starNumber > 0
-                ? Math.round(item.totalStars / item.starNumber)
+              {!isNaN(safeItem.totalStars / safeItem.starNumber) && safeItem.starNumber > 0
+                ? Math.round(safeItem.totalStars / safeItem.starNumber)
                 : "New"}
             </span>
           </div>
@@ -166,7 +197,7 @@ const GigCard = ({ item }) => {
 
           <div className="price">
             <span>STARTING AT</span>
-            <h2>$ {item.price}</h2>
+            <h2>$ {safeItem.price}</h2>
           </div>
         </div>
       </div>

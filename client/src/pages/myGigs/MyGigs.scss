@@ -4,7 +4,8 @@
   color: #555;
 
   .container {
-    width: 100%;
+    width: 1400px;
+    padding: 50px 0px;
 
     .title {
       display: flex;
@@ -51,5 +52,17 @@
         }
       }
     }
+  }
+
+  .loading, .error {
+    width: 100%;
+    text-align: center;
+    padding: 50px 0;
+    color: #555;
+    font-size: 16px;
+  }
+
+  .error {
+    color: #d32f2f;
   }
 }

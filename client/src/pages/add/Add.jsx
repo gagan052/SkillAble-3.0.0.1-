@@ -152,6 +152,7 @@ const Add = () => {
               <option value="">Select a category</option>
               <option value="ai_artists">AI Artists</option>
               <option value="logo_design">Logo Design</option>
+              <option value="ai_service">AI Service</option>
               <option value="wordpress">WordPress</option>
               <option value="voice_over">Voice Over</option>
               <option value="video_explainer">Video Explainer</option>
