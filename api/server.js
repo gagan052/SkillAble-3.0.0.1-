@@ -50,6 +50,15 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+app.get("/test", (req, res) => {
+  res.json({ message: "Server is working!" });
+});
+
+app.get("/api/saved-gigs/test", (req, res) => {
+  res.json({ message: "Saved gigs route works!" });
+});
+
+
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/notifications", notificationRoute);
