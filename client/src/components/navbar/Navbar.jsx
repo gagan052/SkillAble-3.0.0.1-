@@ -21,7 +21,7 @@ function Navbar() {
   const { isLoading, error, data } = useQuery({
     queryKey: ["savedGigs"],
     queryFn: () =>
-      newRequest.get("/gigs/saved").then((res) => {
+      newRequest.get("/saved-gigs").then((res) => {
         return res.data;
       }),
     enabled: !!currentUser,
@@ -30,21 +30,35 @@ function Navbar() {
   // Fetch notifications
   const { data: notificationData, refetch: refetchNotifications } = useQuery({
     queryKey: ["notifications"],
-    queryFn: () =>
-      newRequest.get("/notifications").then((res) => {
+    queryFn: async () => {
+      try {
+        const res = await newRequest.get("/notifications");
         setNotifications(res.data);
         return res.data;
-      }),
+      } catch (err) {
+        console.error("Error fetching notifications:", err);
+        return [];
+      }
+    },
     enabled: !!currentUser,
+    refetchInterval: 30000, // Refetch every 30 seconds
   });
   
   // Mark notification as read
   const handleMarkAsRead = async (notificationId) => {
     try {
       await newRequest.put(`/notifications/${notificationId}/read`);
+      // Update local state to avoid waiting for refetch
+      setNotifications(prev => 
+        prev.map(notification => 
+          notification._id === notificationId 
+            ? {...notification, read: true} 
+            : notification
+        )
+      );
       refetchNotifications();
     } catch (err) {
-      console.log(err);
+      console.error("Error marking notification as read:", err);
     }
   };
   
@@ -52,9 +66,13 @@ function Navbar() {
   const handleMarkAllAsRead = async () => {
     try {
       await newRequest.put("/notifications/read-all");
+      // Update local state to avoid waiting for refetch
+      setNotifications(prev => 
+        prev.map(notification => ({...notification, read: true}))
+      );
       refetchNotifications();
     } catch (err) {
-      console.log(err);
+      console.error("Error marking all notifications as read:", err);
     }
   };
 
@@ -154,14 +172,21 @@ function Navbar() {
                         {notifications.map((notification) => (
                           <div 
                             key={notification._id} 
-                            className={`notification-item ${notification.isRead ? 'read' : 'unread'}`}
+                            className={`notification-item ${notification.read ? 'read' : 'unread'}`}
                             onClick={() => handleMarkAsRead(notification._id)}
                           >
+                            {notification.sender && notification.sender.img && (
+                              <img 
+                                src={notification.sender.img || "/img/noavatar.jpg"} 
+                                alt="" 
+                                className="sender-img"
+                              />
+                            )}
                             <div className="notification-content">
-                              <p>{notification.message}</p>
+                              <p>{notification.content}</p>
                               <span className="time">{new Date(notification.createdAt).toLocaleDateString()}</span>
                             </div>
-                            {!notification.isRead && <div className="unread-indicator"></div>}
+                            {!notification.read && <div className="unread-indicator"></div>}
                           </div>
                         ))}
                       </div>
@@ -192,7 +217,7 @@ function Navbar() {
                   )}
                   <Link className="link" to="/orders" onClick={() => setMobileOpen(false)}>Orders</Link>
                   <Link className="link" to="/messages" onClick={() => setMobileOpen(false)}>Messages</Link>
-                  <Link className="link" to="/saved" onClick={() => setMobileOpen(false)}>Saved Gigs</Link>
+                  <Link className="link" to="/savedGigs" onClick={() => setMobileOpen(false)}>Saved Gigs</Link>
                   <span className="link" onClick={() => {
                     handleLogout();
                     setMobileOpen(false);

@@ -65,8 +65,7 @@ export const getGigs = async (req, res, next) => {
       .sort({ [q.sort || "createdAt"]: -1 })
       .skip(skip)
       .limit(limit);
-      
-    // Get total count for pagination info
+
     const total = await Gig.countDocuments(filters);
 
     res.status(200).json({

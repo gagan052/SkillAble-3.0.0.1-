@@ -219,9 +219,10 @@
       border-radius: 5px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 15px;
       height: max-content;
-      max-height: 500px;
+      max-height: 80vh; /* Changed from fixed 500px to viewport-relative */
+      overflow-y: auto; /* Added scrolling for overflow content */
       position: sticky;
       top: 150px;
       
@@ -263,6 +264,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
 
         h2{
           font-weight: 300;
@@ -270,12 +272,16 @@
 
         h3{
           font-weight: 500;
+          word-break: break-word;
+          max-width: 100%;
         }
       }
 
       p{
         color: gray;
         margin: 10px 0px;
+        word-break: break-word;
+        max-width: 100%;
       }
 
       .details {
@@ -283,14 +289,22 @@
         align-items: center;
         justify-content: space-between;
         font-size: 14px;
+        flex-wrap: wrap;
+        gap: 10px;
 
         .item {
           display: flex;
           align-items: center;
           gap: 10px;
+          min-width: 0;
+          
+          span {
+            word-break: break-word;
+          }
 
           img {
             width: 20px;
+            flex-shrink: 0;
           }
         }
       }
@@ -298,14 +312,20 @@
       .features{
         .item{
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 10px;
           font-weight: 300;
           color: gray;
-          margin-bottom: 5px;
+          margin-bottom: 10px;
+          
+          span {
+            word-break: break-word;
+            flex: 1;
+          }
 
           img{
             width: 14px;
+            margin-top: 3px;
           }
         }
       }

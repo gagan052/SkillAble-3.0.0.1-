@@ -19,7 +19,9 @@ const Review = ({ review }) => {
       {isLoading ? (
         "loading"
       ) : error ? (
-        "error"
+        <div className="error">
+          <p>Error loading user: {error.message}</p>
+        </div>
       ) : (
         <div className="user">
           <img className="pp" src={data.img || "/img/noavatar.jpg"} alt="" />

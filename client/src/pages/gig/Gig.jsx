@@ -209,7 +209,7 @@ function Gig() {
                 </div>
               </div>
             )}
-            <Reviews gigId={id} />
+            <Reviews gigId={id} gigUserId={userId} />
           </div>
           <div className="right">
             <div className="price">

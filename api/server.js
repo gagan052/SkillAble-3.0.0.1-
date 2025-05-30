@@ -11,6 +11,7 @@ import authRoute from "./routes/auth.route.js";
 import followRoute from "./routes/follow.route.js";
 import savedGigRoute from "./routes/savedGig.route.js";
 import storyRoute from "./routes/story.route.js";
+import notificationRoute from "./routes/notification.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -38,7 +39,10 @@ const connect = async () => {
 
 // app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5175"],
+  origin: ["http://localhost:5173",
+     "http://localhost:5174",
+     "https://skillable-freelancer.onrender.com/api/"
+    ],
   methods: "GET, POST, PUT, DELETE, OPTIONS",
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -48,6 +52,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
+app.use("/api/notifications", notificationRoute);
 app.use("/api/gigs", gigRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/conversations", conversationRoute);
@@ -64,7 +69,7 @@ app.use((err, req, res, next) => {
   return res.status(errorStatus).send(errorMessage);
 });
 
-app.listen(8800, () => {
+app.listen(8080, () => {
   connect();
-  console.log("Backend server is running! at 8800");
+  console.log("Backend server is running! at 8080");
 });

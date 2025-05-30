@@ -20,34 +20,72 @@ function Explore() {
   } = useInfiniteQuery({
     queryKey: ["explore-gigs", search],
     queryFn: async ({ pageParam = 0 }) => {
-      const res = await newRequest.get(`/gigs?page=${pageParam}&limit=9${search ? `&${search.substring(1)}` : ''}`);
-      console.log('API response:', res.data);
-      console.log('API response type:', typeof res.data, Array.isArray(res.data) ? '(array)' : '(not array)');
-      
-      // Handle different API response formats
-      if (Array.isArray(res.data)) {
-        console.log('API returned array of gigs directly');
-        return res.data;
-      } else if (res.data && res.data.gigs && Array.isArray(res.data.gigs)) {
-        console.log('Gigs found in response object:', res.data.gigs.length);
-        return res.data;
-      } else if (res.data && typeof res.data === 'object') {
-        // If we can't find a gigs property but the response is an object,
-        // check if the object itself might be a single gig or contains gig-like objects
-        console.log('Examining response object for gig-like data');
-        const keys = Object.keys(res.data);
-        console.log('Response object keys:', keys);
+      try {
+        const res = await newRequest.get(`/gigs?page=${pageParam}&limit=9${search ? `&${search.substring(1)}` : ''}`);
+        if (!res.data) throw new Error("No data in response");
+        // Rest of your logic...
+        console.log('API response:', res.data);
+        console.log('API response type:', typeof res.data, Array.isArray(res.data) ? '(array)' : '(not array)');
         
-        // If this appears to be a single gig, wrap it in an object with gigs array
-        if (res.data._id && (res.data.title || res.data.desc)) {
-          console.log('Response appears to be a single gig, wrapping in array');
-          return { gigs: [res.data], page: pageParam, totalPages: pageParam + 1 };
+        // Handle different API response formats
+        if (Array.isArray(res.data)) {
+          console.log('API returned array of gigs directly');
+          return res.data;
+        } else if (res.data && res.data.gigs && Array.isArray(res.data.gigs)) {
+          console.log('Gigs found in response object:', res.data.gigs.length);
+          return res.data;
+        } else if (res.data && typeof res.data === 'object') {
+          // If we can't find a gigs property but the response is an object,
+          // check if the object itself might be a single gig or contains gig-like objects
+          console.log('Examining response object for gig-like data');
+          const keys = Object.keys(res.data);
+          console.log('Response object keys:', keys);
+          
+          // If this appears to be a single gig, wrap it in an object with gigs array
+          if (res.data._id && (res.data.title || res.data.desc)) {
+            console.log('Response appears to be a single gig, wrapping in array');
+            return { gigs: [res.data], page: pageParam, totalPages: pageParam + 1 };
+          }
         }
+        
+        // Default fallback - return data as is
+        return res.data;
+        
+      } catch (error) {
+        console.error("Error fetching gigs:", error);
+        throw error;
       }
-      
-      // Default fallback - return data as is
-      return res.data;
     },
+    
+    // queryFn: async ({ pageParam = 0 }) => {
+    //   const res = await newRequest.get(`/gigs?page=${pageParam}&limit=9${search ? `&${search.substring(1)}` : ''}`);
+    //   console.log('API response:', res.data);
+    //   console.log('API response type:', typeof res.data, Array.isArray(res.data) ? '(array)' : '(not array)');
+      
+    //   // Handle different API response formats
+    //   if (Array.isArray(res.data)) {
+    //     console.log('API returned array of gigs directly');
+    //     return res.data;
+    //   } else if (res.data && res.data.gigs && Array.isArray(res.data.gigs)) {
+    //     console.log('Gigs found in response object:', res.data.gigs.length);
+    //     return res.data;
+    //   } else if (res.data && typeof res.data === 'object') {
+    //     // If we can't find a gigs property but the response is an object,
+    //     // check if the object itself might be a single gig or contains gig-like objects
+    //     console.log('Examining response object for gig-like data');
+    //     const keys = Object.keys(res.data);
+    //     console.log('Response object keys:', keys);
+        
+    //     // If this appears to be a single gig, wrap it in an object with gigs array
+    //     if (res.data._id && (res.data.title || res.data.desc)) {
+    //       console.log('Response appears to be a single gig, wrapping in array');
+    //       return { gigs: [res.data], page: pageParam, totalPages: pageParam + 1 };
+    //     }
+    //   }
+      
+    //   // Default fallback - return data as is
+    //   return res.data;
+    // },
     getNextPageParam: (lastPage, allPages) => {
       // Check if there are more pages based on the pagination info
       if (!lastPage) return undefined;

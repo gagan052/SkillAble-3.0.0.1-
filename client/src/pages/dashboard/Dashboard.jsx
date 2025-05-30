@@ -72,8 +72,30 @@ function Dashboard() {
     queryKey: ["userGigs"],
     queryFn: async () => {
       try {
+        // Add debug logging for the request
+        console.log("Fetching gigs for user ID:", currentUser._id);
         const res = await newRequest.get("/gigs?userId=" + currentUser._id);
-        return Array.isArray(res.data) ? res.data : [];
+        
+        // Log the raw response
+        console.log("API Response:", res);
+        
+        // Handle different response formats
+        const responseData = res.data;
+        
+        // If response is already an array, return it
+        if (Array.isArray(responseData)) {
+          return responseData;
+        }
+        
+        // If response has a 'gigs' property that is an array, return that
+        if (responseData && responseData.gigs && Array.isArray(responseData.gigs)) {
+          console.log("Found gigs in response object:", responseData.gigs.length);
+          return responseData.gigs;
+        }
+        
+        // If we can't find a valid gigs array, log error and return empty array
+        console.error("Could not find gigs array in response:", responseData);
+        return [];
       } catch (error) {
         console.error("Error fetching gigs:", error);
         return [];
@@ -87,8 +109,30 @@ function Dashboard() {
     queryKey: ["savedGigs"],
     queryFn: async () => {
       try {
+        console.log("Fetching saved gigs");
         const res = await newRequest.get("/saved-gigs");
-        return res.data || [];
+        
+        // Log the raw response
+        console.log("API Response for saved gigs:", res);
+        
+        // Handle different response formats
+        const responseData = res.data;
+        
+        // If response is already an array, return it
+        if (Array.isArray(responseData)) {
+          console.log("Saved gigs response is an array with", responseData.length, "items");
+          return responseData;
+        }
+        
+        // If response has a 'gigs' property that is an array, return that
+        if (responseData && responseData.gigs && Array.isArray(responseData.gigs)) {
+          console.log("Found gigs in saved gigs response object:", responseData.gigs.length);
+          return responseData.gigs;
+        }
+        
+        // If we can't find a valid gigs array, log error and return empty array
+        console.error("Could not find gigs array in saved gigs response:", responseData);
+        return [];
       } catch (error) {
         console.error("Error fetching saved gigs:", error);
         return [];
@@ -100,25 +144,25 @@ function Dashboard() {
   // Fetch user data for all saved gigs using useQueries
   const savedGigsUserQueries = useQueries({
     queries: (savedGigsData || [])
-      .filter(gig => gig?.gigId?.userId) // Filter out items with missing userId
+      .filter(gig => gig?.userId) // Filter out items with missing userId
       .map(gig => ({
-        queryKey: ["user", gig.gigId.userId],
+        queryKey: ["user", gig.userId],
         queryFn: async () => {
           try {
-            const res = await newRequest.get(`/users/${gig.gigId.userId}`);
+            const res = await newRequest.get(`/users/${gig.userId}`);
             return {
-              userId: gig.gigId.userId,
+              userId: gig.userId,
               userData: res.data
             };
           } catch (error) {
-            console.error(`Error fetching user ${gig.gigId.userId}:`, error);
+            console.error(`Error fetching user ${gig.userId}:`, error);
             return {
-              userId: gig.gigId.userId,
+              userId: gig.userId,
               userData: null
             };
           }
         },
-        enabled: !!gig.gigId?.userId,
+        enabled: !!gig.userId,
       })),
   });
 
@@ -164,6 +208,16 @@ function Dashboard() {
 
   if (!currentUser) return null;
 
+  // Debug log to check data structure
+  useEffect(() => {
+    console.log("Dashboard data:", {
+      gigsData,
+      purchasesData,
+      followersData,
+      followingData
+    });
+  }, [gigsData, purchasesData, followersData, followingData]);
+
   // Calculate stats
   const stats = useMemo(() => {
     return [
@@ -181,6 +235,7 @@ function Dashboard() {
       },
     ].filter(item => item.label !== ''); // Filter out empty labels
   }, [currentUser.isSeller, gigsData, purchasesData, followersData, followingData]);
+
 
   // Tab content renderer
   const getTabContent = () => {
@@ -227,17 +282,30 @@ function Dashboard() {
                 <button onClick={() => navigate("/add")}>Create a Gig</button>
               </div>
             ) : (
-              gigsData.map((gig) => (
-                <Link to={`/gig/${gig._id}`} className="gig-item" key={gig._id}>
-                  <div className="gig-image">
-                    <img src={gig.cover || "/img/noimage.jpg"} alt={gig.title} />
-                  </div>
-                  <div className="gig-info">
-                    <h4>{gig.title}</h4>
-                    <p>${gig.price}</p>
-                  </div>
-                </Link>
-              ))
+              <>
+                {/* Debug info - remove in production */}
+                
+                
+                {gigsData.map((gig) => {
+                  // Skip rendering if gig is missing essential data
+                  if (!gig || !gig._id) {
+                    console.warn("Found invalid gig data:", gig);
+                    return null;
+                  }
+                  
+                  return (
+                    <Link to={`/gig/${gig._id}`} className="gig-item" key={gig._id}>
+                      <div className="gig-image">
+                        <img src={gig.cover || "/img/noimage.jpg"} alt={gig.title || "Gig"} />
+                      </div>
+                      <div className="gig-info">
+                        <h4>{gig.title || "Untitled Gig"}</h4>
+                        <p>${gig.price || 0}</p>
+                      </div>
+                    </Link>
+                  );
+                }).filter(Boolean) /* Filter out any null items */}
+              </>
             )}
           </div>
         );
@@ -256,19 +324,19 @@ function Dashboard() {
               </div>
             ) : (
               savedGigsData.map((gig) => {
-                // Skip rendering if gigId is missing or invalid
-                if (!gig.gigId) {
-                  console.warn("Found saved gig with missing gigId:", gig);
+                // Skip rendering if gig is missing essential data
+                if (!gig || !gig._id) {
+                  console.warn("Found invalid saved gig data:", gig);
                   return null;
                 }
                 
                 // Get user data from the map
-                const sellerData = userDataMap[gig.gigId.userId];
+                const sellerData = userDataMap[gig.userId];
                 
                 return (
-                  <Link to={`/gig/${gig.gigId._id}`} className="gig-item" key={gig._id}>
+                  <Link to={`/gig/${gig._id}`} className="gig-item" key={gig._id}>
                     <div className="gig-image">
-                      <img src={gig.gigId.cover || "/img/noimage.jpg"} alt={gig.gigId.title || "Gig"} />
+                      <img src={gig.cover || "/img/noimage.jpg"} alt={gig.title || "Gig"} />
                     </div>
                     
                     {sellerData && (
@@ -282,8 +350,8 @@ function Dashboard() {
                     )}
                     
                     <div className="gig-info">
-                      <h4>{gig.gigId.title || "Untitled Gig"}</h4>
-                      <p>${gig.gigId.price || 0}</p>
+                      <h4>{gig.title || "Untitled Gig"}</h4>
+                      <p>${gig.price || 0}</p>
                     </div>
                   </Link>
                 );

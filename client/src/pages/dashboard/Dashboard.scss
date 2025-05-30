@@ -242,6 +242,7 @@
       border-top: 1px solid transparent;
       margin-top: -1px;
       transition: color 0.3s ease;
+      // object-fit: cover;
       
       &:last-child {
         margin-right: 0;
@@ -265,6 +266,7 @@
         background-size: contain;
         background-repeat: no-repeat;
         transition: transform 0.3s ease;
+        // background-color: yellow;
       }
       
       &:hover .tab-icon {
@@ -330,6 +332,7 @@
   .tab-content {
     padding: 30px 0;
     min-height: 400px;
+    // background-color: #ffb100;
     
     .users-list {
       width: 100%;

@@ -1,7 +1,9 @@
 import createError from "../utils/createError.js";
 import Order from "../models/order.model.js";
 import Gig from "../models/gig.model.js";
+import User from "../models/user.model.js";
 import Stripe from "stripe";
+import { createNotificationHelper } from "./notification.controller.js";
 export const intent = async (req, res, next) => {
   try {
     const stripe = new Stripe(process.env.STRIPE);
@@ -51,7 +53,7 @@ export const getOrders = async (req, res, next) => {
 };
 export const confirm = async (req, res, next) => {
   try {
-    const orders = await Order.findOneAndUpdate(
+    const order = await Order.findOneAndUpdate(
       {
         payment_intent: req.body.payment_intent,
       },
@@ -61,6 +63,18 @@ export const confirm = async (req, res, next) => {
         },
       }
     );
+
+    if (order) {
+      // Create notification for the seller
+      const buyer = await User.findById(order.buyerId);
+      await createNotificationHelper(
+        order.sellerId,
+        order.buyerId,
+        "purchase",
+        `${buyer.username} purchased your gig "${order.title}"`,
+        order._id
+      );
+    }
 
     res.status(200).send("Order has been confirmed.");
   } catch (err) {

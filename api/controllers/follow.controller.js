@@ -1,6 +1,7 @@
 import Follow from "../models/follow.model.js";
 import User from "../models/user.model.js";
 import createError from "../utils/createError.js";
+import { createNotificationHelper } from "./notification.controller.js";
 
 export const createFollow = async (req, res, next) => {
   const { followedId } = req.body;
@@ -28,6 +29,16 @@ export const createFollow = async (req, res, next) => {
     
     // Increment the followersCount of the followed user
     await User.findByIdAndUpdate(followedId, { $inc: { followersCount: 1 } });
+    
+    // Create notification for the followed user
+    const follower = await User.findById(followerId);
+    await createNotificationHelper(
+      followedId,
+      followerId,
+      "follow",
+      `${follower.username} started following you`,
+      followerId
+    );
     
     res.status(201).send("Successfully followed user");
   } catch (err) {

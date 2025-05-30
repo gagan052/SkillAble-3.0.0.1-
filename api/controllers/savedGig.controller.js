@@ -3,6 +3,7 @@ import Gig from "../models/gig.model.js";
 import User from "../models/user.model.js";
 import createError from "../utils/createError.js";
 import mongoose from "mongoose";
+import { createNotificationHelper } from "./notification.controller.js";
 
 // Save or unsave a gig
 export const toggleSaveGig = async (req, res, next) => {
@@ -45,6 +46,16 @@ export const toggleSaveGig = async (req, res, next) => {
       });
       
       await newSavedGig.save();
+      
+      // Create notification for the gig owner
+      const user = await User.findById(req.userId);
+      await createNotificationHelper(
+        gig.userId,
+        req.userId,
+        "save",
+        `${user.username} saved your gig "${gig.title}"`,
+        gigId
+      );
       
       res.status(200).json({ 
         message: "Gig has been saved!", 

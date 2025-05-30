@@ -2,10 +2,12 @@
   display: flex;
   justify-content: center;
   color: #555;
+  // background-color: yellow;
 
   .container {
     width: 100%;
     padding: 50px 0px;
+    // background-color: yellow;
 
     .title {
       display: flex;
@@ -23,14 +25,19 @@
 
     table {
       width: 100%;
+      // background-color: yellow;
+
 
       tr {
         height: 50px;
+        // background-color: yellow;
+
         th {
           text-align: left;
         }
         td {
-          
+          // background-color: yellow;
+          height: 50px;
           sup{
             font-size: 12px;
           }
@@ -43,6 +50,7 @@
 
           .message {
             width: 25px;
+            height: 25px;
             cursor: pointer;
           }
         }
