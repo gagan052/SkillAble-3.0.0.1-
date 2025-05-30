@@ -217,7 +217,7 @@ function Navbar() {
                   )}
                   <Link className="link" to="/orders" onClick={() => setMobileOpen(false)}>Orders</Link>
                   <Link className="link" to="/messages" onClick={() => setMobileOpen(false)}>Messages</Link>
-                  <Link className="link" to="/savedGigs" onClick={() => setMobileOpen(false)}>Saved Gigs</Link>
+                  <Link className="link" to="/saved" onClick={() => setMobileOpen(false)}>Saved Gigs</Link>
                   <span className="link" onClick={() => {
                     handleLogout();
                     setMobileOpen(false);
