@@ -1,97 +1,418 @@
+// Mobile-first responsive design for Add page
 .add {
   display: flex;
   justify-content: center;
+  min-height: 100vh;
+  background-color: #fafafa;
 
   .container {
-    width: 1400px;
-    padding: 50px 0px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 20px;
     
-    .error {
-      color: red;
-      background-color: #ffeeee;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-      font-weight: 500;
-      border: 1px solid #ffcccc;
+    @media (min-width: 768px) {
+      padding: 50px 20px;
     }
 
-    h1 {
-      width: max-content;
+    .add-header {
+      text-align: center;
       margin-bottom: 30px;
-      color: gray;
-      font-weight: 300;
+      
+      h1 {
+        color: #333;
+        font-weight: 600;
+        font-size: 28px;
+        margin-bottom: 8px;
+        
+        @media (min-width: 768px) {
+          font-size: 32px;
+        }
+      }
+      
+      .subtitle {
+        color: #666;
+        font-size: 16px;
+        margin: 0;
+      }
     }
 
-    .sections {
+    .error-message {
       display: flex;
-      justify-content: space-between;
-      gap: 100px;
-
-      label {
-        color: gray;
-        font-size: 18px;
+      align-items: center;
+      gap: 12px;
+      color: #d32f2f;
+      background-color: #ffebee;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      font-weight: 500;
+      border: 1px solid #ffcdd2;
+      
+      .error-icon {
+        font-size: 20px;
       }
-
-      .info,
-      .details {
+      
+      .error-text {
         flex: 1;
+      }
+    }
+
+    .gig-form {
+      .sections {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        justify-content: space-between;
+        gap: 40px;
 
-        input,
-        select,
-        textarea {
-          padding: 20px;
+        @media (min-width: 1024px) {
+          flex-direction: row;
+          gap: 60px;
         }
 
-        .images{
+        .info,
+        .details {
+          flex: 1;
           display: flex;
-          align-items: center;
-          gap: 20px;
+          flex-direction: column;
+          gap: 24px;
 
-          .imagesInputs{
+          .form-group {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 8px;
+
+            label {
+              color: #333;
+              font-size: 16px;
+              font-weight: 500;
+              
+              @media (min-width: 768px) {
+                font-size: 18px;
+              }
+            }
+
+            input,
+            select,
+            textarea {
+              padding: 16px;
+              border: 2px solid #e0e0e0;
+              border-radius: 8px;
+              font-size: 16px;
+              transition: border-color 0.3s ease;
+              background-color: white;
+              
+              &:focus {
+                outline: none;
+                border-color: #1dbf73;
+                box-shadow: 0 0 0 3px rgba(29, 191, 115, 0.1);
+              }
+              
+              &::placeholder {
+                color: #999;
+              }
+            }
+            
+            textarea {
+              resize: vertical;
+              min-height: 120px;
+            }
+          }
+          
+          .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            
+            @media (min-width: 768px) {
+              flex-direction: row;
+              gap: 20px;
+              
+              .form-group {
+                flex: 1;
+              }
+            }
+          }
+
+          .file-upload-wrapper {
+            position: relative;
+            
+            .file-input {
+              position: absolute;
+              opacity: 0;
+              width: 100%;
+              height: 100%;
+              cursor: pointer;
+            }
+            
+            .file-label {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              padding: 16px;
+              border: 2px dashed #e0e0e0;
+              border-radius: 8px;
+              background-color: #fafafa;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              
+              &:hover {
+                border-color: #1dbf73;
+                background-color: #f0fdf4;
+              }
+              
+              .upload-icon {
+                font-size: 24px;
+              }
+              
+              .upload-text {
+                color: #666;
+                font-size: 14px;
+                flex: 1;
+              }
+            }
+          }
+
+          .upload-btn {
+            border: none;
+            padding: 16px 24px;
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+            background-color: #1dbf73;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            
+            &:hover:not(:disabled) {
+              background-color: #18a367;
+            }
+            
+            &:disabled {
+              background-color: #ccc;
+              cursor: not-allowed;
+            }
+            
+            .loading-spinner {
+              width: 16px;
+              height: 16px;
+              border: 2px solid transparent;
+              border-top: 2px solid white;
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+            }
+          }
+
+          .feature-form {
+            .feature-input-wrapper {
+              display: flex;
+              gap: 12px;
+              
+              .feature-input {
+                flex: 1;
+              }
+              
+              .add-feature-btn {
+                border: none;
+                padding: 16px 20px;
+                color: white;
+                font-weight: 500;
+                background-color: #1dbf73;
+                cursor: pointer;
+                border-radius: 8px;
+                transition: background-color 0.3s ease;
+                white-space: nowrap;
+                
+                &:hover {
+                  background-color: #18a367;
+                }
+              }
+            }
+          }
+
+          .addedFeatures {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+
+            .feature-tag {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px 12px;
+              background-color: #e8f5e8;
+              border: 1px solid #1dbf73;
+              border-radius: 20px;
+              font-size: 14px;
+              
+              .feature-text {
+                color: #1dbf73;
+                font-weight: 500;
+              }
+              
+              .remove-feature-btn {
+                background: none;
+                border: none;
+                color: #1dbf73;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                padding: 0;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: background-color 0.3s ease;
+                
+                &:hover {
+                  background-color: #1dbf73;
+                  color: white;
+                }
+              }
+            }
           }
         }
-
-        button {
+      }
+      
+      .form-actions {
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+        
+        .create-btn {
           border: none;
-          padding: 20px;
+          padding: 18px 32px;
           color: white;
-          font-weight: 500;
+          font-weight: 600;
           font-size: 18px;
           background-color: #1dbf73;
           cursor: pointer;
-        }
-
-        .add{
+          border-radius: 8px;
+          transition: all 0.3s ease;
           display: flex;
-          justify-content: space-between;
-
-          input{
-            width: 80%;
+          align-items: center;
+          gap: 8px;
+          min-width: 200px;
+          justify-content: center;
+          
+          &:hover:not(:disabled) {
+            background-color: #18a367;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 191, 115, 0.3);
+          }
+          
+          &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+          }
+          
+          .loading-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
           }
         }
+      }
+    }
+  }
+}
 
-        .addedFeatures{
-          display: flex;
-          gap: 20px;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
-          button{
-            height: 30px;
-            font-size: 12px;
-            font-weight: 400;
-            background: transparent;
-            color: red;
-            border: 1px solid red;
-            display: flex;
-            align-items: center;
+// Additional mobile optimizations
+@media (max-width: 767px) {
+  .add {
+    .container {
+      padding: 16px;
+      
+      .gig-form {
+        .sections {
+          gap: 32px;
+          
+          .info,
+          .details {
             gap: 20px;
+            
+            .form-group {
+              gap: 6px;
+              
+              input,
+              select,
+              textarea {
+                padding: 14px;
+                font-size: 16px; // Prevents zoom on iOS
+              }
+            }
+            
+            .upload-btn,
+            .add-feature-btn {
+              padding: 14px 20px;
+              font-size: 16px;
+            }
+          }
+        }
+        
+        .form-actions {
+          margin-top: 32px;
+          
+          .create-btn {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Touch-friendly improvements for mobile
+@media (max-width: 767px) {
+  .add {
+    .container {
+      .gig-form {
+        .sections {
+          .info,
+          .details {
+            .form-group {
+              input,
+              select,
+              textarea {
+                min-height: 44px; // Touch-friendly minimum height
+              }
+            }
+            
+            .file-upload-wrapper {
+              .file-label {
+                min-height: 60px;
+                padding: 12px 16px;
+              }
+            }
+            
+            .addedFeatures {
+              .feature-tag {
+                padding: 10px 14px;
+                
+                .remove-feature-btn {
+                  width: 24px;
+                  height: 24px;
+                  font-size: 20px;
+                }
+              }
+            }
           }
         }
       }

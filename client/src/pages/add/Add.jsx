@@ -31,6 +31,7 @@ const Add = () => {
       payload: { name: e.target.name, value: e.target.value },
     });
   };
+  
   const handleFeature = (e) => {
     e.preventDefault();
     dispatch({
@@ -136,117 +137,244 @@ const Add = () => {
   return (
     <div className="add">
       <div className="container">
-        <h1>Add New Gig</h1>
-        {error && <div className="error">{error}</div>}
-        <div className="sections">
-          <div className="info">
-            <label htmlFor="">Title</label>
-            <input
-              type="text"
-              name="title"
-              placeholder="e.g. I will do something I'm really good at"
-              onChange={handleChange}
-            />
-            <label htmlFor="">Category</label>
-            <select name="cat" id="cat" onChange={handleChange}>
-              <option value="">Select a category</option>
-              <option value="ai_artists">AI Artists</option>
-              <option value="logo_design">Logo Design</option>
-              <option value="ai_service">AI Service</option>
-              <option value="wordpress">WordPress</option>
-              <option value="voice_over">Voice Over</option>
-              <option value="video_explainer">Video Explainer</option>
-              <option value="social_media">Social Media</option>
-              <option value="seo">SEO</option>
-              <option value="illustration">Illustration</option>
-              <option value="graphics_design">Graphics & Design</option>
-              <option value="digital_marketing">Digital Marketing</option>
-              <option value="writing_translation">Writing & Translation</option>
-              <option value="video_animation">Video & Animation</option>
-              <option value="music_audio">Music & Audio</option>
-              <option value="programming_tech">Programming & Tech</option>
-              <option value="business">Business</option>
-              <option value="lifestyle">Lifestyle</option>
-              <option value="data">Data</option>
-              <option value="photography">Photography</option>
-            </select>
-            <div className="images">
-              <div className="imagesInputs">
-                <label htmlFor="">Cover Image</label>
+        <header className="add-header">
+          <h1>Add New Gig</h1>
+          <p className="subtitle">Create a new service to showcase your skills</p>
+        </header>
+        
+        {error && (
+          <div className="error-message" role="alert">
+            <span className="error-icon">⚠️</span>
+            <span className="error-text">{error}</span>
+          </div>
+        )}
+        
+        <form onSubmit={handleSubmit} className="gig-form">
+          <div className="sections">
+            <div className="info">
+              <div className="form-group">
+                <label htmlFor="title">Title</label>
                 <input
-                  type="file"
-                  onChange={(e) => setSingleFile(e.target.files[0])}
-                />
-                <label htmlFor="">Upload Images</label>
-                <input
-                  type="file"
-                  multiple
-                  onChange={(e) => setFiles(e.target.files)}
+                  type="text"
+                  id="title"
+                  name="title"
+                  placeholder="e.g. I will do something I'm really good at"
+                  onChange={handleChange}
+                  required
                 />
               </div>
-              <button onClick={handleUpload}>
-                {uploading ? "uploading" : "Upload"}
-              </button>
-            </div>
-            <label htmlFor="">Description</label>
-            <textarea
-              name="desc"
-              id=""
-              placeholder="Brief descriptions to introduce your service to customers"
-              cols="0"
-              rows="16"
-              onChange={handleChange}
-            ></textarea>
-            <button onClick={handleSubmit}>Create</button>
-          </div>
-          <div className="details">
-            <label htmlFor="">Service Title</label>
-            <input
-              type="text"
-              name="shortTitle"
-              placeholder="e.g. One-page web design"
-              onChange={handleChange}
-            />
-            <label htmlFor="">Short Description</label>
-            <textarea
-              name="shortDesc"
-              onChange={handleChange}
-              id=""
-              placeholder="Short description of your service"
-              cols="30"
-              rows="10"
-            ></textarea>
-            <label htmlFor="">Delivery Time (e.g. 3 days)</label>
-            <input type="number" name="deliveryTime" onChange={handleChange} />
-            <label htmlFor="">Revision Number</label>
-            <input
-              type="number"
-              name="revisionNumber"
-              onChange={handleChange}
-            />
-            <label htmlFor="">Add Features</label>
-            <form action="" className="add" onSubmit={handleFeature}>
-              <input type="text" placeholder="e.g. page design" />
-              <button type="submit">add</button>
-            </form>
-            <div className="addedFeatures">
-              {state?.features?.map((f) => (
-                <div className="item" key={f}>
-                  <button
-                    onClick={() =>
-                      dispatch({ type: "REMOVE_FEATURE", payload: f })
-                    }
-                  >
-                    {f}
-                    <span>X</span>
-                  </button>
+              
+              <div className="form-group">
+                <label htmlFor="cat">Category</label>
+                <select name="cat" id="cat" onChange={handleChange} required>
+                  <option value="">Select a category</option>
+                  <option value="ai_artists">AI Artists</option>
+                  <option value="logo_design">Logo Design</option>
+                  <option value="ai_service">AI Service</option>
+                  <option value="wordpress">WordPress</option>
+                  <option value="voice_over">Voice Over</option>
+                  <option value="video_explainer">Video Explainer</option>
+                  <option value="social_media">Social Media</option>
+                  <option value="seo">SEO</option>
+                  <option value="illustration">Illustration</option>
+                  <option value="graphics_design">Graphics & Design</option>
+                  <option value="digital_marketing">Digital Marketing</option>
+                  <option value="writing_translation">Writing & Translation</option>
+                  <option value="video_animation">Video & Animation</option>
+                  <option value="music_audio">Music & Audio</option>
+                  <option value="programming_tech">Programming & Tech</option>
+                  <option value="business">Business</option>
+                  <option value="lifestyle">Lifestyle</option>
+                  <option value="data">Data</option>
+                  <option value="photography">Photography</option>
+                </select>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="cover-image">Cover Image</label>
+                <div className="file-upload-wrapper">
+                  <input
+                    type="file"
+                    id="cover-image"
+                    accept="image/*"
+                    onChange={(e) => setSingleFile(e.target.files[0])}
+                    className="file-input"
+                  />
+                  <label htmlFor="cover-image" className="file-label">
+                    <span className="upload-icon">📷</span>
+                    <span className="upload-text">
+                      {singleFile ? singleFile.name : "Choose cover image"}
+                    </span>
+                  </label>
                 </div>
-              ))}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="gallery-images">Gallery Images</label>
+                <div className="file-upload-wrapper">
+                  <input
+                    type="file"
+                    id="gallery-images"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => setFiles(e.target.files)}
+                    className="file-input"
+                  />
+                  <label htmlFor="gallery-images" className="file-label">
+                    <span className="upload-icon">🖼️</span>
+                    <span className="upload-text">
+                      {files.length > 0 
+                        ? `${files.length} image${files.length > 1 ? 's' : ''} selected`
+                        : "Choose gallery images"
+                      }
+                    </span>
+                  </label>
+                </div>
+              </div>
+              
+              <button 
+                type="button" 
+                onClick={handleUpload}
+                className="upload-btn"
+                disabled={uploading}
+              >
+                {uploading ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    Uploading...
+                  </>
+                ) : (
+                  "Upload Images"
+                )}
+              </button>
+              
+              <div className="form-group">
+                <label htmlFor="description">Description</label>
+                <textarea
+                  name="desc"
+                  id="description"
+                  placeholder="Brief descriptions to introduce your service to customers"
+                  rows="8"
+                  onChange={handleChange}
+                  required
+                ></textarea>
+              </div>
             </div>
-            <label htmlFor="">Price</label>
-            <input type="number" onChange={handleChange} name="price" />
+            
+            <div className="details">
+              <div className="form-group">
+                <label htmlFor="shortTitle">Service Title</label>
+                <input
+                  type="text"
+                  id="shortTitle"
+                  name="shortTitle"
+                  placeholder="e.g. One-page web design"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="shortDesc">Short Description</label>
+                <textarea
+                  name="shortDesc"
+                  id="shortDesc"
+                  placeholder="Short description of your service"
+                  rows="4"
+                  onChange={handleChange}
+                  required
+                ></textarea>
+              </div>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="deliveryTime">Delivery Time (days)</label>
+                  <input 
+                    type="number" 
+                    id="deliveryTime"
+                    name="deliveryTime" 
+                    min="1"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="revisionNumber">Revisions</label>
+                  <input
+                    type="number"
+                    id="revisionNumber"
+                    name="revisionNumber"
+                    min="0"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="features">Add Features</label>
+                <form onSubmit={handleFeature} className="feature-form">
+                  <div className="feature-input-wrapper">
+                    <input 
+                      type="text" 
+                      id="features"
+                      placeholder="e.g. page design" 
+                      className="feature-input"
+                    />
+                    <button type="submit" className="add-feature-btn">
+                      Add
+                    </button>
+                  </div>
+                </form>
+                
+                <div className="addedFeatures">
+                  {state?.features?.map((f) => (
+                    <div className="feature-tag" key={f}>
+                      <span className="feature-text">{f}</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          dispatch({ type: "REMOVE_FEATURE", payload: f })
+                        }
+                        className="remove-feature-btn"
+                        aria-label={`Remove ${f}`}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="price">Price ($)</label>
+                <input 
+                  type="number" 
+                  id="price"
+                  name="price" 
+                  min="1"
+                  step="0.01"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
           </div>
-        </div>
+          
+          <div className="form-actions">
+            <button type="submit" className="create-btn" disabled={mutation.isLoading}>
+              {mutation.isLoading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Creating...
+                </>
+              ) : (
+                "Create Gig"
+              )}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
