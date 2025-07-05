@@ -181,7 +181,9 @@ function Navbar() {
         {/* Links */}
         <div className={`links ${mobileOpen ? "mobile-open" : ""}`} ref={mobileMenuRef}>
           
-          <Link className="link" to="/explore" onClick={() => setMobileOpen(false)}>Explore</Link>
+          {currentUser && (
+            <Link className="link" to="/explore" onClick={() => setMobileOpen(false)}>Explore</Link>
+          )}
           
           {currentUser ? (
             <>

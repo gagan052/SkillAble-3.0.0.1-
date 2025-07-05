@@ -10,17 +10,22 @@ import TeamSection from "../../components/teamSection/TeamSection";
 import Footer from "../../components/footer/Footer";
 
 function Home() {
+  // Get current user from localStorage
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
   return (
     <div className="home">
       <Featured />
       <TrustedBy />
 
-
-      <Slide slidesToShow={5} arrowsScroll={4}>
-        {cards.map((card) => (
-          <CatCard key={card.id} card={card} />
-        ))}
-      </Slide>
+      {currentUser && (
+        <Slide slidesToShow={5} arrowsScroll={4}>
+          {cards.map((card) => (
+            <CatCard key={card.id} card={card} />
+          ))}
+        </Slide>
+      )}
+      
       <div className="features">
         <div className="container">
           <div className="item">

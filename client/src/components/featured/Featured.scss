@@ -100,6 +100,60 @@
           margin-bottom: 5px;
         }
       }
+
+      .cta-section {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        margin-top: 10px;
+
+        .cta-text {
+          font-size: 18px;
+          color: #666;
+          line-height: 1.5;
+          margin: 0;
+        }
+
+        .cta-buttons {
+          display: flex;
+          gap: 15px;
+          flex-wrap: wrap;
+
+          .cta-button {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            min-width: 140px;
+
+            &.primary {
+              background: linear-gradient(135deg, #1dbf73 0%, #18a367 100%);
+              color: white;
+              box-shadow: 0 2px 8px rgba(29, 191, 115, 0.3);
+
+              &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(29, 191, 115, 0.4);
+              }
+            }
+
+            &.secondary {
+              background: transparent;
+              color: #1dbf73;
+              border: 2px solid #1dbf73;
+
+              &:hover {
+                background: #1dbf73;
+                color: white;
+                transform: translateY(-2px);
+              }
+            }
+          }
+        }
+      }
     }
 
     .right {
@@ -158,6 +212,24 @@
         .popular {
           justify-content: center;
         }
+        
+        .cta-section {
+          text-align: center;
+          
+          .cta-text {
+            font-size: 16px;
+          }
+          
+          .cta-buttons {
+            justify-content: center;
+            
+            .cta-button {
+              padding: 10px 25px;
+              font-size: 15px;
+              min-width: 120px;
+            }
+          }
+        }
       }
       
       .right {
@@ -209,6 +281,26 @@
           button {
             font-size: 12px;
             padding: 4px 8px;
+          }
+        }
+        
+        .cta-section {
+          gap: 20px;
+          
+          .cta-text {
+            font-size: 14px;
+          }
+          
+          .cta-buttons {
+            flex-direction: column;
+            gap: 10px;
+            
+            .cta-button {
+              width: 100%;
+              padding: 12px 20px;
+              font-size: 14px;
+              min-width: auto;
+            }
           }
         }
       }

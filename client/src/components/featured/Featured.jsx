@@ -7,6 +7,9 @@ function Featured() {
   const [filteredOptions, setFilteredOptions] = useState([]);
   const navigate = useNavigate();
   
+  // Get current user from localStorage
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  
   // Complete list of all available options
   const allOptions = [
     "AI Artists",
@@ -103,33 +106,57 @@ function Featured() {
           <h1>
             Find the perfect <span>freelance</span> services for your business
           </h1>
-          <div className="search">
-            <div className="searchInput">
-              <img src="./img/search-line.png" alt="" />
-              <input
-                type="search"
-                list="browsers"
-                placeholder='Try "Gig Title"'
-                onChange={handleInputChange}
-                onInput={handleInputSelect}
-                value={input}
-                onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-              />
-              <datalist id="browsers">
-                {filteredOptions.map((option, index) => (
-                  <option key={index} value={option}></option>
-                ))}
-              </datalist>
+          {currentUser ? (
+            <>
+              <div className="search">
+                <div className="searchInput">
+                  <img src="./img/search-line.png" alt="" />
+                  <input
+                    type="search"
+                    list="browsers"
+                    placeholder='Try "Gig Title"'
+                    onChange={handleInputChange}
+                    onInput={handleInputSelect}
+                    value={input}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+                  />
+                  <datalist id="browsers">
+                    {filteredOptions.map((option, index) => (
+                      <option key={index} value={option}></option>
+                    ))}
+                  </datalist>
+                </div>
+                <button onClick={handleSubmit}>Search</button>
+              </div>
+              <div className="popular">
+                <span>Popular:</span>
+                <button>Web Design</button>
+                <button>WordPress</button>
+                <button>Logo Design</button>
+                <button>AI Services</button>
+              </div>
+            </>
+          ) : (
+            <div className="cta-section">
+              <p className="cta-text">
+                Join thousands of freelancers and clients on SkillAble
+              </p>
+              <div className="cta-buttons">
+                <button 
+                  className="cta-button primary" 
+                  onClick={() => navigate('/register')}
+                >
+                  Get Started
+                </button>
+                <button 
+                  className="cta-button secondary" 
+                  onClick={() => navigate('/login')}
+                >
+                  Sign In
+                </button>
+              </div>
             </div>
-            <button onClick={handleSubmit}>Search</button>
-          </div>
-          <div className="popular">
-            <span>Popular:</span>
-            <button>Web Design</button>
-            <button>WordPress</button>
-            <button>Logo Design</button>
-            <button>AI Services</button>
-          </div>
+          )}
         </div>
         <div className="right">
           <img src="./img/intern.jpg" alt="" />
