@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Gig.scss";
 import Slider from "infinite-react-carousel";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
@@ -9,6 +9,7 @@ import FollowButton from "../../components/followButton/FollowButton";
 
 function Gig() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const queryClient = useQueryClient();
@@ -64,6 +65,21 @@ function Gig() {
     },
   });
 
+  // Create conversation mutation
+  const createConversationMutation = useMutation({
+    mutationFn: (conversationData) => {
+      return newRequest.post("/conversations", conversationData);
+    },
+    onSuccess: (response) => {
+      // Navigate to the message page with the conversation ID
+      navigate(`/message/${response.data.id}`);
+    },
+    onError: (error) => {
+      console.error("Error creating conversation:", error);
+      alert("Failed to create conversation. Please try again.");
+    }
+  });
+
   // Handle save gig
   const handleSaveGig = () => {
     if (!currentUser) {
@@ -88,6 +104,25 @@ function Gig() {
       navigator.clipboard.writeText(window.location.href);
       alert("Link copied to clipboard!");
     }
+  };
+
+  // Handle message button click
+  const handleMessage = () => {
+    if (!currentUser) {
+      alert("You need to be logged in to send messages!");
+      return;
+    }
+    
+    // Don't allow sellers to message themselves
+    if (currentUser._id === userId) {
+      alert("You cannot message yourself!");
+      return;
+    }
+    
+    // Create the conversation
+    createConversationMutation.mutate({
+      to: userId
+    });
   };
 
   const {
@@ -180,7 +215,12 @@ function Gig() {
                       </div>
                     )}
                     <div className="seller-actions">
-                      <button>Contact Me</button>
+                      <button 
+                        onClick={handleMessage}
+                        disabled={createConversationMutation.isLoading}
+                      >
+                        {createConversationMutation.isLoading ? "Creating..." : "Message Seller"}
+                      </button>
                       <FollowButton userId={userId} size="medium" />
                     </div>
                   </div>

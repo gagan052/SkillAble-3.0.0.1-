@@ -463,21 +463,51 @@
                 padding: 12px 20px;
                 transition: all 0.3s ease;
                 box-shadow: 0 2px 8px rgba(29, 191, 115, 0.3);
+                position: relative;
+                overflow: hidden;
+                
+                // Add message icon
+                &::before {
+                  content: "💬";
+                  margin-right: 8px;
+                  font-size: 16px;
+                }
                 
                 &:hover {
                   transform: translateY(-2px);
                   box-shadow: 0 4px 12px rgba(29, 191, 115, 0.4);
+                  background: linear-gradient(135deg, #18a367 0%, #159a5f 100%);
+                }
+                
+                &:active {
+                  transform: translateY(0);
+                  box-shadow: 0 2px 4px rgba(29, 191, 115, 0.3);
+                }
+                
+                &:disabled {
+                  background: #ccc;
+                  cursor: not-allowed;
+                  transform: none;
+                  box-shadow: none;
+                  
+                  &::before {
+                    content: "⏳";
+                  }
                 }
                 
                 @media (min-width: 768px) {
                   font-size: 16px;
-                  padding: 10px;
+                  padding: 10px 16px;
                   min-width: 120px;
                   flex: none;
                   
                   &:hover {
                     transform: none;
                     box-shadow: 0 2px 8px rgba(29, 191, 115, 0.3);
+                  }
+                  
+                  &:active {
+                    transform: scale(0.98);
                   }
                 }
               }
