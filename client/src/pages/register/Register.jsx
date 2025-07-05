@@ -9,6 +9,7 @@ function Register() {
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({
     username: "",
     email: "",
@@ -31,6 +32,10 @@ function Register() {
     setUser((prev) => {
       return { ...prev, isSeller: e.target.checked };
     });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (e) => {
@@ -112,14 +117,24 @@ function Register() {
               
               <div className="form-group">
                 <label htmlFor="password">Password *</label>
-                <input 
-                  id="password"
-                  name="password" 
-                  type="password" 
-                  placeholder="Create a strong password"
-                  onChange={handleChange}
-                  required
-                />
+                <div className="password-input-wrapper">
+                  <input 
+                    id="password"
+                    name="password" 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder="Create a strong password"
+                    onChange={handleChange}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={togglePasswordVisibility}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? "👁️" : "👁️‍🗨️"}
+                  </button>
+                </div>
               </div>
               
               <div className="form-group">
