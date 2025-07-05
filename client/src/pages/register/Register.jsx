@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import upload from "../../utils/upload";
 import "./Register.scss";
-// import newRequest from "../../../../api/utils/newRequest";
 import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -33,6 +32,7 @@ function Register() {
       return { ...prev, isSeller: e.target.checked };
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -67,104 +67,155 @@ function Register() {
       setLoading(false);
     }
   };
-  
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError(null);
-  //   setLoading(true);
-  
-  //   try {
-  //     console.log("🔹 Sending API Request...");
-  
-  //     const response = await newRequest.post("/auth/register", {
-  //       username: user.username,
-  //       email: user.email,
-  //       password: user.password,
-  //       country: user.country,
-  //       isSeller: user.isSeller,
-  //       desc: user.desc,
-  //       img: file ? await upload(file) : "",
-  //     }, {
-  //       headers: {
-  //         "Content-Type": "application/json"
-  //       }
-  //     });
-  
-  //     console.log("✅ Registration Success:", response.data);
-  //     navigate("/login");
-  
-  //   } catch (err) {
-  //     console.error("❌ API Error:", err);
-  //     setError(err.response?.data?.message || err.message || "Something went wrong");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+
   return (
     <div className="register">
-      <form onSubmit={handleSubmit}>
-        {error && <div className="error">{error}</div>}
-        <div className="left">
-          <h1>Create a new account</h1>
-          <label htmlFor="">Username</label>
-          <input
-            name="username"
-            type="text"
-            placeholder="johndoe"
-            onChange={handleChange}
-          />
-          <label htmlFor="">Email</label>
-          <input
-            name="email"
-            type="email"
-            placeholder="email"
-            onChange={handleChange}
-          />
-          <label htmlFor="">Password</label>
-          <input name="password" type="password" onChange={handleChange} />
-          <label htmlFor="">Profile Picture</label>
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-          <label htmlFor="">Country</label>
-          <input
-            name="country"
-            type="text"
-            placeholder="Usa"
-            onChange={handleChange}
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? "Creating Account..." : "Register"}
-          </button>
-          <p>
-            Already have an account? <Link to="/login">Sign in</Link>
-          </p>
-        </div>
-        <div className="right">
-          <h1>I want to become a seller</h1>
-          <div className="toggle">
-            <label htmlFor="">Activate the seller account</label>
-            <label className="switch">
-              <input type="checkbox" onChange={handleSeller} />
-              <span className="slider round"></span>
-            </label>
+      <div className="register-container">
+        <form onSubmit={handleSubmit}>
+          {error && (
+            <div className="error-message">
+              <span className="error-icon">⚠️</span>
+              <p>{error}</p>
+            </div>
+          )}
+          
+          <div className="form-sections">
+            <div className="left">
+              <div className="section-header">
+                <h1>Create a new account</h1>
+                <p>Join thousands of freelancers and clients on SkillAble</p>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="username">Username *</label>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="Enter your username"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="email">Email *</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="password">Password *</label>
+                <input 
+                  id="password"
+                  name="password" 
+                  type="password" 
+                  placeholder="Create a strong password"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="country">Country *</label>
+                <input
+                  id="country"
+                  name="country"
+                  type="text"
+                  placeholder="Enter your country"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="profile-picture">Profile Picture</label>
+                <div className="file-input-wrapper">
+                  <input 
+                    id="profile-picture"
+                    type="file" 
+                    onChange={(e) => setFile(e.target.files[0])}
+                    accept="image/*"
+                  />
+                  <span className="file-input-text">
+                    {file ? file.name : "Choose a profile picture"}
+                  </span>
+                </div>
+              </div>
+              
+              <button type="submit" disabled={loading} className="submit-btn">
+                {loading ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    Creating Account...
+                  </>
+                ) : (
+                  "Create Account"
+                )}
+              </button>
+              
+              <div className="login-link">
+                <p>
+                  Already have an account? <Link to="/login">Sign in</Link>
+                </p>
+              </div>
+            </div>
+            
+            <div className="right">
+              <div className="section-header">
+                <h1>Become a Seller</h1>
+                <p>Start offering your services to clients worldwide</p>
+              </div>
+              
+              <div className="form-group">
+                <div className="toggle-section">
+                  <label htmlFor="seller-toggle">Activate seller account</label>
+                  <label className="switch">
+                    <input 
+                      id="seller-toggle"
+                      type="checkbox" 
+                      onChange={handleSeller}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </div>
+              </div>
+              
+              {user.isSeller && (
+                <>
+                  <div className="form-group">
+                    <label htmlFor="phone">Phone Number</label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="+1 234 567 89"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="description">Description</label>
+                    <textarea
+                      id="description"
+                      placeholder="Tell us about yourself and your services..."
+                      name="desc"
+                      rows="6"
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-          <label htmlFor="">Phone Number</label>
-          <input
-            name="phone"
-            type="text"
-            placeholder="+1 234 567 89"
-            onChange={handleChange}
-          />
-          <label htmlFor="">Description</label>
-          <textarea
-            placeholder="A short description of yourself"
-            name="desc"
-            id=""
-            cols="30"
-            rows="10"
-            onChange={handleChange}
-          ></textarea>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
