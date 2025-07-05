@@ -127,21 +127,25 @@ function Gig() {
                   src={dataUser.img || "public/img/noavatar.jpg"}
                   alt=""
                 />
-                <span>{dataUser.username}</span>
-                <div className="user-stats">
-                  <span className="followers">{dataUser.followersCount || 0} followers</span>
-                  <FollowButton userId={userId} size="medium" />
-                </div>
-                {!isNaN(data.totalStars / data.starNumber) && (
-                  <div className="stars">
-                    {Array(Math.round(data.totalStars / data.starNumber))
-                      .fill()
-                      .map((item, i) => (
-                        <img src="/img/star.png" alt="" key={i} />
-                      ))}
-                    <span>{Math.round(data.totalStars / data.starNumber)}</span>
+                <div className="user-info">
+                  <div className="user-name-stars">
+                    <span className="username">{dataUser.username}</span>
+                    {!isNaN(data.totalStars / data.starNumber) && (
+                      <div className="stars">
+                        {Array(Math.round(data.totalStars / data.starNumber))
+                          .fill()
+                          .map((item, i) => (
+                            <img src="/img/star.png" alt="" key={i} />
+                          ))}
+                        <span>{Math.round(data.totalStars / data.starNumber)}</span>
+                      </div>
+                    )}
                   </div>
-                )}
+                  <div className="user-stats">
+                    <span className="followers">{dataUser.followersCount || 0} followers</span>
+                    <FollowButton userId={userId} size="medium" />
+                  </div>
+                </div>
               </div>
             )}
             <Slider slidesToShow={1} arrowsScroll={1} className="slider">
