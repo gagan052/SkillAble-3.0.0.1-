@@ -61,40 +61,67 @@
       .user {
         display: flex;
         align-items: flex-start;
-        gap: 12px;
+        gap: 15px;
         flex-wrap: wrap;
-        padding: 15px 0;
-        border-bottom: 1px solid #f0f0f0;
-        margin-bottom: 15px;
-        // background-color: yellow;
+        padding: 20px;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
 
         @media (min-width: 768px) {
           padding: 0;
-          border-bottom: none;
+          border: none;
+          border-radius: 0;
+          background: transparent;
+          box-shadow: none;
           margin-bottom: 0;
           align-items: center;
+          gap: 12px;
+          
+          &:hover {
+            box-shadow: none;
+          }
         }
 
         .pp {
-          width: 32px;
-          height: 32px;
+          width: 50px;
+          height: 50px;
           border-radius: 50%;
           object-fit: cover;
           flex-shrink: 0;
-          border: 2px solid #f0f0f0;
-          // background-color: yellow;
+          border: 3px solid #f8f9fa;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          transition: all 0.3s ease;
+          
+          &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          }
           
           @media (min-width: 768px) {
             width: 32px;
             height: 32px;
-            border: none;
+            border: 2px solid #f0f0f0;
+            box-shadow: none;
+            
+            &:hover {
+              transform: none;
+              box-shadow: none;
+            }
           }
         }
 
         .user-info {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 12px;
           flex: 1;
           min-width: 0;
           
@@ -108,7 +135,7 @@
         .user-name-stars {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
           flex-wrap: wrap;
           
           @media (min-width: 768px) {
@@ -117,14 +144,15 @@
         }
 
         .username {
-          font-size: 14px;
+          font-size: 16px;
           font-weight: 600;
           word-break: break-word;
           color: #333;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          max-width: 120px;
+          max-width: 150px;
+          line-height: 1.2;
           
           @media (min-width: 768px) {
             font-size: 14px;
@@ -139,7 +167,7 @@
         .user-stats {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           flex-wrap: wrap;
           
           @media (min-width: 768px) {
@@ -147,18 +175,22 @@
           }
           
           .followers {
-            font-size: 12px;
+            font-size: 13px;
             color: #666;
-            background-color: #f8f9fa;
-            padding: 4px 8px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 6px 12px;
+            border-radius: 20px;
             white-space: nowrap;
+            border: 1px solid #e9ecef;
+            font-weight: 500;
             
             @media (min-width: 768px) {
               font-size: 12px;
-              background-color: transparent;
+              background: transparent;
               padding: 0;
               border-radius: 0;
+              border: none;
+              font-weight: normal;
             }
           }
         }
@@ -166,34 +198,34 @@
         .stars {
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 6px;
           
           @media (min-width: 768px) {
             gap: 5px;
           }
 
           img {
-            height: 14px;
-            width: 14px;
-            // background-color: yellow;
+            height: 16px;
+            width: 16px;
+            filter: drop-shadow(0 1px 2px rgba(255, 193, 8, 0.3));
             
             @media (min-width: 768px) {
               height: 14px;
               width: 14px;
+              filter: none;
             }
           }
 
           span {
-            font-size: 13px;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 700;
             color: #ffc108;
-            max-width: none;
-            white-space: nowrap;
-            overflow: visible;
-            text-overflow: clip;
+            text-shadow: 0 1px 2px rgba(255, 193, 8, 0.2);
             
             @media (min-width: 768px) {
               font-size: 14px;
+              font-weight: bold;
+              text-shadow: none;
             }
           }
         }
@@ -255,32 +287,68 @@
         .user {
           display: flex;
           align-items: flex-start;
-          gap: 15px;
+          gap: 20px;
           flex-wrap: wrap;
+          padding: 25px;
+          border: 1px solid #e9ecef;
+          border-radius: 16px;
+          background: #ffffff;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+          transition: all 0.3s ease;
+          
+          &:hover {
+            box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+          }
           
           @media (min-width: 768px) {
             align-items: center;
             gap: 20px;
             flex-wrap: nowrap;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            
+            &:hover {
+              box-shadow: none;
+              transform: none;
+            }
           }
 
           img {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: cover;
             flex-shrink: 0;
+            border: 4px solid #f8f9fa;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            
+            &:hover {
+              transform: scale(1.05);
+              box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            }
             
             @media (min-width: 768px) {
               width: 100px;
               height: 100px;
+              border: 3px solid #f8f9fa;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+              
+              &:hover {
+                transform: scale(1.02);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+              }
             }
           }
 
           .info {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 15px;
             flex: 1;
             min-width: 0;
             
@@ -289,22 +357,36 @@
             }
             
             span {
-              font-size: 14px;
-              font-weight: 500;
+              font-size: 18px;
+              font-weight: 600;
               word-break: break-word;
+              color: #333;
+              line-height: 1.3;
               
               @media (min-width: 768px) {
                 font-size: 16px;
+                font-weight: 500;
               }
             }
             
             .followers {
-              font-size: 11px;
-              color: #777;
-              margin-top: -2px;
+              font-size: 14px;
+              color: #666;
+              background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+              padding: 8px 16px;
+              border-radius: 25px;
+              border: 1px solid #e9ecef;
+              font-weight: 500;
+              display: inline-block;
+              width: fit-content;
               
               @media (min-width: 768px) {
                 font-size: 12px;
+                background: transparent;
+                padding: 0;
+                border-radius: 0;
+                border: none;
+                font-weight: normal;
                 margin-top: -5px;
               }
             }
@@ -312,58 +394,91 @@
             .stars {
               display: flex;
               align-items: center;
-              gap: 3px;
-              margin-top: 5px;
+              gap: 8px;
+              margin-top: 8px;
               
               @media (min-width: 768px) {
                 gap: 5px;
+                margin-top: 5px;
               }
 
               img {
-                height: 12px;
-                width: 12px;
+                height: 18px;
+                width: 18px;
+                filter: drop-shadow(0 1px 3px rgba(255, 193, 8, 0.4));
+                border: none;
+                box-shadow: none;
+                
+                &:hover {
+                  transform: none;
+                  box-shadow: none;
+                }
                 
                 @media (min-width: 768px) {
                   height: 14px;
                   width: 14px;
+                  filter: none;
                 }
               }
 
               span {
-                font-size: 12px;
-                font-weight: bold;
+                font-size: 16px;
+                font-weight: 700;
                 color: #ffc108;
+                text-shadow: 0 1px 3px rgba(255, 193, 8, 0.3);
+                background: none;
+                padding: 0;
+                border: none;
+                border-radius: 0;
                 
                 @media (min-width: 768px) {
                   font-size: 14px;
+                  font-weight: bold;
+                  text-shadow: none;
                 }
               }
             }
 
             .seller-actions {
               display: flex;
-              gap: 8px;
-              margin-top: 10px;
+              gap: 12px;
+              margin-top: 15px;
               flex-wrap: wrap;
               
               @media (min-width: 768px) {
                 gap: 10px;
+                margin-top: 10px;
               }
               
               button {
                 flex: 1;
-                min-width: 120px;
-                background-color: #1dbf73;
-                border-radius: 5px;
+                min-width: 140px;
+                background: linear-gradient(135deg, #1dbf73 0%, #18a367 100%);
+                border-radius: 8px;
                 border: none;
                 color: white;
-                font-size: 14px;
+                font-size: 15px;
+                font-weight: 600;
                 cursor: pointer;
-                padding: 8px 12px;
+                padding: 12px 20px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(29, 191, 115, 0.3);
+                
+                &:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 4px 12px rgba(29, 191, 115, 0.4);
+                }
                 
                 @media (min-width: 768px) {
                   font-size: 16px;
                   padding: 10px;
+                  min-width: 120px;
+                  flex: none;
+                  
+                  &:hover {
+                    transform: none;
+                    box-shadow: 0 2px 8px rgba(29, 191, 115, 0.3);
+                  }
                 }
               }
             }
@@ -720,16 +835,101 @@
         }
         
         .user {
+          padding: 18px;
+          gap: 12px;
+          
+          .pp {
+            width: 45px;
+            height: 45px;
+            border-width: 2px;
+          }
+          
+          .user-info {
+            gap: 10px;
+          }
+          
+          .username {
+            font-size: 15px;
+            max-width: 120px;
+          }
+          
           .user-stats {
-            flex-direction: column;
-            align-items: flex-start;
+            gap: 10px;
+            
+            .followers {
+              font-size: 12px;
+              padding: 5px 10px;
+            }
+          }
+          
+          .stars {
             gap: 5px;
+            
+            img {
+              height: 14px;
+              width: 14px;
+            }
+            
+            span {
+              font-size: 13px;
+            }
           }
         }
         
         .slider {
           img {
             max-height: 250px;
+          }
+        }
+        
+        .seller {
+          .user {
+            padding: 20px;
+            gap: 15px;
+            
+            img {
+              width: 70px;
+              height: 70px;
+              border-width: 3px;
+            }
+            
+            .info {
+              gap: 12px;
+              
+              span {
+                font-size: 16px;
+              }
+              
+              .followers {
+                font-size: 13px;
+                padding: 6px 12px;
+              }
+              
+              .stars {
+                gap: 6px;
+                margin-top: 6px;
+                
+                img {
+                  height: 16px;
+                  width: 16px;
+                }
+                
+                span {
+                  font-size: 14px;
+                }
+              }
+              
+              .seller-actions {
+                gap: 10px;
+                margin-top: 12px;
+                
+                button {
+                  min-width: 120px;
+                  font-size: 14px;
+                  padding: 10px 16px;
+                }
+              }
+            }
           }
         }
       }
