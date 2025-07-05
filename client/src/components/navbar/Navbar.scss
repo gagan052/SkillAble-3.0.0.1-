@@ -304,11 +304,113 @@
           padding: 0 20px;
         }
 
-        img {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          object-fit: cover;
+        .user-profile {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          padding: 4px 8px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 20px;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          
+          &:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+          
+          @media (max-width: 768px) {
+            border-color: rgba(0, 0, 0, 0.2);
+            
+            &:hover {
+              border-color: rgba(0, 0, 0, 0.4);
+              background-color: rgba(0, 0, 0, 0.05);
+            }
+          }
+
+          img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            
+            @media (max-width: 768px) {
+              width: 32px;
+              height: 32px;
+            }
+          }
+          
+          .dropdown-icon {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+            
+            @media (max-width: 768px) {
+              color: rgba(0, 0, 0, 0.5);
+            }
+          }
+          
+          &:hover .dropdown-icon {
+            color: rgba(255, 255, 255, 0.9);
+            
+            @media (max-width: 768px) {
+              color: rgba(0, 0, 0, 0.7);
+            }
+          }
+        }
+        
+        .username-container {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          padding: 6px 10px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 20px;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          
+          &:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+          
+          @media (max-width: 768px) {
+            border-color: rgba(0, 0, 0, 0.2);
+            width: 100%;
+            justify-content: center;
+            
+            &:hover {
+              border-color: rgba(0, 0, 0, 0.4);
+              background-color: rgba(0, 0, 0, 0.05);
+            }
+          }
+          
+          .username {
+            font-weight: 500;
+            white-space: nowrap;
+            
+            @media (max-width: 768px) {
+              font-size: 16px;
+            }
+          }
+          
+          .dropdown-icon {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+            
+            @media (max-width: 768px) {
+              color: rgba(0, 0, 0, 0.5);
+            }
+          }
+          
+          &:hover .dropdown-icon {
+            color: rgba(255, 255, 255, 0.9);
+            
+            @media (max-width: 768px) {
+              color: rgba(0, 0, 0, 0.7);
+            }
+          }
         }
 
         .options {
@@ -326,6 +428,7 @@
           width: 160px;
           font-weight: 300;
           z-index: 999;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
           
           @media (max-width: 768px) {
             position: relative;
@@ -335,6 +438,7 @@
             border: none;
             box-shadow: none;
             padding: 10px 0;
+            background-color: transparent;
           }
         }
       }

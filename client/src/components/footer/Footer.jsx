@@ -1,68 +1,113 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Footer.scss";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 function Footer() {
+  const [openSections, setOpenSections] = useState({});
+
+  const toggleSection = (sectionName) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [sectionName]: !prev[sectionName]
+    }));
+  };
+
   return (
     <div className="footer">
       <div className="container">
         <div className="top">
           <div className="item">
-            <h2>Categories</h2>
-            <span>Graphics & Design</span>
-            <span>Digital Marketing</span>
-            <span>Writing & Translation</span>
-            <span>Video & Animation</span>
-            <span>Music & Audio</span>
-            <span>Programming & Tech</span>
-            <span>Data</span>
-            <span>Business</span>
-            <span>Lifestyle</span>
-            <span>Photography</span>
-            <span>Sitemap</span>
+            <h2 onClick={() => toggleSection('categories')} className="mobile-dropdown-header">
+              Categories
+              <span className="mobile-dropdown-icon">
+                {openSections.categories ? <FaChevronUp /> : <FaChevronDown />}
+              </span>
+            </h2>
+            <div className={`mobile-dropdown-content ${openSections.categories ? 'open' : ''}`}>
+              <span>Graphics & Design</span>
+              <span>Digital Marketing</span>
+              <span>Writing & Translation</span>
+              <span>Video & Animation</span>
+              <span>Music & Audio</span>
+              <span>Programming & Tech</span>
+              <span>Data</span>
+              <span>Business</span>
+              <span>Lifestyle</span>
+              <span>Photography</span>
+              <span>Sitemap</span>
+            </div>
           </div>
           <div className="item">
-            <h2>About</h2>
-            <span>Press & News</span>
-            <span>Partnerships</span>
-            <span>Privacy Policy</span>
-            <span>Terms of Service</span>
-            <span>Intellectual Property Claims</span>
-            <span>Investor Relations</span>
-            <span>Contact Sales</span>
+            <h2 onClick={() => toggleSection('about')} className="mobile-dropdown-header">
+              About
+              <span className="mobile-dropdown-icon">
+                {openSections.about ? <FaChevronUp /> : <FaChevronDown />}
+              </span>
+            </h2>
+            <div className={`mobile-dropdown-content ${openSections.about ? 'open' : ''}`}>
+              <span>Press & News</span>
+              <span>Partnerships</span>
+              <span>Privacy Policy</span>
+              <span>Terms of Service</span>
+              <span>Intellectual Property Claims</span>
+              <span>Investor Relations</span>
+              <span>Contact Sales</span>
+            </div>
           </div>
           <div className="item">
-            <h2>Support</h2>
-            <span>Help & Support</span>
-            <span>Trust & Safety</span>
-            <span>Selling on SkillAble</span>
-            <span>Buying on SkillAble</span>
+            <h2 onClick={() => toggleSection('support')} className="mobile-dropdown-header">
+              Support
+              <span className="mobile-dropdown-icon">
+                {openSections.support ? <FaChevronUp /> : <FaChevronDown />}
+              </span>
+            </h2>
+            <div className={`mobile-dropdown-content ${openSections.support ? 'open' : ''}`}>
+              <span>Help & Support</span>
+              <span>Trust & Safety</span>
+              <span>Selling on SkillAble</span>
+              <span>Buying on SkillAble</span>
+            </div>
           </div>
           <div className="item">
-            <h2>Community</h2>
-            <span>Customer Success Stories</span>
-            <span>Community hub</span>
-            <span>Forum</span>
-            <span>Events</span>
-            <span>Blog</span>
-            <span>Influencers</span>
-            <span>Affiliates</span>
-            <span>Podcast</span>
-            <span>Invite a Friend</span>
-            <span>Become a Seller</span>
-            <span>Community Standards</span>
+            <h2 onClick={() => toggleSection('community')} className="mobile-dropdown-header">
+              Community
+              <span className="mobile-dropdown-icon">
+                {openSections.community ? <FaChevronUp /> : <FaChevronDown />}
+              </span>
+            </h2>
+            <div className={`mobile-dropdown-content ${openSections.community ? 'open' : ''}`}>
+              <span>Customer Success Stories</span>
+              <span>Community hub</span>
+              <span>Forum</span>
+              <span>Events</span>
+              <span>Blog</span>
+              <span>Influencers</span>
+              <span>Affiliates</span>
+              <span>Podcast</span>
+              <span>Invite a Friend</span>
+              <span>Become a Seller</span>
+              <span>Community Standards</span>
+            </div>
           </div>
           <div className="item">
-            <h2>More From SkillAble</h2>
-            <span>SkillAble Business</span>
-            <span>SkillAble Pro</span>
-            <span>SkillAble Logo Maker</span>
-            <span>SkillAble Guides</span>
-            <span>Get Inspired</span>
-            <span>SkillAble Select</span>
-            <span>ClearVoice</span>
-            <span>SkillAble Workspace</span>
-            <span>Learn</span>
-            <span>Working Not Working</span>
+            <h2 onClick={() => toggleSection('more')} className="mobile-dropdown-header">
+              More From SkillAble
+              <span className="mobile-dropdown-icon">
+                {openSections.more ? <FaChevronUp /> : <FaChevronDown />}
+              </span>
+            </h2>
+            <div className={`mobile-dropdown-content ${openSections.more ? 'open' : ''}`}>
+              <span>SkillAble Business</span>
+              <span>SkillAble Pro</span>
+              <span>SkillAble Logo Maker</span>
+              <span>SkillAble Guides</span>
+              <span>Get Inspired</span>
+              <span>SkillAble Select</span>
+              <span>ClearVoice</span>
+              <span>SkillAble Workspace</span>
+              <span>Learn</span>
+              <span>Working Not Working</span>
+            </div>
           </div>
         </div>
         <hr />

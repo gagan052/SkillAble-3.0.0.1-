@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import newRequest from "../../utils/newRequest";
 import "./Navbar.scss";
-import { FaBars, FaTimes, FaBell } from "react-icons/fa";
+import { FaBars, FaTimes, FaBell, FaChevronDown } from "react-icons/fa";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 function Navbar() {
@@ -15,6 +15,10 @@ function Navbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const mobileMenuRef = useRef(null);
+  const mobileToggleRef = useRef(null);
+  const userDropdownRef = useRef(null);
+  const usernameContainerRef = useRef(null);
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -93,6 +97,37 @@ function Navbar() {
     setNotificationOpen(false);
   }, [pathname]);
 
+  // Handle click outside to close mobile menu and user dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Close mobile menu if clicked outside
+      if (mobileOpen && 
+          mobileMenuRef.current && 
+          !mobileMenuRef.current.contains(event.target) &&
+          mobileToggleRef.current &&
+          !mobileToggleRef.current.contains(event.target)) {
+        setMobileOpen(false);
+      }
+      
+      // Close user dropdown if clicked outside
+      if (open && 
+          userDropdownRef.current && 
+          !userDropdownRef.current.contains(event.target) &&
+          usernameContainerRef.current &&
+          !usernameContainerRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    // Add event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [mobileOpen, open]);
+
   const handleLogout = async () => {
     try {
       await newRequest.post("/auth/logout");
@@ -139,16 +174,14 @@ function Navbar() {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <div className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+        <div className="mobile-menu-toggle" onClick={toggleMobileMenu} ref={mobileToggleRef}>
           {mobileOpen ? <FaTimes /> : <FaBars />}
         </div>
 
         {/* Links */}
-        <div className={`links ${mobileOpen ? "mobile-open" : ""}`}>
-          <span onClick={() => scrollToSection(".features.dark")}>SkillAble Business</span>
+        <div className={`links ${mobileOpen ? "mobile-open" : ""}`} ref={mobileMenuRef}>
+          
           <Link className="link" to="/explore" onClick={() => setMobileOpen(false)}>Explore</Link>
-          <span>English</span>
-          {!currentUser?.isSeller && <span>Become a Seller</span>}
           
           {currentUser ? (
             <>
@@ -197,18 +230,23 @@ function Navbar() {
                 )}
               </div>
               <div className="user">
-                <img
-                  src={currentUser.img || "/img/noavatar.jpg"}
-                  alt=""
-                  onClick={() => {
-                    navigate("/dashboard");
-                    setMobileOpen(false);
-                  }}
-                  style={{ cursor: "pointer" }}
-                />
-                <span onClick={() => setOpen(!open)}>{currentUser.username}</span>
+                <div className="user-profile" onClick={() => {
+                  navigate("/dashboard");
+                  setMobileOpen(false);
+                }}>
+                  <img
+                    src={currentUser.img || "/img/noavatar.jpg"}
+                    alt=""
+                    style={{ cursor: "pointer" }}
+                  />
+                  
+                </div>
+                <div className="username-container" onClick={() => setOpen(!open)} ref={usernameContainerRef}>
+                  <span className="username">{currentUser.username}</span>
+                  <FaChevronDown className="dropdown-icon" />
+                </div>
                 {open && (
-                <div className="options">
+                <div className="options" ref={userDropdownRef}>
                   {currentUser.isSeller && (
                     <>
                       <Link className="link" to="/mygigs" onClick={() => setMobileOpen(false)}>Gigs</Link>
@@ -217,7 +255,7 @@ function Navbar() {
                   )}
                   <Link className="link" to="/orders" onClick={() => setMobileOpen(false)}>Orders</Link>
                   <Link className="link" to="/messages" onClick={() => setMobileOpen(false)}>Messages</Link>
-                  <Link className="link" to="/savedGigs" onClick={() => setMobileOpen(false)}>Saved Gigs</Link>
+                  <Link className="link" to="/saved" onClick={() => setMobileOpen(false)}>Saved Gigs</Link>
                   <span className="link" onClick={() => {
                     handleLogout();
                     setMobileOpen(false);

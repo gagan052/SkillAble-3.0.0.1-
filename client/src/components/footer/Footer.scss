@@ -30,10 +30,82 @@
         h2 {
           font-size: 16px;
           color: #555;
+          
+          // Mobile dropdown header styling
+          &.mobile-dropdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+            
+            @media (min-width: 768px) {
+              cursor: default;
+              border-bottom: none;
+              padding: 0;
+            }
+            
+            &:hover {
+              @media (max-width: 767px) {
+                color: #1dbf73;
+              }
+            }
+            
+            .mobile-dropdown-icon {
+              display: flex;
+              align-items: center;
+              font-size: 12px;
+              color: #999;
+              transition: all 0.3s ease;
+              
+              @media (min-width: 768px) {
+                display: none;
+              }
+            }
+          }
         }
         
-        span {
-          font-weight: 300;
+        // Mobile dropdown content styling
+        .mobile-dropdown-content {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          overflow: hidden;
+          transition: all 0.3s ease;
+          
+          @media (max-width: 767px) {
+            max-height: 0;
+            opacity: 0;
+            gap: 0;
+            
+            &.open {
+              max-height: 500px;
+              opacity: 1;
+              gap: 15px;
+              padding-top: 10px;
+            }
+          }
+          
+          span {
+            font-weight: 300;
+            transition: color 0.3s ease;
+            
+            @media (max-width: 767px) {
+              padding: 8px 0;
+              border-bottom: 1px solid #f5f5f5;
+              
+              &:last-child {
+                border-bottom: none;
+              }
+              
+              &:hover {
+                color: #1dbf73;
+                padding-left: 5px;
+              }
+            }
+          }
         }
       }
       
@@ -54,7 +126,15 @@
         
         .item {
           width: 100%;
-          gap: 10px;
+          gap: 0;
+          
+          h2 {
+            margin-bottom: 0;
+          }
+          
+          .mobile-dropdown-content {
+            margin-top: 0;
+          }
         }
       }
     }
@@ -91,6 +171,7 @@
           flex-direction: column;
           align-items: flex-start;
           gap: 10px;
+          width: 100%;
         }
       }
       
@@ -108,6 +189,20 @@
           
           @media (max-width: 576px) {
             gap: 15px;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 15px;
+          }
+          
+          @media (max-width: 480px) {
+            gap: 12px;
+          }
+          
+          img {
+            @media (max-width: 576px) {
+              width: 20px;
+              height: 20px;
+            }
           }
         }
 
@@ -115,6 +210,24 @@
           display: flex;
           align-items: center;
           gap: 10px;
+          
+          @media (max-width: 576px) {
+            gap: 8px;
+            font-size: 14px;
+          }
+          
+          img {
+            @media (max-width: 576px) {
+              width: 18px;
+              height: 18px;
+            }
+          }
+          
+          span {
+            @media (max-width: 576px) {
+              font-size: 14px;
+            }
+          }
         }
         
         @media (max-width: 768px) {
@@ -123,13 +236,129 @@
         
         @media (max-width: 576px) {
           width: 100%;
-          justify-content: flex-start;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+          gap: 15px;
+        }
+        
+        @media (max-width: 480px) {
+          gap: 12px;
         }
       }
       
       @media (max-width: 768px) {
         flex-direction: column;
         align-items: flex-start;
+        gap: 25px;
+      }
+      
+      @media (max-width: 576px) {
+        gap: 20px;
+        align-items: center;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// Additional mobile-specific improvements
+@media (max-width: 767px) {
+  .footer {
+    .container {
+      .top {
+        .item {
+          border-bottom: 1px solid #f0f0f0;
+          padding-bottom: 15px;
+          
+          &:last-child {
+            border-bottom: none;
+          }
+          
+          h2.mobile-dropdown-header {
+            user-select: none;
+            
+            &:active {
+              background-color: rgba(29, 191, 115, 0.05);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Extra small devices (phones, 480px and down)
+@media (max-width: 480px) {
+  .footer {
+    margin: 30px 0px;
+    
+    .container {
+      padding: 0 15px;
+      
+      .top {
+        gap: 20px;
+        
+        .item {
+          h2.mobile-dropdown-header {
+            font-size: 15px;
+            padding: 8px 0;
+          }
+          
+          .mobile-dropdown-content {
+            span {
+              font-size: 14px;
+              padding: 6px 0;
+            }
+          }
+        }
+      }
+      
+      .bottom {
+        gap: 15px;
+        
+        .left {
+          span {
+            font-size: 12px;
+          }
+          
+          h2 {
+            font-size: 18px;
+          }
+        }
+        
+        .right {
+          gap: 12px;
+          
+          .social {
+            gap: 10px;
+            margin-bottom: 12px;
+            
+            img {
+              width: 18px;
+              height: 18px;
+            }
+          }
+          
+          .link {
+            gap: 6px;
+            font-size: 13px;
+            
+            img {
+              width: 16px;
+              height: 16px;
+            }
+            
+            span {
+              font-size: 13px;
+            }
+          }
+          
+          img[src*="accessibility"] {
+            width: 20px;
+            height: 20px;
+          }
+        }
       }
     }
   }
