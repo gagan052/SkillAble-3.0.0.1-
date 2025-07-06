@@ -282,7 +282,7 @@ const Stories = () => {
         <div className="error">Error loading stories</div>
       ) : storyUsers.length > 0 ? (
         <div className="stories-wrapper">
-          {showScrollButtons && (
+          {/* {showScrollButtons && (
             <button 
               className="scroll-button left"
               onClick={() => scrollStories('left')}
@@ -290,7 +290,7 @@ const Stories = () => {
             >
               ‹
             </button>
-          )}
+          )} */}
           
           <div 
             className="stories-scroll"
@@ -329,7 +329,7 @@ const Stories = () => {
             })}
           </div>
           
-          {showScrollButtons && (
+          {/* {showScrollButtons && (
             <button 
               className="scroll-button right"
               onClick={() => scrollStories('right')}
@@ -337,7 +337,7 @@ const Stories = () => {
             >
               ›
             </button>
-          )}
+          )} */}
           
           {/* Story Viewer */}
           {activeStory && currentStory && (
