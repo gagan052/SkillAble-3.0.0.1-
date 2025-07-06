@@ -48,15 +48,9 @@ const ChatBot = () => {
       const welcomeMessage = {
         id: Date.now(),
         type: 'bot',
-        content: `Hello! I'm SkillAble Assistant, your AI-powered helper. I can help you with:
-        
-• Finding the perfect gigs for your needs
-• Understanding how SkillAble works
-• Tips for buyers and sellers
-• General questions about our platform
-
-How can I assist you today?`,
-        timestamp: new Date().toISOString()
+        content: `Hello! I'm SkillAble Assistant, your AI-powered helper. I can help you with:\n\n• Finding the perfect gigs for your needs\n• Understanding how SkillAble works\n• Tips for buyers and sellers\n• General questions about our platform\n\nHow can I assist you today?`,
+        timestamp: new Date().toISOString(),
+        animate: true
       };
       setMessages([welcomeMessage]);
     }
@@ -69,7 +63,8 @@ How can I assist you today?`,
       id: Date.now(),
       type: 'user',
       content: inputMessage.trim(),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      animate: true
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -87,12 +82,11 @@ How can I assist you today?`,
         id: Date.now() + 1,
         type: 'bot',
         content: response.data.response,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        animate: true
       };
 
       setMessages(prev => [...prev, botMessage]);
-      
-      // Set conversation ID if this is the first message
       if (!conversationId && response.data.conversationId) {
         setConversationId(response.data.conversationId);
       }
@@ -102,7 +96,8 @@ How can I assist you today?`,
         id: Date.now() + 1,
         type: 'bot',
         content: 'Sorry, I encountered an error. Please try again in a moment.',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        animate: true
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -140,6 +135,8 @@ How can I assist you today?`,
         className={`chatbot-toggle ${isOpen ? 'hidden' : ''}`}
         onClick={toggleChat}
         aria-label="Open chat assistant"
+        tabIndex={0}
+        onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && toggleChat()}
       >
         <FaComments />
         <span className="chatbot-toggle-text">Need help?</span>
@@ -147,20 +144,26 @@ How can I assist you today?`,
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="chatbot-window">
+        <div className="chatbot-window" role="dialog" aria-modal="true" aria-label="SkillAble Chat Assistant">
           {/* Header */}
           <div className="chatbot-header">
             <div className="chatbot-header-content">
-              <FaRobot className="chatbot-avatar" />
+              {/* Logo or Bot Avatar */}
+              { /* Try to load logo, fallback to FaRobot */ }
+              <img src="/img/logo.png" alt="SkillAble Logo" className="chatbot-logo" onError={e => { e.target.style.display = 'none'; }} style={{width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', objectFit: 'cover', marginRight: 8}} />
+              <FaRobot className="chatbot-avatar fallback-avatar" style={{display: 'none'}} />
               <div className="chatbot-info">
                 <h3>SkillAble Assistant</h3>
                 <span className="chatbot-status">AI-powered helper</span>
+                <div className="chatbot-subtitle">Ask me anything about SkillAble!</div>
               </div>
             </div>
             <button 
               className="chatbot-close"
               onClick={toggleChat}
               aria-label="Close chat"
+              tabIndex={0}
+              onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && toggleChat()}
             >
               <FaTimes />
             </button>
@@ -171,7 +174,9 @@ How can I assist you today?`,
             {messages.map((message) => (
               <div 
                 key={message.id} 
-                className={`message ${message.type}`}
+                className={`message ${message.type} ${message.animate ? 'pop-in' : ''}`}
+                tabIndex={0}
+                aria-label={message.type === 'bot' ? 'Assistant message' : 'Your message'}
               >
                 <div className="message-avatar">
                   {message.type === 'bot' ? <FaRobot /> : <FaUser />}
@@ -188,10 +193,9 @@ How can I assist you today?`,
                 </div>
               </div>
             ))}
-            
             {/* Loading indicator */}
             {isLoading && (
-              <div className="message bot">
+              <div className="message bot pop-in">
                 <div className="message-avatar">
                   <FaRobot />
                 </div>
@@ -206,7 +210,6 @@ How can I assist you today?`,
                 </div>
               </div>
             )}
-            
             <div ref={messagesEndRef} />
           </div>
 
@@ -222,12 +225,15 @@ How can I assist you today?`,
                 rows={1}
                 disabled={isLoading}
                 className="message-input"
+                aria-label="Type your message"
+                tabIndex={0}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim() || isLoading}
                 className="send-button"
                 aria-label="Send message"
+                tabIndex={0}
               >
                 <FaPaperPlane />
               </button>
