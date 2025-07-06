@@ -64,51 +64,131 @@ const Messages = () => {
   return (
     <div className="messages">
       {isLoading ? (
-        "loading"
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading conversations...</p>
+        </div>
       ) : error ? (
-        "error"
+        <div className="error-container">
+          <p>Error loading conversations. Please try again later.</p>
+        </div>
       ) : (
         <div className="container">
           <div className="title">
             <h1>Messages</h1>
+            <span className="conversation-count">{data.length} conversations</span>
           </div>
-          <table>
-            <tr>
-              <th>{currentUser.isSeller ? "Buyer" : "Seller"}</th>
-              <th>Last Message</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
+          
+          {/* Desktop Table View */}
+          <div className="desktop-view">
+            <table>
+              <thead>
+                <tr>
+                  <th>{currentUser.isSeller ? "Buyer" : "Seller"}</th>
+                  <th>Last Message</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((c) => (
+                  <tr
+                    className={
+                      ((currentUser.isSeller && !c.readBySeller) ||
+                        (!currentUser.isSeller && !c.readByBuyer)) &&
+                      "active"
+                    }
+                    key={c.id}
+                  >
+                    <td>
+                      <div className="user-cell">
+                        <img 
+                          src={users[currentUser.isSeller ? c.buyerId : c.sellerId]?.img || "/img/noavatar.jpg"} 
+                          alt="Profile" 
+                          className="user-avatar"
+                        />
+                        <span className="username">
+                          {users[currentUser.isSeller ? c.buyerId : c.sellerId]?.username || 
+                           (currentUser.isSeller ? c.buyerId : c.sellerId)}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <Link to={`/message/${c.id}`} className="link">
+                        {c?.lastMessage?.substring(0, 100)}...
+                      </Link>
+                    </td>
+                    <td>{moment(c.updatedAt).fromNow()}</td>
+                    <td>
+                      {((currentUser.isSeller && !c.readBySeller) ||
+                        (!currentUser.isSeller && !c.readByBuyer)) && (
+                        <button onClick={() => handleRead(c.id)}>
+                          Mark as Read
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="mobile-view">
             {data.map((c) => (
-              <tr
-                className={
+              <div
+                className={`conversation-card ${
                   ((currentUser.isSeller && !c.readBySeller) ||
                     (!currentUser.isSeller && !c.readByBuyer)) &&
-                  "active"
-                }
+                  "unread"
+                }`}
                 key={c.id}
               >
-                <td>
-                  {users[currentUser.isSeller ? c.buyerId : c.sellerId]?.username || 
-                   (currentUser.isSeller ? c.buyerId : c.sellerId)}
-                </td>
-                <td>
-                  <Link to={`/message/${c.id}`} className="link">
-                    {c?.lastMessage?.substring(0, 100)}...
-                  </Link>
-                </td>
-                <td>{moment(c.updatedAt).fromNow()}</td>
-                <td>
-                  {((currentUser.isSeller && !c.readBySeller) ||
-                    (!currentUser.isSeller && !c.readByBuyer)) && (
-                    <button onClick={() => handleRead(c.id)}>
-                      Mark as Read
-                    </button>
-                  )}
-                </td>
-              </tr>
+                <Link to={`/message/${c.id}`} className="card-link">
+                  <div className="card-header">
+                    <img 
+                      src={users[currentUser.isSeller ? c.buyerId : c.sellerId]?.img || "/img/noavatar.jpg"} 
+                      alt="Profile" 
+                      className="user-avatar"
+                    />
+                    <div className="user-info">
+                      <h3 className="username">
+                        {users[currentUser.isSeller ? c.buyerId : c.sellerId]?.username || 
+                         (currentUser.isSeller ? c.buyerId : c.sellerId)}
+                      </h3>
+                      <span className="timestamp">{moment(c.updatedAt).fromNow()}</span>
+                    </div>
+                    {((currentUser.isSeller && !c.readBySeller) ||
+                      (!currentUser.isSeller && !c.readByBuyer)) && (
+                      <div className="unread-indicator"></div>
+                    )}
+                  </div>
+                  <div className="card-content">
+                    <p className="last-message">
+                      {c?.lastMessage?.substring(0, 80)}...
+                    </p>
+                  </div>
+                </Link>
+                {((currentUser.isSeller && !c.readBySeller) ||
+                  (!currentUser.isSeller && !c.readByBuyer)) && (
+                  <button 
+                    className="mark-read-btn"
+                    onClick={() => handleRead(c.id)}
+                  >
+                    Mark as Read
+                  </button>
+                )}
+              </div>
             ))}
-          </table>
+          </div>
+
+          {data.length === 0 && (
+            <div className="empty-state">
+              <div className="empty-icon">💬</div>
+              <h3>No conversations yet</h3>
+              <p>Start a conversation by messaging a seller or buyer</p>
+            </div>
+          )}
         </div>
       )}
     </div>

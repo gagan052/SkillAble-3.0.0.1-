@@ -1,8 +1,10 @@
 .message {
   display: flex;
   justify-content: center;
-  height: calc(100vh - 80px); /* Adjust height to account for navbar */
-  background-color: #e5ded8; /* WhatsApp background color */
+  height: calc(100vh - 80px);
+  background-color: #e5ded8;
+  margin-top: 20px;
+
   
   .container {
     width: 100%;
@@ -16,30 +18,60 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     
     .chat-header {
+      height: 60px;
       display: flex;
       align-items: center;
-      padding: 10px 16px;
+      padding: 12px 16px;
       background-color: #f0f2f5;
       border-radius: 8px 8px 0 0;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       z-index: 10;
+      gap: 12px;
+      border-bottom: 1px solid #e0e0e0;
+      
+      .back-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: transparent;
+        transition: background-color 0.2s ease;
+        text-decoration: none;
+        
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        svg {
+          width: 20px;
+          height: 20px;
+          color: #54656f;
+        }
+      }
       
       .avatar {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        margin-right: 15px;
         object-fit: cover;
+        border: 2px solid #e0e0e0;
+        flex-shrink: 0;
       }
       
       .user-info {
         flex: 1;
+        min-width: 0;
         
         .name {
-          font-weight: 500;
+          font-weight: 600;
           font-size: 16px;
           color: #111b21;
           margin-bottom: 2px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         
         .status {
@@ -56,34 +88,77 @@
             background-color: #25d366;
             border-radius: 50%;
             margin-right: 5px;
+            flex-shrink: 0;
           }
         }
       }
       
       .header-icons {
         display: flex;
-        gap: 20px;
+        gap: 8px;
+        flex-shrink: 0;
         
         .icon {
-          color: #54656f;
-          font-size: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background-color: transparent;
+          border: none;
           cursor: pointer;
+          transition: background-color 0.2s ease;
           
           &:hover {
-            color: #128c7e;
+            background-color: rgba(0, 0, 0, 0.1);
+          }
+          
+          svg {
+            width: 20px;
+            height: 20px;
+            color: #54656f;
           }
         }
       }
     }
     
     .breadcrumbs {
-      font-weight: 300;
-      font-size: 13px;
-      color: #555;
-      padding: 10px 16px;
+      font-weight: 400;
+      font-size: 14px;
+      color: #667781;
+      padding: 12px 16px;
       background-color: #f0f2f5;
-      margin-bottom: 1px;
-      display: none; /* Hide by default, can be shown if needed */
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      a {
+        color: #00a884;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+        
+        &:hover {
+          color: #008f73;
+          text-decoration: underline;
+        }
+      }
+      
+      .separator {
+        color: #667781;
+        font-weight: 300;
+      }
+      
+      .current-chat {
+        color: #111b21;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+      }
     }
     
     .loading-container, .error-container {
@@ -105,7 +180,7 @@
       height: 40px;
       border: 3px solid rgba(0, 0, 0, 0.1);
       border-radius: 50%;
-      border-top-color: #25d366; /* WhatsApp green */
+      border-top-color: #25d366;
       animation: spin 1s ease-in-out infinite;
     }
     
@@ -125,57 +200,34 @@
       flex: 1;
       overflow-y: auto;
       scroll-behavior: smooth;
-      background-color: #e5ded8; /* WhatsApp chat background */
+      background-color: #e5ded8;
       background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
 
-      .date-divider {
-        text-align: center;
-        margin: 10px 0;
-        position: relative;
-        
-        span {
-          background-color: #e1f2fb;
-          color: #54656f;
-          font-size: 12.5px;
-          padding: 5px 12px;
-          border-radius: 7px;
-          display: inline-block;
-          box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-        }
-      }
-      
-      .typing-indicator {
+      .empty-chat {
         display: flex;
-        align-self: flex-start;
-        background-color: #ffffff;
-        border-radius: 8px;
-        padding: 12px 16px;
-        margin-bottom: 8px;
-        box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #667781;
+        text-align: center;
         
-        .dots {
-          display: flex;
-          gap: 4px;
-          
-          .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #b9b9b9;
-            animation: typingAnimation 1.5s infinite ease-in-out;
-            
-            &:nth-child(1) {
-              animation-delay: 0s;
-            }
-            
-            &:nth-child(2) {
-              animation-delay: 0.2s;
-            }
-            
-            &:nth-child(3) {
-              animation-delay: 0.4s;
-            }
-          }
+        .empty-icon {
+          font-size: 48px;
+          margin-bottom: 16px;
+        }
+        
+        h3 {
+          font-size: 18px;
+          font-weight: 600;
+          margin: 0 0 8px 0;
+          color: #111b21;
+        }
+        
+        p {
+          font-size: 14px;
+          margin: 0;
+          line-height: 1.4;
         }
       }
 
@@ -192,51 +244,29 @@
           flex-direction: row-reverse;
           align-self: flex-end;
 
-          p {
-            background-color: #d9fdd3; /* Updated WhatsApp sent message color */
-            color: #111b21;
-            border-radius: 8px 0px 8px 8px;
-            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-            position: relative;
-            
-            &::before {
-              content: '';
-              position: absolute;
-              top: 0;
-              right: -8px;
-              width: 0;
-              height: 0;
-              border-top: 8px solid #d9fdd3;
-              border-right: 8px solid transparent;
+          .message-content {
+            p {
+              background-color: #d9fdd3;
+              color: #111b21;
+              border-radius: 8px 0px 8px 8px;
+              box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+              position: relative;
+              
+              &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: -8px;
+                width: 0;
+                height: 0;
+                border-top: 8px solid #d9fdd3;
+                border-right: 8px solid transparent;
+              }
             }
             
             .message-time {
-              position: absolute;
-              bottom: 4px;
-              right: 8px;
-              font-size: 11px;
-              color: #667781;
-              margin-left: 8px;
-              display: inline-block;
-            }
-            
-            .message-status {
-              margin-left: 4px;
-              font-size: 14px;
-              color: #53bdeb; /* Blue for read receipts */
-              
-              &.sent::after {
-                content: '✓';
-              }
-              
-              &.delivered::after {
-                content: '✓✓';
-              }
-              
-              &.read::after {
-                content: '✓✓';
-                color: #53bdeb;
-              }
+              text-align: right;
+              margin-right: 8px;
             }
           }
         }
@@ -250,75 +280,54 @@
           align-self: flex-start;
         }
 
-        p {
-          padding: 8px 10px 18px 10px; /* Extra padding at bottom for timestamp */
-          background-color: #ffffff; /* WhatsApp received message color */
-          border-radius: 0px 8px 8px 8px;
-          color: #111b21;
-          font-weight: 400;
-          box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-          word-break: break-word;
-          position: relative;
+        .message-content {
+          display: flex;
+          flex-direction: column;
           
-          &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -8px;
-            width: 0;
-            height: 0;
-            border-top: 8px solid #ffffff;
-            border-left: 8px solid transparent;
+          p {
+            padding: 8px 10px 18px 10px;
+            background-color: #ffffff;
+            border-radius: 0px 8px 8px 8px;
+            color: #111b21;
+            font-weight: 400;
+            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+            word-break: break-word;
+            position: relative;
+            margin: 0;
+            
+            &::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: -8px;
+              width: 0;
+              height: 0;
+              border-top: 8px solid #ffffff;
+              border-left: 8px solid transparent;
+            }
           }
           
           .message-time {
-            position: absolute;
-            bottom: 4px;
-            right: 8px;
             font-size: 11px;
             color: #667781;
+            margin-top: 4px;
             margin-left: 8px;
-            display: inline-block;
           }
         }
       }
-    }
-
-    hr {
-      height: 0;
-      border: 0.5px solid rgb(232, 230, 230);
-      margin-bottom: 5px;
-      display: none; /* Hide in WhatsApp style */
     }
 
     .write {
       display: flex;
       align-items: center;
       padding: 10px 16px;
-      background-color: #f0f2f5; /* WhatsApp input area color */
+      background-color: #f0f2f5;
       position: sticky;
       bottom: 0;
       gap: 10px;
       z-index: 10;
       border-radius: 0 0 8px 8px;
       box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
-
-      .attachment-options {
-        display: flex;
-        gap: 16px;
-        margin-right: 10px;
-        
-        .attachment-icon {
-          color: #54656f;
-          font-size: 24px;
-          cursor: pointer;
-          
-          &:hover {
-            color: #128c7e;
-          }
-         
-        }
-      }
       
       .message-input-container {
         display: flex;
@@ -342,41 +351,49 @@
           &:focus {
             outline: none;
           }
-        }
-        
-        .emoji-icon {
-          color: #54656f;
-          font-size: 24px;
-          cursor: pointer;
-          margin-right: 8px;
           
-          &:hover {
-            color: #128c7e;
+          &::placeholder {
+            color: #667781;
           }
         }
-      }
-
-      button {
-        background-color: #00a884; /* Updated WhatsApp green */
-        color: white;
-        font-weight: 500;
-        border: none;
-        border-radius: 20%;
-        cursor: pointer;
-        width: 65px;
-        height: 45px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background-color 0.3s;
         
-        &:hover {
-          background-color: #008f73; /* Darker WhatsApp green */
-        }
-        
-        &::after {
-          content: '→';
-          font-size: 20px;
+        button {
+          background-color: #00a884;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.3s;
+          flex-shrink: 0;
+          
+          &:hover:not(:disabled) {
+            background-color: #008f73;
+          }
+          
+          &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+          }
+          
+          svg {
+            width: 20px;
+            height: 20px;
+            color: white;
+          }
+          
+          .send-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+          }
         }
       }
     }
@@ -405,18 +422,6 @@
   }
 }
 
-/* Animation for typing indicator */
-@keyframes typingAnimation {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-}
-
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
   .message {
@@ -426,13 +431,52 @@
       .chat-header {
         padding: 8px 12px;
         
+        .back-button {
+          width: 36px;
+          height: 36px;
+          
+          svg {
+            width: 18px;
+            height: 18px;
+          }
+        }
+        
         .avatar {
           width: 35px;
           height: 35px;
         }
         
+        .user-info {
+          .name {
+            font-size: 15px;
+          }
+          
+          .status {
+            font-size: 12px;
+          }
+        }
+        
         .header-icons {
-          gap: 15px;
+          gap: 6px;
+          
+          .icon {
+            width: 36px;
+            height: 36px;
+            
+            svg {
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
+      }
+      
+      .breadcrumbs {
+        padding: 10px 12px;
+        font-size: 13px;
+        
+        .current-chat {
+          max-width: 150px;
         }
       }
       
@@ -442,7 +486,7 @@
         .item {
           max-width: 80%;
           
-          p {
+          .message-content p {
             max-width: 100%;
           }
         }
@@ -451,10 +495,6 @@
       .write {
         padding: 8px 12px;
         
-        .attachment-options {
-          gap: 12px;
-        }
-        
         .message-input-container {
           padding: 0 6px 0 12px;
           
@@ -462,11 +502,16 @@
             height: 38px;
             padding: 10px 0;
           }
-        }
-        
-        button {
-          width: 38px;
-          height: 38px;
+          
+          button {
+            width: 36px;
+            height: 36px;
+            
+            svg {
+              width: 18px;
+              height: 18px;
+            }
+          }
         }
       }
     }
@@ -478,21 +523,101 @@
   .message {
     .container {
       .chat-header {
+        padding: 6px 10px;
+        
+        .back-button {
+          width: 32px;
+          height: 32px;
+          
+          svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+        
+        .avatar {
+          width: 32px;
+          height: 32px;
+        }
+        
+        .user-info {
+          .name {
+            font-size: 14px;
+          }
+          
+          .status {
+            font-size: 11px;
+          }
+        }
+        
         .header-icons {
-          gap: 10px;
+          gap: 4px;
+          
+          .icon {
+            width: 32px;
+            height: 32px;
+            
+            svg {
+              width: 16px;
+              height: 16px;
+            }
+          }
+        }
+      }
+      
+      .breadcrumbs {
+        padding: 8px 10px;
+        font-size: 12px;
+        gap: 6px;
+        
+        .current-chat {
+          max-width: 120px;
         }
       }
       
       .messages {
+        padding: 10px;
+        
         .item {
           max-width: 85%;
+          
+          img {
+            width: 30px;
+            height: 30px;
+          }
+          
+          .message-content {
+            p {
+              font-size: 14px;
+              padding: 6px 8px 14px 8px;
+            }
+            
+            .message-time {
+              font-size: 10px;
+            }
+          }
         }
       }
       
       .write {
-        .attachment-options {
-          .attachment-icon:nth-child(2) {
-            display: none; /* Hide second attachment icon on very small screens */
+        padding: 6px 10px;
+        
+        .message-input-container {
+          padding: 0 4px 0 10px;
+          
+          textarea {
+            height: 36px;
+            font-size: 14px;
+          }
+          
+          button {
+            width: 32px;
+            height: 32px;
+            
+            svg {
+              width: 16px;
+              height: 16px;
+            }
           }
         }
       }
