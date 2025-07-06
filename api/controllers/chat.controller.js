@@ -4,10 +4,24 @@ import Conversation from '../models/conversation.model.js';
 import Message from '../models/message.model.js';
 import User from '../models/user.model.js';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize OpenAI client with proper error handling
+let openai;
+try {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    console.error('❌ OPENAI_API_KEY is not set in environment variables');
+    throw new Error('OpenAI API key is not configured');
+  }
+  
+  openai = new OpenAI({
+    apiKey: apiKey,
+  });
+  
+  console.log('✅ OpenAI client initialized successfully');
+} catch (error) {
+  console.error('❌ Failed to initialize OpenAI client:', error.message);
+  openai = null;
+}
 
 // System prompt for SkillAble assistant
 const SYSTEM_PROMPT = `You are SkillAble Assistant, an AI-powered helper for the SkillAble platform - a freelance marketplace similar to Fiverr.
@@ -38,6 +52,11 @@ Always respond in a conversational, helpful tone.`;
 
 export const sendMessage = async (req, res, next) => {
   try {
+    // Check if OpenAI is properly initialized
+    if (!openai) {
+      return next(createError(503, "AI service is not configured. Please contact support."));
+    }
+
     const { message, conversationId, userId } = req.body;
 
     if (!message || !message.trim()) {
