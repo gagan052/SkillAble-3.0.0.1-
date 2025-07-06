@@ -3,6 +3,7 @@ import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import React from "react";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
+import ChatBot from "./components/chatbot/ChatBot";
 import Home from "./pages/home/Home";
 import Gigs from "./pages/gigs/Gigs";
 import Gig from "./pages/gig/Gig";
@@ -34,6 +35,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <Navbar />
           <Outlet />
+          <ChatBot />
           {/* <Footer /> */}
         </QueryClientProvider>
       </div>
