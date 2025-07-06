@@ -4,13 +4,14 @@ import newRequest from "../../utils/newRequest";
 import "./Navbar.scss";
 import { FaBars, FaTimes, FaBell, FaChevronDown } from "react-icons/fa";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import notificationSound from "../../utils/notificationSound";
 
 function Navbar() {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
+  const [previousUnreadCount, setPreviousUnreadCount] = useState(0);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -36,14 +37,18 @@ function Navbar() {
     enabled: !!currentUser,
   });
   
-  // Fetch notifications
-  const { data: notificationData, refetch: refetchNotifications } = useQuery({
+  // Fetch notifications with better error handling and real-time updates
+  const { 
+    data: notifications = [], 
+    isLoading: isLoadingNotifications,
+    error: notificationError,
+    refetch: refetchNotifications 
+  } = useQuery({
     queryKey: ["notifications"],
     queryFn: async () => {
       try {
         const res = await newRequest.get("/notifications");
-        setNotifications(res.data);
-        return res.data;
+        return res.data || [];
       } catch (err) {
         console.error("Error fetching notifications:", err);
         return [];
@@ -51,38 +56,82 @@ function Navbar() {
     },
     enabled: !!currentUser,
     refetchInterval: 30000, // Refetch every 30 seconds
+    retry: 3,
+    retryDelay: 1000,
   });
+
+  // Calculate unread notifications count
+  const unreadCount = notifications.filter(notification => !notification.read).length;
   
-  // Mark notification as read
+  // Play notification sound when new unread notifications arrive
+  useEffect(() => {
+    if (previousUnreadCount > 0 && unreadCount > previousUnreadCount) {
+      // New notifications arrived
+      notificationSound.play();
+    }
+    setPreviousUnreadCount(unreadCount);
+  }, [unreadCount, previousUnreadCount]);
+
+  // Mark notification as read with optimistic updates
   const handleMarkAsRead = async (notificationId) => {
     try {
-      await newRequest.put(`/notifications/${notificationId}/read`);
-      // Update local state to avoid waiting for refetch
-      setNotifications(prev => 
-        prev.map(notification => 
+      // Optimistic update
+      queryClient.setQueryData(["notifications"], (oldData) => {
+        if (!oldData) return oldData;
+        return oldData.map(notification => 
           notification._id === notificationId 
             ? {...notification, read: true} 
             : notification
-        )
-      );
+        );
+      });
+
+      await newRequest.put(`/notifications/${notificationId}/read`);
+      
+      // Refetch to ensure consistency
       refetchNotifications();
     } catch (err) {
       console.error("Error marking notification as read:", err);
+      // Revert optimistic update on error
+      refetchNotifications();
     }
   };
   
-  // Mark all notifications as read
+  // Mark all notifications as read with optimistic updates
   const handleMarkAllAsRead = async () => {
     try {
+      // Optimistic update
+      queryClient.setQueryData(["notifications"], (oldData) => {
+        if (!oldData) return oldData;
+        return oldData.map(notification => ({...notification, read: true}));
+      });
+
       await newRequest.put("/notifications/read-all");
-      // Update local state to avoid waiting for refetch
-      setNotifications(prev => 
-        prev.map(notification => ({...notification, read: true}))
-      );
+      
+      // Refetch to ensure consistency
       refetchNotifications();
     } catch (err) {
       console.error("Error marking all notifications as read:", err);
+      // Revert optimistic update on error
+      refetchNotifications();
     }
+  };
+
+  // Test function to create sample notifications (development only)
+  const createTestNotifications = async () => {
+    try {
+      await newRequest.post("/notifications/test");
+      refetchNotifications();
+      alert("Test notifications created successfully!");
+    } catch (err) {
+      console.error("Error creating test notifications:", err);
+      alert("Failed to create test notifications");
+    }
+  };
+
+  // Toggle notification sound
+  const toggleNotificationSound = () => {
+    const isEnabled = notificationSound.toggle();
+    alert(`Notification sound ${isEnabled ? 'enabled' : 'disabled'}`);
   };
 
   const isActive = () => {
@@ -147,6 +196,7 @@ function Navbar() {
       await newRequest.post("/auth/logout");
       localStorage.setItem("currentUser", null);
       queryClient.invalidateQueries(["savedGigs"]);
+      queryClient.invalidateQueries(["notifications"]);
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -209,16 +259,32 @@ function Navbar() {
               <div className="notification">
                 <div className="icon" onClick={() => setNotificationOpen(!notificationOpen)} ref={notificationIconRef}>
                   <FaBell />
-                  {notifications?.length > 0 && <span className="count">{notifications.length}</span>}
+                  {unreadCount > 0 && <span className="count">{unreadCount}</span>}
                 </div>
                 {notificationOpen && (
                   <div className="notification-dropdown" ref={notificationRef}>
                     <div className="notification-header">
                       <h3>Notifications</h3>
                       <div className="notification-actions">
-                        {notifications?.length > 0 && (
+                        {unreadCount > 0 && (
                           <button className="mark-all-read" onClick={handleMarkAllAsRead}>
                             Mark all as read
+                          </button>
+                        )}
+                        <button 
+                          className="sound-toggle" 
+                          onClick={toggleNotificationSound}
+                          title="Toggle notification sound"
+                        >
+                          🔊
+                        </button>
+                        {process.env.NODE_ENV === 'development' && (
+                          <button 
+                            className="test-notifications" 
+                            onClick={createTestNotifications}
+                            title="Create test notifications"
+                          >
+                            Test
                           </button>
                         )}
                         <button 
@@ -230,14 +296,31 @@ function Navbar() {
                         </button>
                       </div>
                     </div>
-                    {notifications?.length > 0 ? (
+                    {isLoadingNotifications ? (
+                      <div className="loading-notifications">
+                        <div className="loading-spinner"></div>
+                        <p>Loading notifications...</p>
+                      </div>
+                    ) : notificationError ? (
+                      <div className="error-notifications">
+                        <p>Failed to load notifications</p>
+                        <button 
+                          onClick={() => refetchNotifications()} 
+                          className="retry-button"
+                        >
+                          Try Again
+                        </button>
+                      </div>
+                    ) : notifications.length > 0 ? (
                       <div className="notification-list">
                         {notifications.map((notification) => (
                           <div 
                             key={notification._id} 
                             className={`notification-item ${notification.read ? 'read' : 'unread'}`}
                             onClick={() => {
-                              handleMarkAsRead(notification._id);
+                              if (!notification.read) {
+                                handleMarkAsRead(notification._id);
+                              }
                               setNotificationOpen(false);
                             }}
                           >
@@ -250,7 +333,14 @@ function Navbar() {
                             )}
                             <div className="notification-content">
                               <p>{notification.content}</p>
-                              <span className="time">{new Date(notification.createdAt).toLocaleDateString()}</span>
+                              <span className="time">
+                                {new Date(notification.createdAt).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </span>
                             </div>
                             {!notification.read && <div className="unread-indicator"></div>}
                           </div>
