@@ -24,6 +24,9 @@ function Navbar() {
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
+  // Check if we're on an individual message page (not the messages list)
+  const isIndividualMessagePage = pathname.startsWith('/message/') && pathname !== '/messages';
+
   const { isLoading, error, data } = useQuery({
     queryKey: ["savedGigs"],
     queryFn: () =>
@@ -172,6 +175,11 @@ function Navbar() {
     window.scrollTo({ top: 0, behavior: "smooth" });
     setMobileOpen(false);
   };
+
+  // Don't render navbar on individual message pages
+  if (isIndividualMessagePage) {
+    return null;
+  }
 
   return (
     <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
