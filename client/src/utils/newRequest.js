@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const newRequest = axios.create({
-  baseURL: "https://skillable-saini.onrender.com/api/",
+  baseURL: "https://new-skillable-backend.onrender.com/api/",
   withCredentials: true,
 });
 
