@@ -60,10 +60,11 @@
 
       .user {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: flex-start;
         gap: 15px;
         flex-wrap: wrap;
-        padding: 20px;
+        padding: 2px;
         border: 1px solid #e9ecef;
         border-radius: 12px;
         background: #ffffff;

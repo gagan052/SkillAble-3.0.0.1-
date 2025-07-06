@@ -19,6 +19,8 @@ function Navbar() {
   const mobileToggleRef = useRef(null);
   const userDropdownRef = useRef(null);
   const usernameContainerRef = useRef(null);
+  const notificationRef = useRef(null);
+  const notificationIconRef = useRef(null);
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -117,6 +119,15 @@ function Navbar() {
           !usernameContainerRef.current.contains(event.target)) {
         setOpen(false);
       }
+
+      // Close notification dropdown if clicked outside
+      if (notificationOpen && 
+          notificationRef.current && 
+          !notificationRef.current.contains(event.target) &&
+          notificationIconRef.current &&
+          !notificationIconRef.current.contains(event.target)) {
+        setNotificationOpen(false);
+      }
     };
 
     // Add event listener
@@ -126,7 +137,7 @@ function Navbar() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [mobileOpen, open]);
+  }, [mobileOpen, open, notificationOpen]);
 
   const handleLogout = async () => {
     try {
@@ -188,19 +199,28 @@ function Navbar() {
           {currentUser ? (
             <>
               <div className="notification">
-                <div className="icon" onClick={() => setNotificationOpen(!notificationOpen)}>
+                <div className="icon" onClick={() => setNotificationOpen(!notificationOpen)} ref={notificationIconRef}>
                   <FaBell />
                   {notifications?.length > 0 && <span className="count">{notifications.length}</span>}
                 </div>
                 {notificationOpen && (
-                  <div className="notification-dropdown">
+                  <div className="notification-dropdown" ref={notificationRef}>
                     <div className="notification-header">
                       <h3>Notifications</h3>
-                      {notifications?.length > 0 && (
-                        <button className="mark-all-read" onClick={handleMarkAllAsRead}>
-                          Mark all as read
+                      <div className="notification-actions">
+                        {notifications?.length > 0 && (
+                          <button className="mark-all-read" onClick={handleMarkAllAsRead}>
+                            Mark all as read
+                          </button>
+                        )}
+                        <button 
+                          className="close-notifications" 
+                          onClick={() => setNotificationOpen(false)}
+                          aria-label="Close notifications"
+                        >
+                          ×
                         </button>
-                      )}
+                      </div>
                     </div>
                     {notifications?.length > 0 ? (
                       <div className="notification-list">
@@ -208,7 +228,10 @@ function Navbar() {
                           <div 
                             key={notification._id} 
                             className={`notification-item ${notification.read ? 'read' : 'unread'}`}
-                            onClick={() => handleMarkAsRead(notification._id)}
+                            onClick={() => {
+                              handleMarkAsRead(notification._id);
+                              setNotificationOpen(false);
+                            }}
                           >
                             {notification.sender && notification.sender.img && (
                               <img 

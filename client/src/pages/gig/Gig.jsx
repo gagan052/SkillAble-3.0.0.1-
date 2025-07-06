@@ -176,10 +176,10 @@ function Gig() {
                       </div>
                     )}
                   </div>
-                  <div className="user-stats">
+                  {/* <div className="user-stats">
                     <span className="followers">{dataUser.followersCount || 0} followers</span>
                     <FollowButton userId={userId} size="medium" />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             )}
