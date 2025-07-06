@@ -8,7 +8,7 @@
   color: rgb(16, 13, 13);
   width: 100%;
   overflow-x: hidden;
-  padding: 40px 0;
+  // padding: 40px 0;
 
   .container {
     width: 100%;
@@ -52,7 +52,7 @@
             width: 20px;
             height: 20px;
             margin: 10px;
-            color: #000;
+            color: #3e3d3d;
           }
           
           input {
@@ -62,7 +62,7 @@
             width: 100%;
 
             &::placeholder {
-              color: rgb(11, 11, 11);
+              color: rgb(75, 75, 75);
               background-color: #B0ADAD;
             }
           }

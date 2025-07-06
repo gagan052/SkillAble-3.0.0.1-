@@ -4,16 +4,45 @@
   border-radius: 5px;
   overflow: hidden;
   cursor: pointer;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   // border: 1px solid rgb(225, 225, 225);
   background-color: white;
   // background-color: gray;
   // gap:10px;
   
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    
+    &::before {
+      opacity: 0.3;
+    }
+    
+    img {
+      transform: scale(1.05);
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    pointer-events: none;
+  }
 
   img {
     width: 100%;
     height: 70%;
     object-fit: cover;
+    transition: transform 0.3s ease;
     // background-color: yellow;
   }
 
@@ -22,6 +51,8 @@
     align-items: center;
     gap: 20px;
     padding: 15px;
+    position: relative;
+    z-index: 2;
     // background-color: rgb(115, 115, 79);
 
     img {
@@ -41,6 +72,71 @@
       span {
         font-size: 14px;
         font-weight: 300;
+      }
+    }
+  }
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .projectCard {
+    width: 280px;
+    height: 280px;
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+    }
+    
+    .info {
+      padding: 12px;
+      gap: 15px;
+      
+      img {
+        width: 35px;
+        height: 35px;
+      }
+      
+      .texts {
+        h2 {
+          font-size: 13px;
+        }
+        
+        span {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .projectCard {
+    width: 260px;
+    height: 260px;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .info {
+      padding: 10px;
+      gap: 12px;
+      
+      img {
+        width: 30px;
+        height: 30px;
+      }
+      
+      .texts {
+        h2 {
+          font-size: 12px;
+        }
+        
+        span {
+          font-size: 12px;
+        }
       }
     }
   }

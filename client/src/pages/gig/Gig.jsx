@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
 import FollowButton from "../../components/followButton/FollowButton";
+import GigCard from "../../components/gigCard/GigCard";
 
 function Gig() {
   const { id } = useParams();
@@ -138,6 +139,47 @@ function Gig() {
     enabled: !!userId,
   });
 
+  // Fetch recommended gigs from the same category
+  const {
+    isLoading: isLoadingRecommendations,
+    error: errorRecommendations,
+    data: recommendedGigs,
+  } = useQuery({
+    queryKey: ["recommendedGigs", data?.cat, id],
+    queryFn: async () => {
+      try {
+        // Debug logging
+        console.log("Current gig data:", data);
+        console.log("Current gig category:", data?.cat);
+        console.log("Current gig ID:", id);
+        
+        // If no category is available, use a fallback
+        const category = data?.cat || 'general';
+        console.log("Fetching recommendations for category:", category);
+        
+        let response;
+        try {
+          // First try category-specific recommendations
+          response = await newRequest.get(`/gigs/recommendations/${category}?excludeId=${id}`);
+        } catch (categoryError) {
+          console.log("Category-specific recommendations failed, trying general recommendations...");
+          console.log("Category error:", categoryError);
+          // If category-specific fails, try general recommendations
+          response = await newRequest.get(`/gigs/recommendations?excludeId=${id}`);
+        }
+        
+        console.log("Recommendations response:", response.data);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching recommendations:", error);
+        throw error;
+      }
+    },
+    enabled: !!id, // Enable as long as we have a gig ID
+    retry: 2, // Retry up to 2 times
+    retryDelay: 1000, // Wait 1 second between retries
+  });
+
   return (
     <div className="gig">
       {isLoading ? (
@@ -254,6 +296,48 @@ function Gig() {
               </div>
             )}
             <Reviews gigId={id} gigUserId={userId} />
+            
+            {/* Recommended Gigs Section */}
+            <div className="recommended-section">
+              <h2>You might also like</h2>
+              {isLoadingRecommendations ? (
+                <div className="loading-recommendations">
+                  <div className="loading-spinner"></div>
+                  <p>Loading recommendations...</p>
+                </div>
+              ) : errorRecommendations ? (
+                <div className="error-recommendations">
+                  <p>Unable to load recommendations</p>
+                  <button 
+                    onClick={() => window.location.reload()} 
+                    style={{
+                      marginTop: '10px',
+                      padding: '8px 16px',
+                      background: '#1dbf73',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : recommendedGigs && recommendedGigs.length > 0 ? (
+                <div className="recommended-gigs">
+                  {recommendedGigs.slice(0, 4).map((gig) => (
+                    <GigCard key={gig._id} item={gig} />
+                  ))}
+                </div>
+              ) : (
+                <div className="no-recommendations">
+                  <p>No recommendations available at the moment</p>
+                  <p style={{ fontSize: '14px', color: '#999', marginTop: '5px' }}>
+                    Check back later for more gigs
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
           <div className="right">
             <div className="price">

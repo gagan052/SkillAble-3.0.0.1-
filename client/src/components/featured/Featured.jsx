@@ -114,7 +114,7 @@ function Featured() {
                   <input
                     type="search"
                     list="browsers"
-                    placeholder='Try "Gig Title"'
+                    placeholder='What service are you looking for today?'
                     onChange={handleInputChange}
                     onInput={handleInputSelect}
                     value={input}

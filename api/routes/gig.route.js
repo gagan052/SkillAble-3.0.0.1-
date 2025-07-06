@@ -3,7 +3,9 @@ import {
   createGig,
   deleteGig,
   getGig,
-  getGigs
+  getGigs,
+  getRecommendedGigs,
+  getGeneralRecommendations
 } from "../controllers/gig.controller.js";
 import { verifyToken } from "../middleware/jwt.js";
 
@@ -13,5 +15,7 @@ router.post("/", verifyToken, createGig);
 router.delete("/:id", verifyToken, deleteGig);
 router.get("/single/:id", getGig);
 router.get("/", getGigs);
+router.get("/recommendations/:category", getRecommendedGigs);
+router.get("/recommendations", getGeneralRecommendations);
 
 export default router;
