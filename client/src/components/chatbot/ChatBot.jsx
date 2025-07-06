@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FaComments, FaTimes, FaPaperPlane, FaRobot, FaUser } from 'react-icons/fa';
 import newRequest from '../../utils/newRequest';
 import './ChatBot.scss';
@@ -11,8 +12,12 @@ const ChatBot = () => {
   const [conversationId, setConversationId] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const { pathname } = useLocation();
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  // Check if we're on the home page
+  const isHomePage = pathname === '/';
 
   // Auto-scroll to bottom when new messages arrive
   const scrollToBottom = () => {
@@ -29,6 +34,13 @@ const ChatBot = () => {
       inputRef.current.focus();
     }
   }, [isOpen]);
+
+  // Close chat when navigating away from home page
+  useEffect(() => {
+    if (!isHomePage && isOpen) {
+      setIsOpen(false);
+    }
+  }, [isHomePage, isOpen]);
 
   // Initialize conversation with welcome message
   useEffect(() => {
@@ -115,6 +127,11 @@ How can I assist you today?`,
       minute: '2-digit'
     });
   };
+
+  // Don't render chatbot if not on home page
+  if (!isHomePage) {
+    return null;
+  }
 
   return (
     <div className="chatbot-container">
