@@ -239,7 +239,7 @@ export const cards = [
      id: 1,
      img: " https://images.pexels.com/photos/3153204/pexels-photo-3153204.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
      pp: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
-     cat: "Web and Mobile Design",
+     cat: "Web & Mobile Design",
      username: "Anna Bell",
    },
    {
