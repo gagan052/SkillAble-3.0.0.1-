@@ -1,9 +1,9 @@
 .slide {
   display: flex;
   justify-content: center;
-  padding: 50px 0px;
+  padding: 30px 0px;
   // background-color: yellow;
-  width: 94%;
+  width: 100%;
   overflow-x: hidden;
   
   .container {
@@ -34,17 +34,7 @@
   }
 }
 
-@media screen and (max-width: 768px) {
-  .slide {
-    padding: 30px 0px;
-    
-    .carousel-prev,
-    .carousel-next {
-      width: 40px;
-      height: 40px;
-    }
-  }
-}
+
 
 @media screen and (max-width: 480px) {
   .slide {
@@ -55,5 +45,29 @@
       width: 35px;
       height: 35px;
     }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .slide {
+    padding: 30px 30px;
+    
+    .carousel-prev,
+    .carousel-next {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .slide {
+    padding: 0px 0px;
+    
+  //   .carousel-prev,
+  //   .carousel-next {
+  //     width: 35px;
+  //     height: 35px;
+  //   }
   }
 }

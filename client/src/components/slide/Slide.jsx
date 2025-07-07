@@ -14,13 +14,16 @@ const Slide = ({ children, slidesToShow, arrowsScroll }) => {
     const width = window.innerWidth;
     
     if (width <= 480) {
-      setCurrentSlidesToShow(1);
-      setCurrentArrowsScroll(1);
+      setCurrentSlidesToShow(Math.min(2, slidesToShow));
+      setCurrentArrowsScroll(Math.min(1, arrowsScroll));
     } else if (width <= 768) {
       setCurrentSlidesToShow(Math.min(2, slidesToShow));
       setCurrentArrowsScroll(Math.min(1, arrowsScroll));
     } else if (width <= 1024) {
       setCurrentSlidesToShow(Math.min(3, slidesToShow));
+      setCurrentArrowsScroll(Math.min(2, arrowsScroll));
+    }else if (width <= 1440) {
+      setCurrentSlidesToShow(Math.min(5, slidesToShow));
       setCurrentArrowsScroll(Math.min(2, arrowsScroll));
     } else {
       setCurrentSlidesToShow(slidesToShow);
