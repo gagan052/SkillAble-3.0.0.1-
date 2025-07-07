@@ -1,28 +1,32 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose;
 
-const conversationSchema = new mongoose.Schema(
+const ConversationSchema = new Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: false, // Allow anonymous conversations
-    },
-    title: {
+    id: {
       type: String,
       required: true,
-      maxlength: 100,
+      unique: true,
+    },
+    sellerId: {
+      type: String,
+      required: true,
+    },
+    buyerId: {
+      type: String,
+      required: true,
+    },
+    readBySeller: {
+      type: Boolean,
+      required: true,
+    },
+    readByBuyer: {
+      type: Boolean,
+      required: true,
     },
     lastMessage: {
       type: String,
-      default: "",
-    },
-    messageCount: {
-      type: Number,
-      default: 0,
-    },
-    isActive: {
-      type: Boolean,
-      default: true,
+      required: false,
     },
   },
   {
@@ -30,8 +34,4 @@ const conversationSchema = new mongoose.Schema(
   }
 );
 
-// Index for efficient queries
-conversationSchema.index({ userId: 1, updatedAt: -1 });
-conversationSchema.index({ createdAt: -1 });
-
-export default mongoose.model("Conversation", conversationSchema);
+export default mongoose.model("Conversation", ConversationSchema);
