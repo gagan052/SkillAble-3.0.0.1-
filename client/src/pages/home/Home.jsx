@@ -64,7 +64,7 @@ function Home() {
             </p>
           </div>
           <div className="item">
-            <video src="./img/Video-home.mp4" controls autoPlay loop muted/>
+            <video src="./img/Video-home.mp4" autoPlay loop muted/>
           </div>
         </div>
       </div>
