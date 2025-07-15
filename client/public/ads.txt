@@ -3,4 +3,4 @@
 
 # This file is intentionally left empty as SkillAble does not currently use programmatic advertising.
 # When you decide to implement advertising, you'll need to add entries in the following format:
-# https://new-skillable-frontend.onrender.com, pub-9709239481777346, DIRECT, f08c47fec0942fa0
+# google.com, pub-9709239481777346, DIRECT, f08c47fec0942fa0
