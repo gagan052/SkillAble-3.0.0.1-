@@ -45,6 +45,8 @@ app.use(cors({
      "https://skillable-freelancer.onrender.com",
      "https://new-skillable-frontend.onrender.com",
     "https://skillable-gagan.onrender.com",
+    "https://skillable-3-0-0-1-gagan.onrender.com",
+
      
     ],
   methods: "GET, POST, PUT, DELETE, OPTIONS",
