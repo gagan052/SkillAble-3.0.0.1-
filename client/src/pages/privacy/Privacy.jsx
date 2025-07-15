@@ -78,7 +78,7 @@ function Privacy() {
           <p>Address: Rose garden, Ambala city, Haryana, India</p>
         </section>
       </div>
-      <Footer />
+      
     </div>
   );
 }
