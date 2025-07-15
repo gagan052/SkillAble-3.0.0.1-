@@ -47,7 +47,7 @@ function Footer() {
             <div className={`mobile-dropdown-content ${openSections.about ? 'open' : ''}`}>
               <span>Press & News</span>
               <span>Partnerships</span>
-              <span>Privacy Policy</span>
+              <span><a href="/privacy">Privacy Policy</a></span>
               <span>Terms of Service</span>
               <span>Intellectual Property Claims</span>
               <span>Investor Relations</span>

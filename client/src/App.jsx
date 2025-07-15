@@ -14,6 +14,7 @@ import Messages from "./pages/messages/Messages";
 import Message from "./pages/message/Message";
 import MyGigs from "./pages/myGigs/MyGigs";
 import AddStory from "./pages/addStory/AddStory";
+import Privacy from "./pages/privacy/Privacy";
 
 import Dashboard from "./pages/dashboard/Dashboard";
 
@@ -108,6 +109,10 @@ function App() {
         {
           path: "/saved",
           element: <SavedGigs />
+        },
+        {
+          path: "/privacy",
+          element: <Privacy />
         },
       ],
     },

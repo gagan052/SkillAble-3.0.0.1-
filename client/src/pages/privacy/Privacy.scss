@@ -1,0 +1,56 @@
+.privacy {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+  
+  .container {
+    width: 1200px;
+    max-width: 90%;
+    
+    h1 {
+      margin-bottom: 20px;
+      color: #404145;
+    }
+    
+    p {
+      color: #62646a;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+    
+    section {
+      margin-bottom: 30px;
+      
+      h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #404145;
+      }
+      
+      ul {
+        list-style-type: disc;
+        margin-left: 20px;
+        margin-bottom: 15px;
+        
+        li {
+          margin-bottom: 10px;
+          color: #62646a;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 20px;
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      section h2 {
+        font-size: 18px;
+      }
+    }
+  }
+}
