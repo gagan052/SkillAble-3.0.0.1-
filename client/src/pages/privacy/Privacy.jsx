@@ -1,5 +1,6 @@
 import React from "react";
 import "./Privacy.scss";
+import Footer from "../../components/footer/Footer";
 
 function Privacy() {
   return (
@@ -77,6 +78,7 @@ function Privacy() {
           <p>Address: Rose garden, Ambala city, Haryana, India</p>
         </section>
       </div>
+      <Footer />
     </div>
   );
 }
