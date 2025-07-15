@@ -15,6 +15,8 @@ import Message from "./pages/message/Message";
 import MyGigs from "./pages/myGigs/MyGigs";
 import AddStory from "./pages/addStory/AddStory";
 import Privacy from "./pages/privacy/Privacy";
+import About from "./pages/about/About";
+import Contact from "./pages/contact/Contact";
 
 import Dashboard from "./pages/dashboard/Dashboard";
 
@@ -113,6 +115,14 @@ function App() {
         {
           path: "/privacy",
           element: <Privacy />
+        },
+        {
+          path: "/about",
+          element: <About />
+        },
+        {
+          path: "/contact",
+          element: <Contact />
         },
       ],
     },

@@ -45,13 +45,14 @@ function Footer() {
               </span>
             </h2>
             <div className={`mobile-dropdown-content ${openSections.about ? 'open' : ''}`}>
+              <span><a href="/about">About Us</a></span>
               <span>Press & News</span>
               <span>Partnerships</span>
               <span><a href="/privacy">Privacy Policy</a></span>
               <span>Terms of Service</span>
               <span>Intellectual Property Claims</span>
               <span>Investor Relations</span>
-              <span>Contact Sales</span>
+              <span><a href="/contact">Contact Us</a></span>
             </div>
           </div>
           <div className="item">
@@ -66,6 +67,7 @@ function Footer() {
               <span>Trust & Safety</span>
               <span>Selling on SkillAble</span>
               <span>Buying on SkillAble</span>
+              <span><a href="/contact">Contact Support</a></span>
             </div>
           </div>
           <div className="item">
