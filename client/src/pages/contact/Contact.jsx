@@ -92,7 +92,7 @@ function Contact() {
               <FaPhone className="icon" />
               <div>
                 <h3>Phone</h3>
-                <p><a href="tel:+919876543210">+91 98765 43210</a></p>
+                <p><a href="tel:+919728422008">+91 9728422008</a></p>
                 <p>Monday-Friday, 9:00 AM - 6:00 PM IST</p>
               </div>
             </div>
@@ -102,8 +102,8 @@ function Contact() {
               <div>
                 <h3>Address</h3>
                 <p>SkillAble Headquarters</p>
-                <p>123 Freelancer Avenue</p>
-                <p>Bengaluru, Karnataka 560001</p>
+                <p>Rose Garden</p>
+                <p>Ambala city, Haryana 134007</p>
                 <p>India</p>
               </div>
             </div>
