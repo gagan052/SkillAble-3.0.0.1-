@@ -49,20 +49,24 @@ const Add = () => {
     
     setUploading(true);
     try {
-      const cover = await upload(singleFile);
+      const coverResult = await upload(singleFile);
+      const cover = coverResult.url;
 
-      const images = await Promise.all(
+      const mediaItems = await Promise.all(
         [...files].map(async (file) => {
-          const url = await upload(file);
-          return url;
+          const result = await upload(file);
+          return {
+            url: result.url,
+            type: result.resourceType // 'image' or 'video'
+          };
         })
       );
       setUploading(false);
-      dispatch({ type: "ADD_IMAGES", payload: { cover, images } });
+      dispatch({ type: "ADD_IMAGES", payload: { cover, mediaItems } });
       setError(null); // Clear any errors after successful upload
     } catch (err) {
       setUploading(false);
-      setError("Error uploading images. Please try again.");
+      setError("Error uploading media files. Please try again.");
       console.log(err);
     }
   };
@@ -169,6 +173,7 @@ const Add = () => {
                 <select name="cat" id="cat" onChange={handleChange} required>
                   <option value="">Select a category</option>
                   <option value="ai_artists">AI Artists</option>
+                  <option value="web_design">Web Design</option>
                   <option value="logo_design">Logo Design</option>
                   <option value="ai_service">AI Service</option>
                   <option value="wordpress">WordPress</option>
@@ -210,12 +215,12 @@ const Add = () => {
               </div>
               
               <div className="form-group">
-                <label htmlFor="gallery-images">Gallery Images</label>
+                <label htmlFor="gallery-images">Gallery Images & Videos</label>
                 <div className="file-upload-wrapper">
                   <input
                     type="file"
                     id="gallery-images"
-                    accept="image/*"
+                    accept="image/*,video/*"
                     multiple
                     onChange={(e) => setFiles(e.target.files)}
                     className="file-input"
@@ -224,8 +229,8 @@ const Add = () => {
                     <span className="upload-icon">🖼️</span>
                     <span className="upload-text">
                       {files.length > 0 
-                        ? `${files.length} image${files.length > 1 ? 's' : ''} selected`
-                        : "Choose gallery images"
+                        ? `${files.length} file${files.length > 1 ? 's' : ''} selected`
+                        : "Choose gallery images & videos"
                       }
                     </span>
                   </label>
@@ -244,9 +249,34 @@ const Add = () => {
                     Uploading...
                   </>
                 ) : (
-                  "Upload Images"
+                  "Upload Media"
                 )}
               </button>
+              
+              {state.mediaItems && state.mediaItems.length > 0 && (
+                <div className="media-preview">
+                  <h4>Media Preview</h4>
+                  <div className="media-grid">
+                    {state.mediaItems.map((item, index) => (
+                      <div key={index} className="media-item">
+                        {item.type === 'video' ? (
+                          <video 
+                            src={item.url} 
+                            controls 
+                            className="video-preview"
+                          />
+                        ) : (
+                          <img 
+                            src={item.url} 
+                            alt={`Gallery item ${index}`} 
+                            className="image-preview"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               
               <div className="form-group">
                 <label htmlFor="description">Description</label>
@@ -314,7 +344,7 @@ const Add = () => {
               
               <div className="form-group">
                 <label htmlFor="features">Add Features</label>
-                <form onSubmit={handleFeature} className="feature-form">
+                <div className="feature-form">
                   <div className="feature-input-wrapper">
                     <input 
                       type="text" 
@@ -322,11 +352,24 @@ const Add = () => {
                       placeholder="e.g. page design" 
                       className="feature-input"
                     />
-                    <button type="submit" className="add-feature-btn">
+                    <button 
+                      type="button" 
+                      className="add-feature-btn"
+                      onClick={() => {
+                        const input = document.getElementById('features');
+                        if (input.value.trim()) {
+                          dispatch({
+                            type: "ADD_FEATURE",
+                            payload: input.value.trim(),
+                          });
+                          input.value = "";
+                        }
+                      }}
+                    >
                       Add
                     </button>
                   </div>
-                </form>
+                </div>
                 
                 <div className="addedFeatures">
                   {state?.features?.map((f) => (

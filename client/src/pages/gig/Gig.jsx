@@ -201,8 +201,8 @@ function Gig() {
               <div className="user">
                 <img
                   className="pp"
-                  src={dataUser.img || "public/img/noavatar.jpg"}
-                  alt=""
+                  src={dataUser.img || "/img/noavatar.jpg"}
+                  alt={`${dataUser.username}'s profile`}
                 />
                 <div className="user-info">
                   <div className="user-name-stars">
@@ -212,7 +212,7 @@ function Gig() {
                         {Array(Math.round(data.totalStars / data.starNumber))
                           .fill()
                           .map((item, i) => (
-                            <img src="/img/star.png" alt="" key={i} />
+                            <img src="/img/star.png" alt="rating star" key={i} />
                           ))}
                         <span>{Math.round(data.totalStars / data.starNumber)}</span>
                       </div>
@@ -225,11 +225,38 @@ function Gig() {
                 </div>
               </div>
             )}
-            <Slider slidesToShow={1} arrowsScroll={1} className="slider">
+            {/* <Slider slidesToShow={1} arrowsScroll={1} className="slider">
               {data.images.map((img) => (
                 <img key={img} src={img} alt="" />
               ))}
-            </Slider>
+            </Slider> */}
+            <div className="slider-container">
+              <Slider slidesToShow={1} arrowsScroll={1} className="slider" dots arrows>
+                {data.images && data.images.map((item, index) => {
+                  const url = typeof item === 'object' ? item.url : item;
+                  const isVideo = url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm');
+                  
+                  return (
+                    <div key={index} className={`slider-item ${isVideo ? 'video-item' : ''}`}>
+                      {isVideo ? (
+                        <video 
+                          controls
+                          playsInline
+                          controlsList="nodownload"
+                          className="slider-video"
+                          
+                        >
+                          <source src={url} type={url.toLowerCase().endsWith('.mp4') ? 'video/mp4' : 'video/webm'} />
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : (
+                        <img src={url} alt={`Gig content ${index + 1}`} />
+                      )}
+                    </div>
+                  );
+                })}
+              </Slider>
+            </div>
             <h2>About This Gig</h2>
             <p>{data.desc}</p>
             {isLoadingUser ? (

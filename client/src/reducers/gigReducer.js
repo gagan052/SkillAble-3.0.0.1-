@@ -4,6 +4,7 @@ export const INITIAL_STATE = {
   cat: "",
   cover: "",
   images: [],
+  mediaItems: [], // New field to store both images and videos with their types
   desc: "",
   shortTitle: "",
   shortDesc: "",
@@ -24,7 +25,8 @@ export const gigReducer = (state, action) => {
       return {
         ...state,
         cover: action.payload.cover,
-        images: action.payload.images,
+        images: action.payload.mediaItems.map(item => item.url), // For backward compatibility
+        mediaItems: action.payload.mediaItems,
       };
     case "ADD_FEATURE":
       return {
