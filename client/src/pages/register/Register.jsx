@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import upload from "../../utils/upload";
 import "./Register.scss";
 import newRequest from "../../utils/newRequest";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useGoogleLogin } from '@react-oauth/google';
+
 
 function Register() {
   const [file, setFile] = useState(null);
@@ -38,6 +39,46 @@ function Register() {
     setShowPassword(!showPassword);
   };
 
+  const handleGoogleRegister = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        setLoading(true);
+        // Get user info from Google
+        const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: {
+            Authorization: `Bearer ${tokenResponse.access_token}`,
+          },
+        });
+        
+        const userInfo = await userInfoResponse.json();
+        
+        // Register with Google
+        const response = await newRequest.post('/auth/google-register', {
+          googleId: userInfo.sub,
+          email: userInfo.email,
+          name: userInfo.name,
+          img: userInfo.picture,
+          country: user.country,
+          isSeller: user.isSeller,
+          desc: user.desc || "",
+          phone: user.phone || ""
+        });
+        
+        // Store user data in localStorage
+        localStorage.setItem("currentUser", JSON.stringify(response.data));
+        navigate("/");
+      } catch (err) {
+        setError(err.response?.data || "Error with Google registration");
+      } finally {
+        setLoading(false);
+      }
+    },
+    onError: (error) => {
+      console.error("Google registration error:", error);
+      setError("Google registration failed. Please try again.");
+    }
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -60,12 +101,13 @@ function Register() {
         url = await upload(file);
       }
 
-      await newRequest.post("/auth/register", {
+      const response = await newRequest.post("/auth/register", {
         ...user,
         img: url,
       });
 
-      navigate("/login");
+      // Navigate to verification page
+      navigate(`/verify-email/${response.data.userId}`);
     } catch (err) {
       setError(err.response?.data || err.message || "Something went wrong");
     } finally {
@@ -174,6 +216,21 @@ function Register() {
                   "Create Account"
                 )}
               </button>
+              
+              <div className="social-login">
+            <p>Or sign up with</p>
+            <button 
+              type="button" 
+              className="google-btn"
+              onClick={handleGoogleRegister}
+            >
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" 
+                alt="Google logo" 
+              />
+              Sign up with Google
+            </button>
+          </div>
               
               <div className="login-link">
                 <p>

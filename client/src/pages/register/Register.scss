@@ -11,6 +11,46 @@
     align-items: flex-start;
     padding-top: 80px; // Account for navbar
   }
+  
+  .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: white;
+    color: #757575;
+    border: 1px solid #ddd;
+    padding: 12px 20px;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: #f5f5f5;
+      
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .google-notice {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 8px;
+    text-align: center;
+  }
 
   .register-container {
     width: 100%;

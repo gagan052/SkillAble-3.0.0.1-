@@ -26,19 +26,23 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import Pay from "./pages/pay/Pay";
 import Success from "./pages/success/Success";
+import VerifyEmail from "./pages/verify/VerifyEmail";
 function App() {
   const queryClient = new QueryClient();
 
   const Layout = () => {
     return (
       <div className="app">
-        <QueryClientProvider client={queryClient}>
-          <Navbar />
-          <Outlet />
-          {/* <Footer /> */}
-        </QueryClientProvider>
+        <GoogleOAuthProvider clientId="412703226079-bqnsp67ptg5dgve5i6903mehia7o1bn3.apps.googleusercontent.com">
+          <QueryClientProvider client={queryClient}>
+            <Navbar />
+            <Outlet />
+            {/* <Footer /> */}
+          </QueryClientProvider>
+        </GoogleOAuthProvider>
       </div>
     );
   };
@@ -95,6 +99,10 @@ function App() {
         {
           path: "/success",
           element: <Success />,
+        },
+        {
+          path: "/verify-email/:userId",
+          element: <VerifyEmail />,
         },
         {
           path: "/dashboard",

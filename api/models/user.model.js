@@ -14,7 +14,10 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function() {
+      // Password is required unless user is authenticated via Google
+      return !this.googleId;
+    },
   },
   img: {
     type: String,
@@ -34,7 +37,7 @@ const userSchema = new Schema({
   },
   isSeller: {
     type: Boolean,
-    default:false
+    default: false
   },
   followersCount: {
     type: Number,
@@ -44,8 +47,40 @@ const userSchema = new Schema({
     type: [String],
     default: []
   },
+  // Fields for OTP verification
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  isPhoneVerified: {
+    type: Boolean,
+    default: false
+  },
+  emailOtp: {
+    type: String,
+    default: null
+  },
+  phoneOtp: {
+    type: String,
+    default: null
+  },
+  otpExpiry: {
+    type: Date,
+    default: null
+  },
+  // Fields for Google authentication
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local'
+  }
 },{
-  timestamps:true
+  timestamps: true
 });
 
 export default mongoose.model("User", userSchema)

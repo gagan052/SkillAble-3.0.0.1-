@@ -1,8 +1,11 @@
 import axios from "axios";
 
 const newRequest = axios.create({
-  baseURL: "https://skillable-3-0-0-1.onrender.com/api/",
+  baseURL: "http://localhost:8080/api/",
   withCredentials: true,
+  headers: {
+    "Content-Type": "application/json"
+  }
 });
 
 // Add a request interceptor to include the token in the headers
