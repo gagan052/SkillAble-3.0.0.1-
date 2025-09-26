@@ -242,6 +242,7 @@ function Gig() {
                         <video 
                           controls
                           playsInline
+                          autoPlay
                           controlsList="nodownload"
                           className="slider-video"
                           

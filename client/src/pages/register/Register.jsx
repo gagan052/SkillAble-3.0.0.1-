@@ -98,7 +98,8 @@ function Register() {
 
       let url = "";
       if (file) {
-        url = await upload(file);
+        const uploadResult = await upload(file);
+        url = uploadResult.url; // 只获取URL字符串，而不是整个对象
       }
 
       const response = await newRequest.post("/auth/register", {

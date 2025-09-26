@@ -34,7 +34,13 @@ function Login() {
       localStorage.setItem("currentUser", JSON.stringify(res.data));
       navigate("/");
     } catch (err) {
-      setError(err.response?.data || "Something went wrong!");
+      // 确保错误信息是字符串而不是对象
+      const errorData = err.response?.data;
+      if (errorData && typeof errorData === 'object') {
+        setError(errorData.message || JSON.stringify(errorData));
+      } else {
+        setError(errorData || "Something went wrong!");
+      }
     } finally {
       setLoading(false);
     }
@@ -65,7 +71,13 @@ function Login() {
         localStorage.setItem("currentUser", JSON.stringify(response.data));
         navigate("/");
       } catch (err) {
-        setError(err.response?.data || "Error with Google authentication");
+        // 确保错误信息是字符串而不是对象
+        const errorData = err.response?.data;
+        if (errorData && typeof errorData === 'object') {
+          setError(errorData.message || JSON.stringify(errorData));
+        } else {
+          setError(errorData || "Error with Google authentication");
+        }
       } finally {
         setLoading(false);
       }
