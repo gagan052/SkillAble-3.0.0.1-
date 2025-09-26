@@ -155,7 +155,8 @@ function AddStory() {
       });
       
       // Upload cropped image
-      const imageUrl = await upload(croppedImageFile);
+      const uploadResult = await upload(croppedImageFile);
+      const imageUrl = uploadResult.url;
       
       // Create story with specified expiration
       const story = {
