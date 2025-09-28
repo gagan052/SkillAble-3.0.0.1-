@@ -5,7 +5,7 @@ import Slider from "infinite-react-carousel";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const Slide = ({ children, slidesToShow, arrowsScroll }) => {
+const Slide = ({ children, slidesToShow, arrowsScroll, autoplay = true }) => {
   const [currentSlidesToShow, setCurrentSlidesToShow] = useState(slidesToShow);
   const [currentArrowsScroll, setCurrentArrowsScroll] = useState(arrowsScroll);
 
@@ -44,7 +44,14 @@ const Slide = ({ children, slidesToShow, arrowsScroll }) => {
   return (
     <div className="slide">
       <div className="container">
-        <Slider slidesToShow={currentSlidesToShow} arrowsScroll={currentArrowsScroll}>
+        <Slider 
+          slidesToShow={currentSlidesToShow} 
+          arrowsScroll={currentArrowsScroll}
+          autoplay={autoplay}
+          autoplaySpeed={3000}
+          pauseOnHover={true}
+          initialSlide={0}
+        >
           {children}
         </Slider>
       </div>

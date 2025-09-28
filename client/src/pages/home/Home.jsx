@@ -19,7 +19,7 @@ function Home() {
       <TrustedBy />
 
       {currentUser && (
-        <Slide slidesToShow={5} arrowsScroll={4}>
+        <Slide slidesToShow={5} arrowsScroll={4} autoplay={true}>
           {cards.map((card) => (
             <CatCard key={card.id} card={card} />
           ))}
@@ -193,7 +193,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <Slide slidesToShow={3.7} arrowsScroll={2}>
+      <Slide slidesToShow={3.7} arrowsScroll={2} autoplay={true}>
         {projects.map((card) => (
           <ProjectCard key={card.id} card={card} />
         ))}
