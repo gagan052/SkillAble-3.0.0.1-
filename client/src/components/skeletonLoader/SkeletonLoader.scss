@@ -1,0 +1,221 @@
+@import "../../index.scss";
+
+// Base skeleton animation
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.skeleton-pulse {
+  background-color: #e0e0e0;
+  animation: pulse 1.5s ease-in-out infinite;
+  margin-bottom: 8px;
+}
+
+// Text skeletons
+.skeleton-text {
+  width: 100%;
+  
+  .skeleton-text-line {
+    margin-bottom: 8px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Card skeletons
+.skeleton-card {
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  
+  .skeleton-card-image {
+    margin-bottom: 12px;
+  }
+  
+  .skeleton-card-content {
+    padding: 0 12px 12px;
+    
+    .skeleton-card-title {
+      margin-bottom: 12px;
+    }
+    
+    .skeleton-card-subtitle {
+      margin-bottom: 8px;
+    }
+    
+    .skeleton-card-text {
+      margin-bottom: 16px;
+    }
+    
+    .skeleton-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}
+
+// Avatar skeletons
+.skeleton-avatar {
+  flex-shrink: 0;
+}
+
+// Message skeletons
+.skeleton-message {
+  display: flex;
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+  
+  .skeleton-message-content {
+    flex: 1;
+    margin: 0 12px;
+    
+    .skeleton-message-sender {
+      margin-bottom: 4px;
+    }
+  }
+}
+
+// Order skeletons
+.skeleton-order {
+  padding: 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 5px;
+  margin-bottom: 16px;
+  
+  .skeleton-order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  .skeleton-order-body {
+    margin-bottom: 16px;
+  }
+  
+  .skeleton-order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+// Gig detail skeletons
+.skeleton-gig-detail {
+  .skeleton-gig-header {
+    margin-bottom: 20px;
+    
+    .skeleton-gig-title {
+      margin-bottom: 16px;
+    }
+    
+    .skeleton-seller-info {
+      display: flex;
+      align-items: center;
+      
+      > div {
+        margin-left: 12px;
+      }
+    }
+  }
+  
+  .skeleton-gig-slider {
+    margin-bottom: 24px;
+    border-radius: 8px;
+  }
+  
+  .skeleton-gig-description {
+    margin-bottom: 24px;
+    
+    > .skeleton-pulse:first-child {
+      margin-bottom: 16px;
+    }
+  }
+  
+  .skeleton-seller-description {
+    > .skeleton-pulse:first-child {
+      margin-bottom: 16px;
+    }
+    
+    .skeleton-seller-profile {
+      display: flex;
+      margin-bottom: 16px;
+      
+      > div {
+        margin-left: 16px;
+        
+        > .skeleton-pulse {
+          margin-bottom: 8px;
+        }
+      }
+    }
+  }
+}
+
+// Gig price skeletons
+.skeleton-gig-price {
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+  border-radius: 5px;
+  
+  > .skeleton-pulse {
+    margin-bottom: 16px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Explore filters skeletons
+.skeleton-explore-filters {
+  margin-bottom: 24px;
+  
+  > .skeleton-pulse:first-child {
+    margin-bottom: 16px;
+  }
+  
+  .skeleton-filter-options {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+// Grid layouts for skeleton cards
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .skeleton-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  
+  .skeleton-gig-detail {
+    .skeleton-seller-profile {
+      flex-direction: column;
+      
+      > div {
+        margin-left: 0;
+        margin-top: 12px;
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import { useLocation } from "react-router-dom";
 import { cards } from "../../data";
+import { SkeletonCard } from "../../components/skeletonLoader/SkeletonLoader";
 
 function Gigs() {
   const [sort, setSort] = useState("sales");
@@ -213,11 +214,11 @@ function Gigs() {
           </div>
         </div>
         <div className="cards">
-
-
-        
           {isLoading ? (
-            <div className="loading">Loading gigs...</div>
+            // Skeleton loading for gigs
+            Array(8).fill(0).map((_, index) => (
+              <SkeletonCard key={index} />
+            ))
           ) : error ? (
             <div className="error">
               <p>{error.response?.data?.message || error.message || "Something went wrong!"}</p>

@@ -5,6 +5,7 @@ import Stories from "../../components/stories/Stories";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import { useLocation } from "react-router-dom";
+import { SkeletonCard, SkeletonExploreFilters } from "../../components/skeletonLoader/SkeletonLoader";
 
 function Explore() {
   const { search } = useLocation();
@@ -217,7 +218,14 @@ function Explore() {
         </p>
         
         {status === "loading" ? (
-          <div className="loading">Loading gigs...</div>
+          <>
+            <SkeletonExploreFilters />
+            <div className="skeleton-grid">
+              {Array(9).fill().map((_, index) => (
+                <SkeletonCard key={index} height="300px" />
+              ))}
+            </div>
+          </>
         ) : status === "error" ? (
           <div className="error">Error loading gigs. Please try again later.</div>
         ) : (
@@ -229,7 +237,11 @@ function Explore() {
                 </div>
                 
                 {isFetchingNextPage && (
-                  <div className="loading-more">Loading more gigs...</div>
+                  <div className="skeleton-grid" style={{ marginTop: "20px" }}>
+                    {Array(3).fill().map((_, index) => (
+                      <SkeletonCard key={index} height="300px" />
+                    ))}
+                  </div>
                 )}
                 
                 {!hasNextPage && gigs.length > 0 && (

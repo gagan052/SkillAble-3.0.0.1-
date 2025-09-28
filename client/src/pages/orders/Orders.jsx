@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Orders.scss";
 import { useQuery } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
+import { SkeletonOrder } from "../../components/skeletonLoader/SkeletonLoader";
 
 const Orders = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -36,7 +37,16 @@ const Orders = () => {
   return (
     <div className="orders">
       {isLoading ? (
-        "loading"
+        <div className="container">
+          <div className="title">
+            <h1>Orders</h1>
+          </div>
+          <div className="skeleton-orders">
+            {Array(5).fill(0).map((_, index) => (
+              <SkeletonOrder key={index} />
+            ))}
+          </div>
+        </div>
       ) : error ? (
         "error"
       ) : (

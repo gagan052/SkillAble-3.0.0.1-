@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import newRequest from "../../utils/newRequest";
 import "./Messages.scss";
 import moment from "moment";
+import { SkeletonMessage } from "../../components/skeletonLoader/SkeletonLoader";
 
 const Messages = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -64,9 +65,27 @@ const Messages = () => {
   return (
     <div className="messages">
       {isLoading ? (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading conversations...</p>
+        <div className="container">
+          <div className="title">
+            <h1>Messages</h1>
+          </div>
+          <div className="desktop-view">
+            <table>
+              <thead>
+                <tr>
+                  <th>{currentUser.isSeller ? "Buyer" : "Seller"}</th>
+                  <th>Last Message</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array(5).fill(0).map((_, index) => (
+                  <SkeletonMessage key={index} />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : error ? (
         <div className="error-container">

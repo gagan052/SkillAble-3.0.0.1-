@@ -7,6 +7,7 @@ import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
 import FollowButton from "../../components/followButton/FollowButton";
 import GigCard from "../../components/gigCard/GigCard";
+import { SkeletonGigDetail, SkeletonGigPrice, SkeletonCard } from "../../components/skeletonLoader/SkeletonLoader";
 
 function Gig() {
   const { id } = useParams();
