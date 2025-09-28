@@ -189,9 +189,11 @@ function Gig() {
       ) : (
         <div className="container">
           <div className="left">
-            <span className="breadcrumbs">
-              SkillAble {">"} Graphics & Design {">"}
-            </span>
+            <div className="breadcrumbs">
+              <Link to="/">SkillAble</Link> {" > "}
+              <Link to={`/gigs?cat=${data.cat}`}>{data.cat}</Link> {" > "}
+              <span>{data.title.substring(0, 30)}{data.title.length > 30 ? "..." : ""}</span>
+            </div>
             <h1>{data.title}</h1>
             {isLoadingUser ? (
               "loading"
