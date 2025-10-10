@@ -35,7 +35,7 @@ const CollaborationRequests = () => {
   // Mutation for updating application status
   const updateStatusMutation = useMutation({
     mutationFn: ({ collaborationId, applicationId, status }) => {
-      return newRequest.put(`/collaborations/${collaborationId}/application-status`, {
+      return newRequest.put(`/collaborations/application/${collaborationId}`, {
         applicationId,
         status,
       });
