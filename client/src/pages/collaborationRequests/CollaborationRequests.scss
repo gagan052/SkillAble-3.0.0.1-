@@ -2,10 +2,12 @@
   display: flex;
   justify-content: center;
   padding: 30px 0;
+  // background-color: yellow;
   
   .container {
     width: 1400px;
     padding: 0 20px;
+    
     
     h1 {
       margin-bottom: 30px;
@@ -16,6 +18,7 @@
       display: flex;
       justify-content: center;
       margin-bottom: 30px;
+      
       
       .tab-btn {
         padding: 12px 24px;
@@ -59,11 +62,13 @@
       flex-direction: column;
       gap: 20px;
       
+      
       .collaboration-item {
         background-color: white;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
         overflow: hidden;
+        
         
         .collab-header {
           display: flex;
@@ -106,6 +111,7 @@
         .applications-section {
           padding: 20px;
           
+          
           h4 {
             margin-top: 0;
             margin-bottom: 15px;
@@ -142,6 +148,7 @@
               .applicant-info {
                 margin-bottom: 10px;
                 
+                
                 .applicant-header {
                   display: flex;
                   justify-content: space-between;
@@ -160,6 +167,7 @@
                 span {
                   display: block;
                   margin-bottom: 5px;
+                  
                 }
                 
                 .role-applied {
@@ -168,14 +176,16 @@
                 
                 .status {
                   font-size: 14px;
-                  color: #666;
+                  color: #666666;
                   text-transform: capitalize;
                 }
                 
                 .message {
                   font-style: italic;
-                  color: #666;
+                  color: #666666;
                   margin-top: 10px;
+                  // background-color: yellow;
+                  height: auto;
                 }
               }
               
