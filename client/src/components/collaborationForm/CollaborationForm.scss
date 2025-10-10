@@ -1,0 +1,211 @@
+.collaboration-form {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  
+  h2 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-family: inherit;
+      
+      &:focus {
+        outline: none;
+        border-color: #1dbf73;
+      }
+    }
+    
+    .error {
+      color: #e53935;
+      font-size: 14px;
+      margin-top: 5px;
+      display: block;
+    }
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 20px;
+    
+    .form-group {
+      flex: 1;
+    }
+  }
+  
+  .skill-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    
+    input {
+      flex: 1;
+    }
+    
+    button {
+      background-color: #1dbf73;
+      color: white;
+      border: none;
+      padding: 0 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      
+      &:hover {
+        background-color: #19a463;
+      }
+    }
+  }
+  
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    
+    .skill-tag {
+      display: flex;
+      align-items: center;
+      background-color: #f0f0f0;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      
+      button {
+        background: none;
+        border: none;
+        color: #777;
+        margin-left: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        
+        &:hover {
+          color: #e53935;
+        }
+      }
+    }
+  }
+  
+  .position-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    
+    input {
+      flex: 3;
+    }
+    
+    .count-input {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      
+      label {
+        margin: 0 5px 0 0;
+        font-weight: normal;
+      }
+      
+      input {
+        width: 60px;
+      }
+    }
+    
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #777;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0 5px;
+      
+      &:hover {
+        color: #e53935;
+      }
+      
+      &:disabled {
+        color: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+  .add-position-btn {
+    background: none;
+    border: 1px dashed #1dbf73;
+    color: #1dbf73;
+    padding: 8px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+    
+    &:hover {
+      background-color: rgba(29, 191, 115, 0.05);
+    }
+  }
+  
+  .submit-btn {
+    width: 100%;
+    background-color: #1dbf73;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    
+    &:hover {
+      background-color: #19a463;
+    }
+    
+    &:disabled {
+      background-color: #a0e5c8;
+      cursor: not-allowed;
+    }
+  }
+  
+  .error-message {
+    margin-top: 15px;
+    color: #e53935;
+    text-align: center;
+  }
+  
+  @media (max-width: 768px) {
+    .form-row {
+      flex-direction: column;
+      gap: 0;
+    }
+    
+    .position-item {
+      flex-direction: column;
+      align-items: flex-start;
+      
+      .count-input {
+        width: 100%;
+        margin-top: 5px;
+      }
+      
+      .remove-btn {
+        align-self: flex-end;
+        margin-top: -30px;
+      }
+    }
+  }
+}

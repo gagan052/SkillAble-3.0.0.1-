@@ -22,6 +22,8 @@ import Dashboard from "./pages/dashboard/Dashboard";
 
 import Explore from "./pages/explore/Explore";
 import SavedGigs from "./pages/saved/SavedGigs";
+import Collaborate from "./pages/collaborate/Collaborate";
+import CollaborationDetail from "./pages/collaborationDetail/CollaborationDetail";
 import {
   QueryClient,
   QueryClientProvider,
@@ -131,6 +133,14 @@ function App() {
         {
           path: "/contact",
           element: <Contact />
+        },
+        {
+          path: "/collaborate",
+          element: <Collaborate />
+        },
+        {
+          path: "/collaborate/:id",
+          element: <CollaborationDetail />
         },
       ],
     },

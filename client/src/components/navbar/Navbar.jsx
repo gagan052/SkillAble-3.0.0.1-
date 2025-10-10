@@ -352,6 +352,9 @@ function Navbar() {
                   </div>
                 )}
               </div>
+              <Link className="link" to="/collaborate" onClick={() => setMobileOpen(false)}>
+                Collaborate
+              </Link>
               <div className="user">
                 <div className="user-profile" onClick={() => {
                   navigate("/dashboard");

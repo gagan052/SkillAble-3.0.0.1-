@@ -12,6 +12,7 @@ import followRoute from "./routes/follow.route.js";
 import savedGigRoute from "./routes/savedGig.route.js";
 import storyRoute from "./routes/story.route.js";
 import notificationRoute from "./routes/notification.route.js";
+import collaborationRoute from "./routes/collaboration.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -76,6 +77,7 @@ app.use("/api/reviews", reviewRoute);
 app.use("/api/follows", followRoute);
 app.use("/api/saved-gigs", savedGigRoute);
 app.use("/api/stories", storyRoute);
+app.use("/api/collaborations", collaborationRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
