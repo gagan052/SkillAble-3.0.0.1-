@@ -11,6 +11,19 @@ const CollaborationCard = ({ collaboration }) => {
   const [selectedRole, setSelectedRole] = useState("");
   const [message, setMessage] = useState("");
   
+  // Get current user from localStorage
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  
+  // Check if this is the user's own collaboration
+  const isOwnCollaboration = currentUser && collaboration && 
+                            collaboration.createdBy === currentUser._id;
+                            
+  // Check if user has already applied to this collaboration
+  const hasApplied = currentUser && collaboration && 
+                    collaboration.applicants && 
+                    collaboration.applicants.some(app => 
+                      app.userId === currentUser._id);
+  
   // Safely check if createdBy is valid
   const isValidCreatedBy = collaboration && 
                           collaboration.createdBy && 
@@ -50,8 +63,15 @@ const CollaborationCard = ({ collaboration }) => {
   const handleApply = async (e) => {
     e.preventDefault();
     
+    // Prevent applying to own collaboration
+    if (isOwnCollaboration) {
+      alert("You cannot apply to your own collaboration.");
+      setIsApplying(false);
+      return;
+    }
+    
     try {
-      await newRequest.post(`/collaborations/${collaboration._id}/apply`, {
+      await newRequest.post(`/collaborations/apply/${collaboration._id}`, {
         roleApplied: selectedRole,
         message: message
       });
@@ -62,7 +82,12 @@ const CollaborationCard = ({ collaboration }) => {
       alert("Application submitted successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to submit application. " + err.response?.data?.message || err.message);
+      // Handle specific error cases
+      if (err.response?.status === 403 && err.response?.data?.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("Failed to submit application. " + (err.response?.data?.message || err.message));
+      }
     }
   };
 
@@ -124,7 +149,23 @@ const CollaborationCard = ({ collaboration }) => {
         )}
       </div>
       
-      {!isApplying ? (
+      {isOwnCollaboration ? (
+        <button 
+          className="apply-button disabled"
+          disabled
+          title="You cannot apply to your own collaboration"
+        >
+          Your Collaboration
+        </button>
+      ) : hasApplied ? (
+        <button 
+          className="apply-button applied"
+          disabled
+          title="You have already applied to this collaboration"
+        >
+          Applied
+        </button>
+      ) : !isApplying ? (
         <button 
           className="apply-button"
           onClick={() => setIsApplying(true)}

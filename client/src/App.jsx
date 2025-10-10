@@ -24,6 +24,7 @@ import Explore from "./pages/explore/Explore";
 import SavedGigs from "./pages/saved/SavedGigs";
 import Collaborate from "./pages/collaborate/Collaborate";
 import CollaborationDetail from "./pages/collaborationDetail/CollaborationDetail";
+import CollaborationRequests from "./pages/collaborationRequests/CollaborationRequests";
 import {
   QueryClient,
   QueryClientProvider,
@@ -141,6 +142,10 @@ function App() {
         {
           path: "/collaborate/:id",
           element: <CollaborationDetail />
+        },
+        {
+          path: "/collaboration-requests",
+          element: <CollaborationRequests />
         },
       ],
     },

@@ -31,7 +31,7 @@ const CollaborationDetail = () => {
   // Apply for a role
   const applyMutation = useMutation({
     mutationFn: (applicationData) => {
-      return newRequest.post(`/collaborations/${id}/apply`, applicationData);
+      return newRequest.post(`/collaborations/apply/${id}`, applicationData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["collaboration", id]);
@@ -39,6 +39,11 @@ const CollaborationDetail = () => {
       setMessage("");
       alert("Application submitted successfully!");
     },
+    onError: (error) => {
+      const errorMessage = error.response?.data?.message || "Failed to submit application";
+      alert(`Error: ${errorMessage}`);
+      console.error("Application submission error:", error);
+    }
   });
 
   // Update application status
