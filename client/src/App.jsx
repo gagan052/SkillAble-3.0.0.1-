@@ -23,7 +23,9 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Explore from "./pages/explore/Explore";
 import SavedGigs from "./pages/saved/SavedGigs";
 import Collaborate from "./pages/collaborate/Collaborate";
+import Community from "./pages/community/Community";
 import CollaborationDetail from "./pages/collaborationDetail/CollaborationDetail";
+import CommunityDetail from "./pages/communityDetail/CommunityDetail";
 import CollaborationRequests from "./pages/collaborationRequests/CollaborationRequests";
 import {
   QueryClient,
@@ -146,6 +148,14 @@ function App() {
         {
           path: "/collaboration-requests",
           element: <CollaborationRequests />
+        },
+        {
+          path: "/community",
+          element: <Community />
+        },
+        {
+          path: "/community/:id",
+          element: <CommunityDetail />
         },
       ],
     },

@@ -8,6 +8,10 @@ const CollaborationSchema = new Schema(
       ref: "User",
       required: true,
     },
+    communityId: {
+      type: Schema.Types.ObjectId,
+      ref: "Community",
+    },
     title: {
       type: String,
       required: true,
@@ -74,6 +78,9 @@ const CollaborationSchema = new Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    expiresAt: {
+      type: Date,
     },
   },
   {

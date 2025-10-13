@@ -36,6 +36,11 @@ const Collaborate = () => {
     <div className="collaborate">
       <div className="container">
         <div className="header">
+          <div className="header-top">
+            <Link to="/collaboration-requests" className="requests-button">
+              View Collaboration Requests
+            </Link>
+          </div>
           <h1>Collaborate with other freelancers</h1>
           <p>
             Find projects to collaborate on or create your own collaboration

@@ -13,8 +13,11 @@ import savedGigRoute from "./routes/savedGig.route.js";
 import storyRoute from "./routes/story.route.js";
 import notificationRoute from "./routes/notification.route.js";
 import collaborationRoute from "./routes/collaboration.route.js";
+import communityRoute from "./routes/community.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import cron from "node-cron";
+import { deleteExpiredCollaborations } from "./controllers/collaboration.controller.js";
 
 const app = express();
 dotenv.config();
@@ -24,6 +27,13 @@ const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO);
     console.log("✅ Connected to MongoDB!");
+
+    // Schedule the daily task to delete expired collaborations
+    cron.schedule("0 2 * * *", () => {
+      console.log("Running daily task to delete expired collaborations...");
+      deleteExpiredCollaborations();
+    });
+
   } catch (error) {
     console.error("❌ MongoDB Connection Error:", error);
   }
@@ -78,6 +88,7 @@ app.use("/api/follows", followRoute);
 app.use("/api/saved-gigs", savedGigRoute);
 app.use("/api/stories", storyRoute);
 app.use("/api/collaborations", collaborationRoute);
+app.use("/api/communities", communityRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

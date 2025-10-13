@@ -10,6 +10,30 @@
     .header {
       text-align: center;
       margin-bottom: 40px;
+      position: relative;
+      
+      .header-top {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+        
+        .requests-button {
+          background-color: #1dbf73;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-weight: 500;
+          font-size: 14px;
+          text-decoration: none;
+          transition: background-color 0.3s;
+          
+          &:hover {
+            background-color: #19a463;
+          }
+        }
+      }
       
       h1 {
         font-size: 32px;

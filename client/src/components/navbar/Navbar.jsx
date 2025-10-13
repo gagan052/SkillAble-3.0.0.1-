@@ -254,6 +254,10 @@ function Navbar() {
             <Link className="link" to="/explore" onClick={() => setMobileOpen(false)}>Explore</Link>
           )}
           
+          {currentUser && (
+            <Link className="link" to="/community" onClick={() => setMobileOpen(false)}>Community</Link>
+          )}
+          
           {currentUser ? (
             <>
               <div className="notification">
@@ -382,7 +386,6 @@ function Navbar() {
                   <Link className="link" to="/orders" onClick={() => setMobileOpen(false)}>Orders</Link>
                   <Link className="link" to="/messages" onClick={() => setMobileOpen(false)}>Messages</Link>
                   <Link className="link" to="/saved" onClick={() => setMobileOpen(false)}>Saved Gigs</Link>
-                  <Link className="link" to="/collaboration-requests" onClick={() => setMobileOpen(false)}>Collaboration Requests</Link>
                   <span className="link" onClick={() => {
                     handleLogout();
                     setMobileOpen(false);

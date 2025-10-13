@@ -1,0 +1,76 @@
+.community-form {
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+  }
+  
+  form {
+    .form-group {
+      margin-bottom: 20px;
+      
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #555;
+      }
+      
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        
+        &:focus {
+          outline: none;
+          border-color: #1dbf73;
+        }
+      }
+      
+      &.checkbox {
+        display: flex;
+        align-items: center;
+        
+        input {
+          margin-right: 10px;
+        }
+        
+        label {
+          margin-bottom: 0;
+        }
+      }
+    }
+    
+    .error {
+      color: #dc3545;
+      margin-bottom: 15px;
+      padding: 10px;
+      background-color: #f8d7da;
+      border-radius: 4px;
+    }
+    
+    .submit-button {
+      background-color: #1dbf73;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s;
+      
+      &:hover:not(:disabled) {
+        background-color: #19a463;
+      }
+      
+      &:disabled {
+        background-color: #a0e5c5;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

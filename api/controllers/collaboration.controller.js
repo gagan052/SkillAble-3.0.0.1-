@@ -1,12 +1,15 @@
 import Collaboration from "../models/collaboration.model.js";
 import createError from "../utils/createError.js";
+import mongoose from "mongoose";
 
 // Create a new collaboration
 export const createCollaboration = async (req, res, next) => {
   try {
+    const { expiresAt, ...otherBody } = req.body;
     const newCollaboration = new Collaboration({
-      ...req.body,
+      ...otherBody,
       createdBy: req.userId,
+      ...(expiresAt && { expiresAt: new Date(expiresAt) }),
     });
     
     const savedCollaboration = await newCollaboration.save();
@@ -18,17 +21,23 @@ export const createCollaboration = async (req, res, next) => {
 
 // Get all collaborations with optional filters
 export const getCollaborations = async (req, res, next) => {
+  console.log("req.userId in getCollaborations:", req.userId);
   const q = req.query;
   const filters = {
     ...(q.search && { title: { $regex: q.search, $options: "i" } }),
     ...(q.skills && { skillsRequired: { $in: q.skills.split(",") } }),
     ...(q.mode && { mode: q.mode }),
     ...(q.userId && { createdBy: q.userId }),
-    ...(q.isActive !== undefined && { isActive: q.isActive === "true" }),
+    isActive: q.isActive === "false" ? false : true, // Default to true, unless explicitly set to "false"
   };
 
+  // Add a filter to exclude collaborations where the user has an accepted application
+  const userAcceptedFilter = req.userId ? {
+    "applicants": { $not: { $elemMatch: { userId: req.userId, status: "accepted" } } }
+  } : {};
+
   try {
-    const collaborations = await Collaboration.find(filters)
+    const collaborations = await Collaboration.find({ ...filters, ...userAcceptedFilter })
       .sort({ createdAt: -1 })
       .populate("createdBy", "username img");
     
@@ -169,20 +178,43 @@ export const updateApplicationStatus = async (req, res, next) => {
       }
       
       rolePosition.filled += 1;
-    }
-    
-    // If un-accepting (changing from accepted to rejected), decrease the filled count
-    if (status === "rejected" && application.status === "accepted") {
-      const rolePosition = collaboration.positions.find(
-        pos => pos.role === application.roleApplied
+
+      // Check if all positions are filled
+      const allPositionsFilled = collaboration.positions.every(
+        (pos) => pos.filled >= pos.count
       );
+
+      if (allPositionsFilled) {
+        collaboration.isActive = false;
+      }
       
-      rolePosition.filled = Math.max(0, rolePosition.filled - 1);
+      // If this collaboration is for a community, automatically add the user to the community
+      if (collaboration.communityId) {
+        const Community = mongoose.model('Community');
+        try {
+          const community = await Community.findById(collaboration.communityId);
+          
+          if (community) {
+            // Check if user is already a member
+            const isMember = community.members.some(member => 
+              member.userId.toString() === application.userId.toString()
+            );
+            
+            if (!isMember) {
+              community.members.push({ userId: application.userId, role: application.roleApplied });
+              await community.save();
+            }
+          } else {
+            console.log("Community not found for collaborationId: ", collaboration.communityId);
+          }
+        } catch (communityErr) {
+          console.error("Error adding user to community: ", communityErr);
+          // Continue with collaboration update even if community update fails
+        }
+      }
     }
-    
-    // Update application status
+
     application.status = status;
-    
     await collaboration.save();
     res.status(200).json({ message: `Application ${status} successfully` });
   } catch (err) {
@@ -216,5 +248,16 @@ export const getUserApplications = async (req, res, next) => {
     res.status(200).json(formattedCollaborations);
   } catch (err) {
     next(err);
+  }
+};
+
+// Delete expired collaborations
+export const deleteExpiredCollaborations = async () => {
+  try {
+    const now = new Date();
+    const result = await Collaboration.deleteMany({ expiresAt: { $lt: now } });
+    console.log(`Deleted ${result.deletedCount} expired collaborations.`);
+  } catch (err) {
+    console.error("Error deleting expired collaborations:", err);
   }
 };

@@ -42,6 +42,7 @@ const CollaborationRequests = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["userCreatedCollaborations"]);
+      queryClient.invalidateQueries(["communities"]); // Invalidate communities cache
     },
   });
 

@@ -4,17 +4,32 @@ import { gigReducer, INITIAL_STATE } from "../../reducers/gigReducer";
 import upload from "../../utils/upload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Add = () => {
   const [singleFile, setSingleFile] = useState(undefined);
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
+  const [isForCommunity, setIsForCommunity] = useState(false);
+  const [communityId, setCommunityId] = useState(null);
   
   // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Check URL parameters for community-specific collaboration
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const communityIdParam = params.get("communityId");
+    const isForCommunityParam = params.get("isForCommunity");
+    
+    if (communityIdParam && isForCommunityParam === "true") {
+      setCommunityId(communityIdParam);
+      setIsForCommunity(true);
+    }
+  }, [location]);
   
   // Check if user is a seller
   useEffect(() => {
@@ -73,6 +88,42 @@ const Add = () => {
 
   const queryClient = useQueryClient();
 
+  const collaborationMutation = useMutation({
+    mutationFn: (collaboration) => {
+      return newRequest.post("/collaborations", collaboration);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["collaborations"]);
+      if (isForCommunity && communityId) {
+        // Add the collaboration to the community
+        communityCollaborationMutation.mutate({
+          collaborationId: data.data._id,
+          title: data.data.title
+        });
+      } else {
+        navigate("/collaborate");
+      }
+    },
+    onError: (error) => {
+      setError(error.response?.data || "Something went wrong!");
+      console.error("Error creating collaboration:", error);
+    }
+  });
+
+  const communityCollaborationMutation = useMutation({
+    mutationFn: (data) => {
+      return newRequest.post(`/communities/${communityId}/collaborations`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["community", communityId]);
+      navigate(`/community/${communityId}`);
+    },
+    onError: (error) => {
+      setError(error.response?.data || "Error adding collaboration to community!");
+      console.error("Error adding collaboration to community:", error);
+    }
+  });
+
   const mutation = useMutation({
     mutationFn: (gig) => {
       return newRequest.post("/gigs", gig);
@@ -90,7 +141,13 @@ const Add = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Validate required fields
+    // If this is a community collaboration, handle it differently
+    if (isForCommunity) {
+      handleCollaborationSubmit(e);
+      return;
+    }
+    
+    // Validate required fields for gigs
     if (!currentUser?.isSeller) {
       setError("Only sellers can create gigs!");
       return;
@@ -137,13 +194,67 @@ const Add = () => {
     setError(null);
     mutation.mutate(state);
   }
+  
+  const handleCollaborationSubmit = (e) => {
+    e.preventDefault();
+    
+    // Get form data from the collaboration form
+    const title = document.getElementById("collab-title").value;
+    const description = document.getElementById("collab-description").value;
+    const skillsRequired = document.getElementById("collab-skills").value.split(",").map(skill => skill.trim());
+    const role = document.getElementById("collab-role").value;
+    const count = parseInt(document.getElementById("collab-count").value) || 1;
+    const mode = document.getElementById("collab-mode").value;
+    const expiresAt = document.getElementById("collab-expiresAt").value;
+    
+    // Set deadline to 30 days from now
+    const deadline = new Date();
+    deadline.setDate(deadline.getDate() + 30);
+    
+    // Validate required fields
+    if (!title) {
+      setError("Please enter a title");
+      return;
+    }
+    if (!description) {
+      setError("Please enter a description");
+      return;
+    }
+    if (skillsRequired.length === 0) {
+      setError("Please enter at least one required skill");
+      return;
+    }
+    if (!role) {
+      setError("Please enter a role");
+      return;
+    }
+    
+    // Create collaboration object
+    const collaboration = {
+      title,
+      description,
+      skillsRequired,
+      positions: [{ role, count, filled: 0 }],
+      mode,
+      deadline: deadline.toISOString(),
+      communityId: communityId,
+      ...(expiresAt && { expiresAt: new Date(expiresAt).toISOString() }),
+    };
+    
+    setError(null);
+    collaborationMutation.mutate(collaboration);
+  }
 
   return (
     <div className="add">
       <div className="container">
         <header className="add-header">
-          <h1>Add New Gig</h1>
-          <p className="subtitle">Create a new service to showcase your skills</p>
+          <h1>{isForCommunity ? "Create Community Collaboration" : "Add New Gig"}</h1>
+          <p className="subtitle">
+            {isForCommunity 
+              ? "Create a collaboration post for your community where users can request to join" 
+              : "Create a new service to showcase your skills"}
+          </p>
         </header>
         
         {error && (
@@ -153,20 +264,98 @@ const Add = () => {
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="gig-form">
-          <div className="sections">
-            <div className="info">
+        {isForCommunity && (
+          <div className="collaboration-form">
+            <form onSubmit={handleCollaborationSubmit}>
               <div className="form-group">
-                <label htmlFor="title">Title</label>
+                <label htmlFor="collab-title">Collaboration Title</label>
                 <input
                   type="text"
-                  id="title"
-                  name="title"
-                  placeholder="e.g. I will do something I'm really good at"
-                  onChange={handleChange}
+                  id="collab-title"
+                  placeholder="Enter a title for your collaboration"
                   required
                 />
               </div>
+              
+              <div className="form-group">
+                <label htmlFor="collab-description">Description</label>
+                <textarea
+                  id="collab-description"
+                  placeholder="Describe what this collaboration is about and what you're looking for"
+                  rows="4"
+                  required
+                ></textarea>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="collab-skills">Required Skills (comma-separated)</label>
+                <input
+                  type="text"
+                  id="collab-skills"
+                  placeholder="e.g. JavaScript, React, UI Design"
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="collab-role">Role</label>
+                <input
+                  type="text"
+                  id="collab-role"
+                  placeholder="e.g. Frontend Developer"
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="collab-count">Number of Positions</label>
+                <input
+                  type="number"
+                  id="collab-count"
+                  min="1"
+                  defaultValue="1"
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="collab-mode">Collaboration Type</label>
+                <select id="collab-mode" required>
+                  <option value="Unpaid">Unpaid</option>
+                  <option value="Paid">Paid</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="collab-expiresAt">Expires At</label>
+                <input
+                  type="datetime-local"
+                  id="collab-expiresAt"
+                />
+              </div>
+              
+              <button type="submit" className="submit-button">
+                Create Collaboration
+              </button>
+            </form>
+          </div>
+        )}
+         
+        {!isForCommunity && (
+          <form onSubmit={handleSubmit} className="gig-form">
+            <div className="sections">
+              <div className="info">
+                <div className="form-group">
+                  <label htmlFor="title">Title</label>
+                  <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="e.g. I will do something I'm really good at"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
               
               <div className="form-group">
                 <label htmlFor="cat">Category</label>
@@ -418,6 +607,7 @@ const Add = () => {
             </button>
           </div>
         </form>
+        )}
       </div>
     </div>
   );

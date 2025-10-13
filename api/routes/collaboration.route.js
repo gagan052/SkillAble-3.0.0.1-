@@ -9,12 +9,16 @@ import {
   applyForCollaboration,
   updateApplicationStatus,
   getUserApplications,
+  deleteExpiredCollaborations,
 } from "../controllers/collaboration.controller.js";
 
 const router = express.Router();
 
 // Create a new collaboration
 router.post("/", verifyToken, createCollaboration);
+
+// Manually trigger deletion of expired collaborations (for testing)
+router.post("/delete-expired", deleteExpiredCollaborations);
 
 // Get all collaborations (with optional filters)
 router.get("/", getCollaborations);
