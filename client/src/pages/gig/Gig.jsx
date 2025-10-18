@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import "./Gig.scss";
-import Slider from "infinite-react-carousel";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
@@ -254,7 +256,7 @@ function Gig() {
     if (!data?.images) return null;
     
     return (
-      <Slider slidesToShow={1} arrowsScroll={1} className="slider" dots arrows>
+      <Slider slidesToShow={1} slidesToScroll={1} className="slider" dots arrows>
         {data.images.map((item, index) => {
           const url = typeof item === 'object' ? item.url : item;
           const isVideo = url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm');

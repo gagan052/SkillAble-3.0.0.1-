@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Slide.scss";
-import Slider from "infinite-react-carousel";
-// import Slider from "react-slick";
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -46,7 +45,7 @@ const Slide = ({ children, slidesToShow, arrowsScroll, autoplay = true }) => {
       <div className="container">
         <Slider 
           slidesToShow={currentSlidesToShow} 
-          arrowsScroll={currentArrowsScroll}
+          slidesToScroll={currentArrowsScroll}
           autoplay={autoplay}
           autoplaySpeed={3000}
           pauseOnHover={true}

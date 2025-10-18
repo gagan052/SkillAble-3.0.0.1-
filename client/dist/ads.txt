@@ -1,0 +1,6 @@
+# SkillAble Authorized Digital Sellers File
+# More info about ads.txt: https://iabtechlab.com/ads-txt/
+
+# This file is intentionally left empty as SkillAble does not currently use programmatic advertising.
+# When you decide to implement advertising, you'll need to add entries in the following format:
+# google.com, pub-9709239481777346, DIRECT, f08c47fec0942fa0
