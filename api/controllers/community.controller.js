@@ -1,5 +1,6 @@
 import Community from "../models/community.model.js";
 import createError from "../utils/createError.js";
+import mongoose from "mongoose";
 
 export const createCommunity = async (req, res, next) => {
   try {
@@ -51,7 +52,7 @@ export const createSubgroup = async (req, res, next) => {
     if (!community) return next(createError(404, "Community not found"));
     
     // Check if user is a member with admin privileges
-    const member = community.members.find(m => m.userId === req.userId);
+    const member = community.members.find(m => m.userId?.toString() === req.userId);
     if (!member) return next(createError(403, "You are not a member of this community"));
     if (member.role !== "admin") return next(createError(403, "Only admins can create subgroups"));
     
@@ -76,16 +77,65 @@ export const createSubgroup = async (req, res, next) => {
 
 export const getCommunity = async (req, res, next) => {
   try {
+    // Check if the ID is valid
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return next(createError(400, "Invalid community ID format"));
+    }
+
+    // First find the community
     const community = await Community.findById(req.params.id);
-    if (!community) return next(createError(404, "Community not found"));
+    if (!community) {
+      console.log(`Community not found for ID: ${req.params.id}`);
+      return next(createError(404, "Community not found"));
+    }
     
     // Check if private community and user is not a member
-    if (!community.isPublic && !community.members.some(member => member.userId === req.userId)) {
+    if (!community.isPublic && !community.members.some(member => member.userId.toString() === req.userId)) {
       return next(createError(403, "You don't have access to this community"));
     }
     
-    res.status(200).json(community);
+    try {
+      // Import User model directly
+      const User = mongoose.model('User');
+      
+      // Get all members with user details in a more direct way
+      const communityObj = community.toObject();
+      const memberDetails = [];
+      
+      // Process each member one by one to ensure we get all details
+      for (const member of communityObj.members) {
+        try {
+          const user = await User.findById(member.userId).select('username img');
+          memberDetails.push({
+            userId: member.userId,
+            role: member.role,
+            joinedAt: member.joinedAt,
+            username: user ? user.username : 'Unknown',
+            img: user ? user.img : ''
+          });
+        } catch (e) {
+          // If we can't get a specific user, add with placeholder data
+          memberDetails.push({
+            userId: member.userId,
+            role: member.role,
+            joinedAt: member.joinedAt,
+            username: 'Unknown',
+            img: ''
+          });
+        }
+      }
+      
+      // Replace members array with the detailed one
+      communityObj.members = memberDetails;
+      
+      res.status(200).json(communityObj);
+    } catch (userErr) {
+      console.error("Error fetching user details:", userErr);
+      // If we can't get user details, still return the community without detailed members
+      res.status(200).json(community);
+    }
   } catch (err) {
+    console.error("Error in getCommunity:", err);
     next(err);
   }
 };
@@ -96,7 +146,7 @@ export const updateCommunity = async (req, res, next) => {
     if (!community) return next(createError(404, "Community not found"));
     
     // Check if user is admin
-    const userMember = community.members.find(member => member.userId === req.userId);
+    const userMember = community.members.find(member => member.userId?.toString() === req.userId);
     if (!userMember || userMember.role !== "admin") {
       return next(createError(403, "Only community admins can update community details"));
     }
@@ -119,7 +169,7 @@ export const joinCommunity = async (req, res, next) => {
     if (!community) return next(createError(404, "Community not found"));
     
     // Check if user is already a member
-    if (community.members.some(member => member.userId === req.userId)) {
+    if (community.members.some(member => member.userId?.toString() === req.userId)) {
       return next(createError(400, "You are already a member of this community"));
     }
     
@@ -146,12 +196,12 @@ export const leaveCommunity = async (req, res, next) => {
     if (!community) return next(createError(404, "Community not found"));
     
     // Check if user is a member
-    if (!community.members.some(member => member.userId === req.userId)) {
+    if (!community.members.some(member => member.userId?.toString() === req.userId)) {
       return next(createError(400, "You are not a member of this community"));
     }
     
     // Check if user is the only admin
-    const isAdmin = community.members.find(member => member.userId === req.userId)?.role === "admin";
+    const isAdmin = community.members.find(member => member.userId?.toString() === req.userId)?.role === "admin";
     const adminCount = community.members.filter(member => member.role === "admin").length;
     
     if (isAdmin && adminCount === 1) {
@@ -176,7 +226,7 @@ export const createPoll = async (req, res, next) => {
     if (!community) return next(createError(404, "Community not found"));
     
     // Check if user is a member
-    if (!community.members.some(member => member.userId === req.userId)) {
+    if (!community.members.some(member => member.userId?.toString() === req.userId)) {
       return next(createError(403, "Only community members can create polls"));
     }
     
@@ -207,7 +257,7 @@ export const votePoll = async (req, res, next) => {
     if (!community) return next(createError(404, "Community not found"));
     
     // Check if user is a member
-    if (!community.members.some(member => member.userId === req.userId)) {
+    if (!community.members.some(member => member.userId?.toString() === req.userId)) {
       return next(createError(403, "Only community members can vote in polls"));
     }
     
@@ -244,7 +294,7 @@ export const addCollaboration = async (req, res, next) => {
     if (!community) return next(createError(404, "Community not found"));
     
     // Check if user is a member with admin or moderator role
-    const userMember = community.members.find(member => member.userId === req.userId);
+    const userMember = community.members.find(member => member.userId?.toString() === req.userId);
     if (!userMember || (userMember.role !== "admin" && userMember.role !== "moderator")) {
       return next(createError(403, "Only admins or moderators can add collaborations"));
     }

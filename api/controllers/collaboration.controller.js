@@ -201,7 +201,10 @@ export const updateApplicationStatus = async (req, res, next) => {
             );
             
             if (!isMember) {
-              community.members.push({ userId: application.userId, role: application.roleApplied });
+              community.members.push({ 
+                userId: application.userId, 
+                role: "member" // Using valid enum value "member" instead of the role applied
+              });
               await community.save();
             }
           } else {
@@ -251,13 +254,35 @@ export const getUserApplications = async (req, res, next) => {
   }
 };
 
-// Delete expired collaborations
+// Delete expired collaborations and fulfilled collaborations
 export const deleteExpiredCollaborations = async () => {
   try {
     const now = new Date();
-    const result = await Collaboration.deleteMany({ expiresAt: { $lt: now } });
-    console.log(`Deleted ${result.deletedCount} expired collaborations.`);
+    
+    // Delete collaborations that have expired
+    const expiredResult = await Collaboration.deleteMany({ expiresAt: { $lt: now } });
+    console.log(`Deleted ${expiredResult.deletedCount} expired collaborations.`);
+    
+    // Delete collaborations where deadline has passed
+    const deadlineResult = await Collaboration.deleteMany({ deadline: { $lt: now } });
+    console.log(`Deleted ${deadlineResult.deletedCount} collaborations with passed deadlines.`);
+    
+    // Find collaborations where all positions are filled
+    const collaborations = await Collaboration.find({});
+    let fulfilledCount = 0;
+    
+    for (const collab of collaborations) {
+      // Check if all positions are filled
+      const allPositionsFilled = collab.positions.every(position => position.filled >= position.count);
+      
+      if (allPositionsFilled) {
+        await Collaboration.findByIdAndDelete(collab._id);
+        fulfilledCount++;
+      }
+    }
+    
+    console.log(`Deleted ${fulfilledCount} collaborations with all positions filled.`);
   } catch (err) {
-    console.error("Error deleting expired collaborations:", err);
+    console.error("Error deleting expired/fulfilled collaborations:", err);
   }
 };

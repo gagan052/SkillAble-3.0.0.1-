@@ -19,7 +19,8 @@ const CommunitySchema = new Schema(
       type: [
         {
           userId: {
-            type: String,
+            type: Schema.Types.ObjectId,
+            ref: "User",
             required: true,
           },
           role: {

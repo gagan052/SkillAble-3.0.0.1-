@@ -10,7 +10,7 @@ const getBaseURL = (url) => {
     return 'http://localhost:8080/api/';
   }
   // For all other endpoints, use production server
-  return "https://skillable-3-0-0-1.onrender.com/api/";
+  return "http://localhost:8080/api/";
 };
 
 // Create axios instance with dynamic baseURL
