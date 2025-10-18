@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import { Link } from "react-router-dom";
-import "./communityDetail.scss";
+import "./CommunityDetail.scss";
 
 const CommunityDetail = () => {
   const { id } = useParams();
