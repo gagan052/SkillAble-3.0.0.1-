@@ -57,7 +57,7 @@ app.use(cors({
      "https://new-skillable-frontend.onrender.com",
     "https://skillable-gagan.onrender.com",
     "https://skillable-3-0-0-1-gagan.onrender.com",
-    "http://devxcom.dpdns.org/",
+    "https://devxcom.dpdns.org",
 
      
     ],
