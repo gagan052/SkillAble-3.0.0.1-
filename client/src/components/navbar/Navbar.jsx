@@ -237,7 +237,7 @@ function Navbar() {
         {/* Logo */}
         <div className="logo">
           <Link className="link" to="/" onClick={scrollToTop}>
-            <span className="text">SkillAble</span>
+            <span className="text">DevXcom</span>
           </Link>
           <span className="dot">.</span>
         </div>
