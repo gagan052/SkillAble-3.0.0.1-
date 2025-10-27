@@ -13,7 +13,7 @@ import Orders from "./pages/orders/Orders";
 import Messages from "./pages/messages/Messages";
 import Message from "./pages/message/Message";
 import MyGigs from "./pages/myGigs/MyGigs";
-import AddStory from "./pages/addStory/AddStory";
+// import AddStory from "./pages/addStory/AddStory";
 import Privacy from "./pages/privacy/Privacy";
 import About from "./pages/about/About";
 import Contact from "./pages/contact/Contact";
