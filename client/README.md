@@ -1,7 +1,7 @@
 # Freelancing Project Client
 
 ## Overview
-This is the client-side application for the SkillAble freelancing platform, built with React and Vite. The application allows users to browse gigs, place orders, communicate with freelancers, and manage payments through Stripe.
+This is the client-side application for the DevXcom freelancing platform, built with React and Vite. The application allows users to browse gigs, place orders, communicate with freelancers, and manage payments through Stripe.
 
 ## Prerequisites
 - Node.js (v14 or higher)

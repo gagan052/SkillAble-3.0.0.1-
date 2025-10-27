@@ -3,8 +3,8 @@ import axios from "axios";
 const upload = async (file) => {
   const data = new FormData();
   data.append("file", file);
-  data.append("upload_preset", "SkillAble");
-  data.append("folder","SkillAble");
+  data.append("upload_preset", "DevXcom");
+  data.append("folder","DevXcom");
 
   try {
     // Determine if the file is a video or image based on its type

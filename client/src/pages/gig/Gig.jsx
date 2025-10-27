@@ -333,7 +333,7 @@ function Gig() {
         <div className="container">
           <div className="left">
             <div className="breadcrumbs">
-              <Link to="/">SkillAble</Link> {" > "}
+              <Link to="/">DevXcom</Link> {" > "}
               <Link to={`/gigs?cat=${data.cat}`}>{data.cat}</Link> {" > "}
               <span>{data.title.substring(0, 30)}{data.title.length > 30 ? "..." : ""}</span>
             </div>

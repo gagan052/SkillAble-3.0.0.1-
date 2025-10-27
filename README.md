@@ -1,7 +1,7 @@
-# SkillAble - Freelancing Platform
+# DevXcom - Freelancing Platform
 
 ## Overview
-SkillAble is a full-stack freelancing platform that connects clients with skilled freelancers. The platform allows users to browse gigs, place orders, communicate with freelancers, and process payments securely.
+DevXcom is a full-stack freelancing platform that connects clients with skilled freelancers. The platform allows users to browse gigs, place orders, communicate with freelancers, and process payments securely.
 
 ## Project Structure
 This project consists of two main components:

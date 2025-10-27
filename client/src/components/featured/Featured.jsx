@@ -139,7 +139,7 @@ function Featured() {
           ) : (
             <div className="cta-section">
               <p className="cta-text">
-                Join thousands of freelancers and clients on SkillAble
+                Join thousands of freelancers and clients on DevXcom
               </p>
               <div className="cta-buttons">
                 <button 

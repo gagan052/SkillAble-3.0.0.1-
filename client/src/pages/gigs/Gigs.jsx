@@ -183,7 +183,7 @@ function Gigs() {
   return (
     <div className="gigs">
       <div className="container">
-        <span className="breadcrumbs">SkillAble {selectedCategory ? `- ${selectedCategory} -` : ""}</span>
+        <span className="breadcrumbs">DevXcom {selectedCategory ? `- ${selectedCategory} -` : ""}</span>
         <h1>{categoryInfo.title}</h1>
         <p className="para">
           {categoryInfo.desc}

@@ -131,7 +131,7 @@ function Register() {
             <div className="left">
               <div className="section-header">
                 <h1>Create a new account</h1>
-                <p>Join thousands of freelancers and clients on SkillAble</p>
+                <p>Join thousands of freelancers and clients on DevXcom</p>
               </div>
               
               <div className="form-group">

@@ -75,7 +75,7 @@ function Contact() {
           <div className="contact-info">
             <h2>Get In Touch</h2>
             <p>
-              Have questions about SkillAble? Want to partner with us? Or just want to say hello? 
+              Have questions about DevXcom? Want to partner with us? Or just want to say hello? 
               We'd love to hear from you! Reach out using any of the methods below.
             </p>
             
@@ -83,8 +83,8 @@ function Contact() {
               <FaEnvelope className="icon" />
               <div>
                 <h3>Email</h3>
-                <p><a href="mailto:contact@skillable.com">contact@skillable.com</a></p>
-                <p><a href="mailto:support@skillable.com">support@skillable.com</a></p>
+                <p><a href="mailto:contact@DevXcom.com">contact@DevXcom.com</a></p>
+                <p><a href="mailto:support@DevXcom.com">support@DevXcom.com</a></p>
               </div>
             </div>
             
@@ -101,7 +101,7 @@ function Contact() {
               <FaMapMarkerAlt className="icon" />
               <div>
                 <h3>Address</h3>
-                <p>SkillAble Headquarters</p>
+                <p>DevXcom Headquarters</p>
                 <p>Rose Garden</p>
                 <p>Ambala city, Haryana 134007</p>
                 <p>India</p>
@@ -189,7 +189,7 @@ function Contact() {
           <h2>Frequently Asked Questions</h2>
           
           <div className="faq-item">
-            <h3>How do I create an account on SkillAble?</h3>
+            <h3>How do I create an account on DevXcom?</h3>
             <p>
               Creating an account is easy! Simply click on the "Join" button in the top right corner of our homepage, 
               or visit our <a href="/register">registration page</a>. Follow the prompts to set up your profile.
@@ -199,13 +199,13 @@ function Contact() {
           <div className="faq-item">
             <h3>What payment methods do you accept?</h3>
             <p>
-              SkillAble accepts various payment methods including credit/debit cards, PayPal, and bank transfers. 
+              DevXcom accepts various payment methods including credit/debit cards, PayPal, and bank transfers. 
               All payments are processed securely through our trusted payment gateways.
             </p>
           </div>
           
           <div className="faq-item">
-            <h3>How do I become a seller on SkillAble?</h3>
+            <h3>How do I become a seller on DevXcom?</h3>
             <p>
               To become a seller, you need to create an account and complete your profile. Then, click on "Become a Seller" 
               in your dashboard and follow the steps to set up your services and gigs.
@@ -213,9 +213,9 @@ function Contact() {
           </div>
           
           <div className="faq-item">
-            <h3>What fees does SkillAble charge?</h3>
+            <h3>What fees does DevXcom charge?</h3>
             <p>
-              SkillAble charges a 15% commission on completed orders. This fee covers platform maintenance, 
+              DevXcom charges a 15% commission on completed orders. This fee covers platform maintenance, 
               payment processing, marketing, and customer support services.
             </p>
           </div>

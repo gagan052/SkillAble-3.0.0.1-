@@ -160,7 +160,7 @@ function Home() {
         <div className="container">
           <div className="item">
             <h1>
-              SkillAble <i>business</i>
+              DevXcom <i>business</i>
             </h1>
             <h1>
               A business solution designed for <i>teams</i>
@@ -183,7 +183,7 @@ function Home() {
               <img src="./img/check.png" alt="" />
               Manage teamwork and boost productivity with one powerful workspace
             </div>
-            <button>Explore SkillAble Business</button>
+            <button>Explore DevXcom Business</button>
           </div>
           <div className="item">
             <img

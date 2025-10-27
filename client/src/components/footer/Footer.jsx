@@ -66,8 +66,8 @@ function Footer() {
             <div className={`mobile-dropdown-content ${openSections.support ? 'open' : ''}`}>
               <span>Help & Support</span>
               <span>Trust & Safety</span>
-              <span>Selling on SkillAble</span>
-              <span>Buying on SkillAble</span>
+              <span>Selling on DevXcom</span>
+              <span>Buying on DevXcom</span>
               <span><Link to="/contact">Contact Support</Link></span>
             </div>
           </div>
@@ -94,20 +94,20 @@ function Footer() {
           </div>
           <div className="item">
             <h2 onClick={() => toggleSection('more')} className="mobile-dropdown-header">
-              More From SkillAble
+              More From DevXcom
               <span className="mobile-dropdown-icon">
                 {openSections.more ? <FaChevronUp /> : <FaChevronDown />}
               </span>
             </h2>
             <div className={`mobile-dropdown-content ${openSections.more ? 'open' : ''}`}>
-              <span>SkillAble Business</span>
-              <span>SkillAble Pro</span>
-              <span>SkillAble Logo Maker</span>
-              <span>SkillAble Guides</span>
+              <span>DevXcom Business</span>
+              <span>DevXcom Pro</span>
+              <span>DevXcom Logo Maker</span>
+              <span>DevXcom Guides</span>
               <span>Get Inspired</span>
-              <span>SkillAble Select</span>
+              <span>DevXcom Select</span>
               <span>ClearVoice</span>
-              <span>SkillAble Workspace</span>
+              <span>DevXcom Workspace</span>
               <span>Learn</span>
               <span>Working Not Working</span>
             </div>
@@ -116,8 +116,8 @@ function Footer() {
         <hr />
         <div className="bottom">
           <div className="left">
-            <h2>SkillAble</h2>
-            <span>© SkillAble International Ltd. 2025</span>
+            <h2>DevXcom</h2>
+            <span>© DevXcom International Ltd. 2025</span>
           </div>
           <div className="right">
             <div className="social">
