@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 const Slide = ({ children, slidesToShow, arrowsScroll, autoplay = true }) => {
   const [currentSlidesToShow, setCurrentSlidesToShow] = useState(slidesToShow);
   const [currentArrowsScroll, setCurrentArrowsScroll] = useState(arrowsScroll);
+  const childrenCount = React.Children.count(children);
 
   // Function to update slides based on window width
   const updateSlidesCount = () => {
@@ -44,12 +45,16 @@ const Slide = ({ children, slidesToShow, arrowsScroll, autoplay = true }) => {
     <div className="slide">
       <div className="container">
         <Slider 
-          slidesToShow={currentSlidesToShow} 
-          slidesToScroll={currentArrowsScroll}
-          autoplay={autoplay}
+          slidesToShow={currentSlidesToShow}
+          slidesToScroll={Math.min(currentArrowsScroll || 1, childrenCount || 1)}
+          infinite={childrenCount > currentSlidesToShow}
+          dots={childrenCount > 1}
+          arrows={childrenCount > 1}
+          autoplay={autoplay && childrenCount > 1}
           autoplaySpeed={3000}
           pauseOnHover={true}
           initialSlide={0}
+          adaptiveHeight
         >
           {children}
         </Slider>

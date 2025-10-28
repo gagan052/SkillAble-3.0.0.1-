@@ -256,32 +256,58 @@ function Gig() {
     if (!data?.images) return null;
     
     return (
-      <Slider slidesToShow={1} slidesToScroll={1} className="slider" dots arrows>
-        {data.images.map((item, index) => {
-          const url = typeof item === 'object' ? item.url : item;
-          const isVideo = url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm');
+      // <Slider slidesToShow={1} slidesToScroll={1} className="slider" dots arrows>
+      //   {data.images.map((item, index) => {
+      //     const url = typeof item === 'object' ? item.url : item;
+      //     const isVideo = url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm');
           
-          return (
-            <div key={index} className={`slider-item ${isVideo ? 'video-item' : ''}`}>
-              {isVideo ? (
-                <video 
-                  controls
-                  playsInline
-                  autoPlay
-                  controlsList="nodownload"
-                  className="slider-video"
-                  loading="lazy"
-                >
-                  <source src={url} type={url.toLowerCase().endsWith('.mp4') ? 'video/mp4' : 'video/webm'} />
-                  Your browser does not support the video tag.
-                </video>
-              ) : (
-                <img src={url} alt={`Gig content ${index + 1}`} loading="lazy" />
-              )}
-            </div>
-          );
-        })}
-      </Slider>
+      //     return (
+      //       <div key={index} className={`slider-item ${isVideo ? 'video-item' : ''}`}>
+      //         {isVideo ? (
+      //           <video 
+      //             controls
+      //             playsInline
+      //             autoPlay
+      //             controlsList="nodownload"
+      //             className="slider-video"
+      //             loading="lazy"
+      //           >
+      //             <source src={url} type={url.toLowerCase().endsWith('.mp4') ? 'video/mp4' : 'video/webm'} />
+      //             Your browser does not support the video tag.
+      //           </video>
+      //         ) : (
+      //           <img src={url} alt={`Gig content ${index + 1}`} loading="lazy" />
+      //         )}
+      //       </div>
+      //     );
+      //   })}
+      // </Slider>
+      <Slider slidesToShow={1} arrowsScroll={1} className="slider" dots arrows>
+                {data.images && data.images.map((item, index) => {
+                  const url = typeof item === 'object' ? item.url : item;
+                  const isVideo = url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm');
+                  
+                  return (
+                    <div key={index} className={`slider-item ${isVideo ? 'video-item' : ''}`}>
+                      {isVideo ? (
+                        <video 
+                          controls
+                          playsInline
+                          controlsList="nodownload"
+                          className="slider-video"
+                          
+                        >
+                          <source src={url} type={url.toLowerCase().endsWith('.mp4') ? 'video/mp4' : 'video/webm'} />
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : (
+                        <img src={url} alt={`Gig content $
+                          {index+ 1}`} />
+                      )}
+                    </div>
+                  );
+                })}
+              </Slider>
     );
   }, [data?.images]);
 

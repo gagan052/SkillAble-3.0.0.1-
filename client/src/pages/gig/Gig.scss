@@ -10,6 +10,8 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    // background-color: #ffc108;
+    
     
     // Add top padding for mobile devices to prevent navbar overlap
     @media (max-width: 767px) {
@@ -29,8 +31,16 @@
     .left {
       flex: 2;
       display: flex;
+      width: 70%;
       flex-direction: column;
       gap: 15px;
+      // background-color: green;
+
+      @media (max-width: 766px){
+        width: 100%;
+        flex: 1
+      }
+
 
       .breadcrumbs {
         font-weight: 300;
@@ -254,21 +264,64 @@
         background-color: #F5F5F5;
         border-radius: 8px;
         overflow: hidden;
+        object-fit: fill;
+
+        // @media (min-width: 2825px){
+        //   height: 600px;
+        //   width: auto;
+        // }
+      
+        // @media (min-width: 1440px){
+        //   height: 500px;
+        // }
+        // @media (min-width: 1024px){
+        //   height: 500px;
+        // }
+        // @media (min-width: 768px){
+        //   height: 400px;
+        // }
+        // @media (min-width: 400px){
+        //   height: 300px;
+        // }
+        @media (min-width: 2825px){
+          height: 500px;
+          width: auto;
+        }
+        // @media screen and (min-width: 760px) {
+        //   height: 500px;
+        //   width: auto;
+        // }
+        
+
+        // overflow: hidden;
+        // object-fit: cover;
+
+        .slider-item{
+          
+          //  background-color: #ffc108
+        }
+
+        video{
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
         
         img {
           max-height: 300px;
-          width: 100%;
-          object-fit: contain;
+          width: 100%;;
+          // overflow: hidden;
+          object-fit: fill;
+          
           
           @media (min-width: 768px) {
             max-height: 400px;
           }
           
-          
-          
           @media (min-width: 1024px) {
             max-height: 500px;
           }
+
         }
       }
 
