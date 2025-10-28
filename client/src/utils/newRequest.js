@@ -7,12 +7,12 @@ const isDevelopment = import.meta.env.DEV;
 const getBaseURL = (url) => {
   // For community endpoints, use local server in development
   if (isDevelopment
-     //&& (url.startsWith('/communities') || url.includes('communities'))
+     && (url.startsWith('/communities') || url.includes('communities'))
   ) {
     return 'http://localhost:8080/api/';
   }
   // For all other endpoints, use production server
-  // return "https://skillable-3-0-0-1.onrender.com/api/";
+  return "https://skillable-3-0-0-1.onrender.com/api/";
 };
 
 // Create axios instance with dynamic baseURL
