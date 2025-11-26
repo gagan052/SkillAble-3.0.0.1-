@@ -12,7 +12,7 @@ export const register = async (req, res, next) => {
         { username: req.body.username },
         { email: req.body.email }
       ]
-    });
+    }).lean();
 
     if (existingUser) {
       if (existingUser.username === req.body.username) {
@@ -42,15 +42,23 @@ export const register = async (req, res, next) => {
 
     // Save user to database
     await newUser.save();
+
+    // Send OTP to user's email asynchronously (do not block response)
+    Promise.resolve().then(() => {
+      sendEmailOTP(req.body.email, emailOtp).catch((err) => {
+        console.error('Error sending email OTP:', err);
+      });
+    });
     
-    // Send OTP to user's email
-    await sendEmailOTP(req.body.email, emailOtp);
-    
-    // If phone number is provided, send OTP to phone as well
+    // If phone number is provided, send OTP to phone as well (async)
     if (req.body.phone) {
       const phoneOtp = generateOTP();
       await User.findByIdAndUpdate(newUser._id, { phoneOtp });
-      await sendSmsOTP(req.body.phone, phoneOtp);
+      Promise.resolve().then(() => {
+        sendSmsOTP(req.body.phone, phoneOtp).catch((err) => {
+          console.error('Error sending SMS OTP:', err);
+        });
+      });
     }
 
     res.status(201).json({ 
@@ -196,7 +204,13 @@ export const login = async (req, res, next) => {
       otpExpiry.setMinutes(otpExpiry.getMinutes() + 10);
       
       await User.findByIdAndUpdate(user._id, { emailOtp, otpExpiry });
-      await sendEmailOTP(user.email, emailOtp);
+
+      // Send email OTP asynchronously to avoid blocking login response
+      Promise.resolve().then(() => {
+        sendEmailOTP(user.email, emailOtp).catch((err) => {
+          console.error('Error sending email OTP:', err);
+        });
+      });
       
       return res.status(403).json({
         message: "Email not verified. A new verification code has been sent to your email.",
