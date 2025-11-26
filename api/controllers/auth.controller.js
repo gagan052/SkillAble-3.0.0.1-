@@ -26,43 +26,19 @@ export const register = async (req, res, next) => {
     // Create hash for password
     const hash = bcrypt.hashSync(req.body.password, 5);
     
-    // Generate OTP for email verification
-    const emailOtp = generateOTP();
-    const otpExpiry = new Date();
-    otpExpiry.setMinutes(otpExpiry.getMinutes() + 10); // OTP valid for 10 minutes
-    
-    // Create new user with OTP
     const newUser = new User({
       ...req.body,
       password: hash,
-      emailOtp,
-      otpExpiry,
+      isEmailVerified: true,
+      emailOtp: null,
+      otpExpiry: null,
       authProvider: 'local'
     });
 
-    // Save user to database
     await newUser.save();
 
-    // Send OTP to user's email asynchronously (do not block response)
-    Promise.resolve().then(() => {
-      sendEmailOTP(req.body.email, emailOtp).catch((err) => {
-        console.error('Error sending email OTP:', err);
-      });
-    });
-    
-    // If phone number is provided, send OTP to phone as well (async)
-    if (req.body.phone) {
-      const phoneOtp = generateOTP();
-      await User.findByIdAndUpdate(newUser._id, { phoneOtp });
-      Promise.resolve().then(() => {
-        sendSmsOTP(req.body.phone, phoneOtp).catch((err) => {
-          console.error('Error sending SMS OTP:', err);
-        });
-      });
-    }
-
     res.status(201).json({ 
-      message: "User has been created. Please verify your email.",
+      message: "User has been created.",
       userId: newUser._id
     });
   } catch (err) {
@@ -157,8 +133,11 @@ export const resendOTP = async (req, res, next) => {
       // Update user with new email OTP
       await User.findByIdAndUpdate(userId, { emailOtp: otp, otpExpiry });
       
-      // Send OTP to email
-      await sendEmailOTP(user.email, otp);
+      // Send OTP to email and report delivery status
+      const sent = await sendEmailOTP(user.email, otp);
+      if (!sent) {
+        return next(createError(502, "Failed to send OTP email. Please try again later."));
+      }
       
       res.status(200).json({ message: "OTP sent to your email" });
     } else if (type === 'phone') {
@@ -169,8 +148,11 @@ export const resendOTP = async (req, res, next) => {
       // Update user with new phone OTP
       await User.findByIdAndUpdate(userId, { phoneOtp: otp, otpExpiry });
       
-      // Send OTP to phone
-      await sendSmsOTP(user.phone, otp);
+      // Send OTP to phone and report delivery status
+      const sent = await sendSmsOTP(user.phone, otp);
+      if (!sent) {
+        return next(createError(502, "Failed to send OTP SMS. Please try again later."));
+      }
       
       res.status(200).json({ message: "OTP sent to your phone" });
     } else {
@@ -197,27 +179,7 @@ export const login = async (req, res, next) => {
       return next(createError(400, "Wrong password or username!"));
 
     // Check if email is verified
-    if (!user.isEmailVerified) {
-      // Generate new OTP for verification
-      const emailOtp = generateOTP();
-      const otpExpiry = new Date();
-      otpExpiry.setMinutes(otpExpiry.getMinutes() + 10);
-      
-      await User.findByIdAndUpdate(user._id, { emailOtp, otpExpiry });
 
-      // Send email OTP asynchronously to avoid blocking login response
-      Promise.resolve().then(() => {
-        sendEmailOTP(user.email, emailOtp).catch((err) => {
-          console.error('Error sending email OTP:', err);
-        });
-      });
-      
-      return res.status(403).json({
-        message: "Email not verified. A new verification code has been sent to your email.",
-        userId: user._id,
-        requiresVerification: true
-      });
-    }
 
     const token = jwt.sign(
       {

@@ -5,13 +5,13 @@ const isDevelopment = import.meta.env.DEV;
 
 // Create a function to determine the appropriate base URL for each request
 const getBaseURL = (url) => {
-  // For community endpoints, use local server in development
-  if (isDevelopment
-    //  && (url.startsWith('/communities') || url.includes('communities'))
-  ) {
-    // return 'http://localhost:8080/api/';
+  const override = import.meta.env.VITE_API_BASE_URL;
+  if (override) {
+    return override.endsWith("/") ? override : `${override}/`;
   }
-  // For all other endpoints, use production server
+  if (isDevelopment) {
+    return "http://localhost:8080/api/";
+  }
   return "https://skillable-3-0-0-1.onrender.com/api/";
 };
 

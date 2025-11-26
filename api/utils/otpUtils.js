@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import axios from 'axios';
 
 // Generate a random 6-digit OTP
 export const generateOTP = () => {
@@ -86,6 +87,21 @@ export const sendEmailOTP = async (email, otp) => {
 
   if (process.env.NODE_ENV === 'development') {
     console.log(`DEV: Email OTP for ${email}: ${otp}`);
+  }
+
+  // Try Mailgun HTTP API first if configured
+  if (process.env.MAILGUN_DOMAIN && process.env.MAILGUN_API_KEY) {
+    try {
+      const mgURL = `https://api.mailgun.net/v3/${process.env.MAILGUN_DOMAIN}/messages`;
+      const params = new URLSearchParams({ from: mailOptions.from, to: email, subject: mailOptions.subject, text: mailOptions.text, html: mailOptions.html });
+      await axios.post(mgURL, params, {
+        auth: { username: 'api', password: process.env.MAILGUN_API_KEY },
+        timeout: 10000,
+      });
+      return true;
+    } catch (mgErr) {
+      console.error('Mailgun send failed, switching to SMTP:', mgErr?.response?.data || mgErr.message);
+    }
   }
 
   try {

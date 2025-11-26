@@ -34,12 +34,19 @@ function Login() {
       localStorage.setItem("currentUser", JSON.stringify(res.data));
       navigate("/");
     } catch (err) {
-      // 确保错误信息是字符串而不是对象
-      const errorData = err.response?.data;
-      if (errorData && typeof errorData === 'object') {
-        setError(errorData.message || JSON.stringify(errorData));
+      const status = err.response?.status;
+      const data = err.response?.data;
+      if (status === 403 && data?.requiresVerification && data?.userId) {
+        setVerificationNeeded(true);
+        setUserId(data.userId);
+        setError(null);
       } else {
-        setError(errorData || "Something went wrong!");
+        const errorData = data;
+        if (errorData && typeof errorData === 'object') {
+          setError(errorData.message || JSON.stringify(errorData));
+        } else {
+          setError(errorData || "Something went wrong!");
+        }
       }
     } finally {
       setLoading(false);

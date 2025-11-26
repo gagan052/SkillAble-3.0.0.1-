@@ -107,8 +107,7 @@ function Register() {
         img: url,
       });
 
-      // Navigate to verification page
-      navigate(`/verify-email/${response.data.userId}`);
+      navigate('/login');
     } catch (err) {
       setError(err.response?.data || err.message || "Something went wrong");
     } finally {
