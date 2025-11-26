@@ -43,33 +43,43 @@ newRequest.interceptors.request.use(
 
 // Add a response interceptor to handle errors consistently
 newRequest.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
-    // Log the error for debugging
-    console.error("API Error:", error.response?.status, error.response?.data);
-    
-    // Handle specific error codes
-    if (error.response) {
-      // Unauthorized - redirect to login
-      if (error.response.status === 401) {
-        // Optional: redirect to login page if token is invalid/expired
-        // window.location.href = "/login";
-      }
-      
-      // Forbidden - usually permission issues
-      if (error.response.status === 403) {
-        // Add custom message if not provided by server
-        if (!error.response.data?.message) {
-          error.response.data = {
-            ...error.response.data,
-            message: "You don't have permission to perform this action."
-          };
+    const status = error.response?.status;
+    const url = error.config?.url || "";
+    const currentUser = (() => {
+      try { return JSON.parse(localStorage.getItem("currentUser")); } catch { return null; }
+    })();
+    const hasAuthHeader = !!error.config?.headers?.Authorization;
+
+    if (status === 401) {
+      // Suppress noisy 401 logs
+      // If we thought we were authenticated, clear stale token and optionally redirect
+      if (hasAuthHeader || (currentUser && currentUser.accessToken)) {
+        localStorage.removeItem("currentUser");
+        // Only redirect if not already on public auth pages
+        const publicPaths = ["/login", "/register", "/verify-email/"];
+        const path = typeof window !== "undefined" ? window.location.pathname : "";
+        if (!publicPaths.some(p => path.startsWith(p))) {
+          // window.location.href = "/login";
         }
       }
+      return Promise.reject(error);
     }
-    
+
+    // Forbidden - add a friendly message if missing
+    if (status === 403) {
+      if (!error.response.data?.message) {
+        error.response.data = {
+          ...error.response.data,
+          message: "You don't have permission to perform this action."
+        };
+      }
+    } else {
+      // Log other errors for debugging
+      console.error("API Error:", status, error.response?.data, "on", url);
+    }
+
     return Promise.reject(error);
   }
 );

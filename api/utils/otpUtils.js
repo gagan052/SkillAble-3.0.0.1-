@@ -8,37 +8,65 @@ export const generateOTP = () => {
 // Send OTP via email
 export const sendEmailOTP = async (email, otp) => {
   const delay = (ms) => new Promise((r) => setTimeout(r, ms));
-  const createTransporter = () => {
+
+  const createPrimaryTransporter = () => {
     if (process.env.SMTP_HOST) {
       return nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT) || 465,
         secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : true,
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASSWORD,
-        },
+        auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
         pool: true,
         maxConnections: 5,
         maxMessages: 100,
+        connectionTimeout: 10000,
+        socketTimeout: 10000,
+        greetingTimeout: 5000,
       });
     }
     return nodemailer.createTransport({
       service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
       pool: true,
+      connectionTimeout: 10000,
+      socketTimeout: 10000,
+      greetingTimeout: 5000,
     });
   };
 
-  const transporter = createTransporter();
+  const createFallbackTransporter = () => {
+    if (process.env.SMTP_HOST) {
+      return nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: 587,
+        secure: false,
+        auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
+        pool: true,
+        maxConnections: 5,
+        maxMessages: 100,
+        connectionTimeout: 10000,
+        socketTimeout: 10000,
+        greetingTimeout: 5000,
+      });
+    }
+    return nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASSWORD },
+      pool: true,
+      connectionTimeout: 10000,
+      socketTimeout: 10000,
+      greetingTimeout: 5000,
+    });
+  };
+
+  let transporter = createPrimaryTransporter();
   const mailOptions = {
     from: `SkillAble <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'SkillAble - Email Verification OTP',
-    text: `Your SkillAble verification code is ${otp}. It expires in 10 minutes. If you didn't request this code, ignore this email.`,
+    text: `Your DevXcom verification code is ${otp}. It expires in 10 minutes. If you didn't request this code, ignore this email.`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
         <h2 style="color: #1dbf73; text-align: center;">SkillAble Email Verification</h2>
@@ -49,15 +77,24 @@ export const sendEmailOTP = async (email, otp) => {
         </div>
         <p>This code will expire in 10 minutes.</p>
         <p>If you didn't request this code, please ignore this email.</p>
-        <p>Thank you,<br>The SkillAble Team</p>
+        <p>Thank you,<br>The DevXcom Team</p>
       </div>
     `,
+    priority: 'high',
+    replyTo: process.env.EMAIL_USER,
   };
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`DEV: Email OTP for ${email}: ${otp}`);
+  }
 
   try {
     try {
       await transporter.verify();
-    } catch (_) {}
+    } catch (vErr) {
+      transporter = createFallbackTransporter();
+      try { await transporter.verify(); } catch (_) {}
+    }
 
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
@@ -65,10 +102,23 @@ export const sendEmailOTP = async (email, otp) => {
         return true;
       } catch (error) {
         if (attempt === 3) {
-          console.error('Error sending email OTP:', error);
-          return false;
+          // Try fallback transporter if primary failed repeatedly
+          const fb = createFallbackTransporter();
+          for (let fbAttempt = 1; fbAttempt <= 2; fbAttempt++) {
+            try {
+              await fb.sendMail(mailOptions);
+              return true;
+            } catch (fbErr) {
+              if (fbAttempt === 2) {
+                console.error('Error sending email OTP (fallback failed):', fbErr);
+                return false;
+              }
+              await delay(700 * fbAttempt);
+            }
+          }
+        } else {
+          await delay(500 * attempt);
         }
-        await delay(500 * attempt);
       }
     }
     return false;
