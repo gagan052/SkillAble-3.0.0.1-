@@ -1,0 +1,29 @@
+{
+  "greeting": "Hola desde Lingo.dev",
+  "navbar": {
+    "home": "Inicio",
+    "explore": "Explorar",
+    "gigs": "Servicios",
+    "messages": "Mensajes",
+    "orders": "Pedidos",
+    "dashboard": "Panel",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión"
+  },
+  "gig": {
+    "about": "Sobre Este Servicio",
+    "seller": "Sobre El Vendedor",
+    "reviews": "Reseñas",
+    "packages": "Paquetes",
+    "contact": "Contactar Vendedor",
+    "save": "Guardar",
+    "saved": "Guardado",
+    "continue": "Continuar"
+  },
+  "common": {
+    "from": "desde",
+    "days": "días",
+    "delivery": "Entrega"
+  }
+}

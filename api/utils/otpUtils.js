@@ -7,39 +7,71 @@ export const generateOTP = () => {
 
 // Send OTP via email
 export const sendEmailOTP = async (email, otp) => {
-  try {
-    // Create a transporter (configure with your email service)
-    const transporter = nodemailer.createTransport({
+  const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+  const createTransporter = () => {
+    if (process.env.SMTP_HOST) {
+      return nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT) || 465,
+        secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : true,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+        pool: true,
+        maxConnections: 5,
+        maxMessages: 100,
+      });
+    }
+    return nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
       },
+      pool: true,
     });
+  };
 
-    // Email content
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'SkillAble - Email Verification OTP',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
-          <h2 style="color: #1dbf73; text-align: center;">SkillAble Email Verification</h2>
-          <p>Hello,</p>
-          <p>Your verification code for SkillAble is:</p>
-          <div style="background-color: #f5f5f5; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; margin: 20px 0;">
-            ${otp}
-          </div>
-          <p>This code will expire in 10 minutes.</p>
-          <p>If you didn't request this code, please ignore this email.</p>
-          <p>Thank you,<br>The SkillAble Team</p>
+  const transporter = createTransporter();
+  const mailOptions = {
+    from: `SkillAble <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: 'SkillAble - Email Verification OTP',
+    text: `Your SkillAble verification code is ${otp}. It expires in 10 minutes. If you didn't request this code, ignore this email.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+        <h2 style="color: #1dbf73; text-align: center;">SkillAble Email Verification</h2>
+        <p>Hello,</p>
+        <p>Your verification code for SkillAble is:</p>
+        <div style="background-color: #f5f5f5; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; margin: 20px 0;">
+          ${otp}
         </div>
-      `,
-    };
+        <p>This code will expire in 10 minutes.</p>
+        <p>If you didn't request this code, please ignore this email.</p>
+        <p>Thank you,<br>The SkillAble Team</p>
+      </div>
+    `,
+  };
 
-    // Send email
-    await transporter.sendMail(mailOptions);
-    return true;
+  try {
+    try {
+      await transporter.verify();
+    } catch (_) {}
+
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        await transporter.sendMail(mailOptions);
+        return true;
+      } catch (error) {
+        if (attempt === 3) {
+          console.error('Error sending email OTP:', error);
+          return false;
+        }
+        await delay(500 * attempt);
+      }
+    }
+    return false;
   } catch (error) {
     console.error('Error sending email OTP:', error);
     return false;

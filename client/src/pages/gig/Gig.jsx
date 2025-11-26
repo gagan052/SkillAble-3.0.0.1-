@@ -401,7 +401,7 @@ function Gig() {
             </div>
             
             <h2>About This Gig</h2>
-            <p>{data.desc}</p>
+                <p>{data.desc}</p>
             
             {isLoadingUser ? (
               <div className="seller skeleton">
@@ -422,13 +422,13 @@ function Gig() {
             ) : (
               <div className="seller">
                 <h2>About The Seller</h2>
-                <div className="user">
-                  <img 
-                    src={dataUser.img || "/img/noavatar.jpg"} 
-                    alt="" 
-                    loading="lazy"
-                  />
-                  <div className="info">
+              <div className="user">
+                <img 
+                  src={dataUser.img || "/img/noavatar.jpg"} 
+                  alt="" 
+                  loading="lazy"
+                />
+                <div className="info">
                     <span>{dataUser.username}</span>
                     <span className="followers">{dataUser.followersCount || 0} followers</span>
                     {rating && (
@@ -442,14 +442,14 @@ function Gig() {
                       </div>
                     )}
                     <div className="seller-actions">
-                      <button 
-                        onClick={handleMessage}
-                        disabled={createConversationMutation.isLoading}
-                      >
-                        {createConversationMutation.isLoading ? "Creating..." : "Message Seller"}
-                      </button>
-                      <FollowButton userId={userId} size="medium" />
-                    </div>
+                        <button 
+                          onClick={handleMessage}
+                          disabled={createConversationMutation.isLoading}
+                        >
+                          {createConversationMutation.isLoading ? "Creating..." : "Message Seller"}
+                        </button>
+                        <FollowButton userId={userId} size="medium" />
+                      </div>
                   </div>
                 </div>
                 <div className="box">

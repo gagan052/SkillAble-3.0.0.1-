@@ -242,6 +242,8 @@ function Navbar() {
           <span className="dot">.</span>
         </div>
 
+        {/* Language Selector - This component doesn't exist in the code */}
+        
         {/* Mobile Menu Toggle */}
         <div className="mobile-menu-toggle" onClick={toggleMobileMenu} ref={mobileToggleRef}>
           {mobileOpen ? <FaTimes /> : <FaBars />}
@@ -369,7 +371,6 @@ function Navbar() {
                     alt=""
                     style={{ cursor: "pointer" }}
                   />
-                  
                 </div>
                 <div className="username-container" onClick={() => setOpen(!open)} ref={usernameContainerRef}>
                   <span className="username">{currentUser.username}</span>
@@ -386,10 +387,10 @@ function Navbar() {
                   <Link className="link" to="/orders" onClick={() => setMobileOpen(false)}>Orders</Link>
                   <Link className="link" to="/messages" onClick={() => setMobileOpen(false)}>Messages</Link>
                   <Link className="link" to="/saved" onClick={() => setMobileOpen(false)}>Saved Gigs</Link>
-                  <span className="link" onClick={() => {
+                  <Link className="link" onClick={() => {
                     handleLogout();
                     setMobileOpen(false);
-                  }}>Logout</span>
+                  }}>Logout</Link>
                 </div>
               )}
             </div>

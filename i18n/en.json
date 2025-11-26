@@ -1,0 +1,29 @@
+{
+	"greeting": "Hello from Lingo.dev",
+	"navbar": {
+		"home": "Home",
+		"explore": "Explore",
+		"gigs": "Gigs",
+		"messages": "Messages",
+		"orders": "Orders",
+		"dashboard": "Dashboard",
+		"login": "Sign In",
+		"register": "Join",
+		"logout": "Logout"
+	},
+	"gig": {
+		"about": "About This Gig",
+		"seller": "About The Seller",
+		"reviews": "Reviews",
+		"packages": "Packages",
+		"contact": "Contact Seller",
+		"save": "Save",
+		"saved": "Saved",
+		"continue": "Continue"
+	},
+	"common": {
+		"from": "from",
+		"days": "days",
+		"delivery": "Delivery"
+	}
+}
