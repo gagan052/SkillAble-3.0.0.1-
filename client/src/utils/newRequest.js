@@ -14,7 +14,6 @@ const getBaseURL = (url) => {
   }
   return "https://skillable-3-0-0-1.onrender.com/api/";
 };
-
 // Create axios instance with dynamic baseURL
 const newRequest = axios.create({
   withCredentials: true,
@@ -22,7 +21,6 @@ const newRequest = axios.create({
     "Content-Type": "application/json"
   }
 });
-
 // Add a request interceptor to include the token in the headers and set dynamic baseURL
 newRequest.interceptors.request.use(
   (config) => {
