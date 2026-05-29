@@ -1,4 +1,4 @@
-@import "../../index.scss";
+// @import "../../index.scss";
 
 .stories-container {
   width: 100%;
@@ -341,7 +341,8 @@
   text-decoration: none;
   
   &:hover {
-    background-color: darken(#1dbf73, 10%);
+    // background-color: darken(#1dbf73, 10%);
+    background-color: #17a567;
   }
 }
 
@@ -395,6 +396,7 @@
   text-decoration: none;
   
   &:hover {
-    background-color: darken(#1dbf73, 10%);
+    // background-color: darken(#1dbf73, 10%);
+    background-color: #17a567;
   }
 }

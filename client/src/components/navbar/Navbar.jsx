@@ -256,13 +256,13 @@ function Navbar() {
             <Link className="link" to="/explore" onClick={() => setMobileOpen(false)}>Explore</Link>
           )}
           
-          {currentUser && (
+          {/* {currentUser && (
             <Link className="link" to="/community" onClick={() => setMobileOpen(false)}>Community</Link>
-          )}
+          )} */}
           
           {currentUser ? (
             <>
-              <div className="notification">
+              {/* <div className="notification">
                 <div className="icon" onClick={() => setNotificationOpen(!notificationOpen)} ref={notificationIconRef}>
                   <FaBell />
                   {unreadCount > 0 && <span className="count">{unreadCount}</span>}
@@ -360,7 +360,8 @@ function Navbar() {
               </div>
               <Link className="link" to="/collaborate" onClick={() => setMobileOpen(false)}>
                 Collaborate
-              </Link>
+              </Link> */}
+
               <div className="user">
                 <div className="user-profile" onClick={() => {
                   navigate("/dashboard");

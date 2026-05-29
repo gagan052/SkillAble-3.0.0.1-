@@ -1,5 +1,7 @@
 const getCurrentUser = () => {
+  
   const userData = localStorage.getItem("currentUser");
+
   if (!userData || userData === "null") return null;
   
   try {

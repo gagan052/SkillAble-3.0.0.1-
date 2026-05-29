@@ -13,6 +13,7 @@ function Home() {
   // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
+
   return (
     <div className="home">
       <Featured />
@@ -193,6 +194,7 @@ function Home() {
           </div>
         </div>
       </div>
+
       <Slide slidesToShow={3.7} arrowsScroll={2} autoplay={true}>
         {projects.map((card) => (
           <ProjectCard key={card.id} card={card} />

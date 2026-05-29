@@ -17,9 +17,7 @@ import AddStory from "./pages/addStory/AddStory";
 import Privacy from "./pages/privacy/Privacy";
 import About from "./pages/about/About";
 import Contact from "./pages/contact/Contact";
-
 import Dashboard from "./pages/dashboard/Dashboard";
-
 import Explore from "./pages/explore/Explore";
 import SavedGigs from "./pages/saved/SavedGigs";
 import Collaborate from "./pages/collaborate/Collaborate";

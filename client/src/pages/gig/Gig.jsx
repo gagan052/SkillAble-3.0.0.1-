@@ -9,7 +9,11 @@ import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
 import FollowButton from "../../components/followButton/FollowButton";
 import GigCard from "../../components/gigCard/GigCard";
-import { SkeletonGigDetail, SkeletonGigPrice, SkeletonCard } from "../../components/skeletonLoader/SkeletonLoader";
+import {
+  SkeletonGigDetail,
+  SkeletonGigPrice,
+  SkeletonCard,
+} from "../../components/skeletonLoader/SkeletonLoader";
 
 function Gig() {
   const { id } = useParams();
@@ -87,7 +91,7 @@ function Gig() {
     },
     onError: (error) => {
       console.error("Error saving gig:", error);
-    }
+    },
   });
 
   // Create conversation mutation
@@ -102,7 +106,7 @@ function Gig() {
     onError: (error) => {
       console.error("Error creating conversation:", error);
       alert("Failed to create conversation. Please try again.");
-    }
+    },
   });
 
   // Handle save gig - memoized to prevent unnecessary re-renders
@@ -111,21 +115,22 @@ function Gig() {
       alert("You need to be logged in to save gigs!");
       return;
     }
-    
+
     saveGigMutation.mutate(id);
   }, [currentUser, id, saveGigMutation]);
 
   // Handle share gig - memoized to prevent unnecessary re-renders
   const handleShareGig = useCallback(() => {
     if (!data) return;
-    
+
     if (navigator.share) {
-      navigator.share({
-        title: data.title,
-        text: data.shortDesc,
-        url: window.location.href,
-      })
-      .catch((error) => console.log('Error sharing:', error));
+      navigator
+        .share({
+          title: data.title,
+          text: data.shortDesc,
+          url: window.location.href,
+        })
+        .catch((error) => console.log("Error sharing:", error));
     } else {
       // Fallback for browsers that don't support the Web Share API
       navigator.clipboard.writeText(window.location.href);
@@ -139,16 +144,16 @@ function Gig() {
       alert("You need to be logged in to send messages!");
       return;
     }
-    
+
     // Don't allow sellers to message themselves
     if (currentUser._id === userId) {
       alert("You cannot message yourself!");
       return;
     }
-    
+
     // Create the conversation
     createConversationMutation.mutate({
-      to: userId
+      to: userId,
     });
   }, [currentUser, userId, createConversationMutation]);
 
@@ -183,15 +188,19 @@ function Gig() {
     queryFn: async () => {
       try {
         // If no category is available, use a fallback
-        const category = data?.cat || 'general';
-        
+        const category = data?.cat || "general";
+
         try {
           // First try category-specific recommendations
-          const response = await newRequest.get(`/gigs/recommendations/${category}?excludeId=${id}`);
+          const response = await newRequest.get(
+            `/gigs/recommendations/${category}?excludeId=${id}`
+          );
           return response.data;
         } catch (categoryError) {
           // If category-specific fails, try general recommendations
-          const response = await newRequest.get(`/gigs/recommendations?excludeId=${id}`);
+          const response = await newRequest.get(
+            `/gigs/recommendations?excludeId=${id}`
+          );
           return response.data;
         }
       } catch (error) {
@@ -254,67 +263,66 @@ function Gig() {
   // Memoize the slider content to prevent unnecessary re-renders
   const SliderContent = useMemo(() => {
     if (!data?.images) return null;
-    
+
+    console.log(data.images);
+    console.log(data.images.length);
+
     return (
-      // <Slider slidesToShow={1} slidesToScroll={1} className="slider" dots arrows>
-      //   {data.images.map((item, index) => {
-      //     const url = typeof item === 'object' ? item.url : item;
-      //     const isVideo = url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm');
-          
-      //     return (
-      //       <div key={index} className={`slider-item ${isVideo ? 'video-item' : ''}`}>
-      //         {isVideo ? (
-      //           <video 
-      //             controls
-      //             playsInline
-      //             autoPlay
-      //             controlsList="nodownload"
-      //             className="slider-video"
-      //             loading="lazy"
-      //           >
-      //             <source src={url} type={url.toLowerCase().endsWith('.mp4') ? 'video/mp4' : 'video/webm'} />
-      //             Your browser does not support the video tag.
-      //           </video>
-      //         ) : (
-      //           <img src={url} alt={`Gig content ${index + 1}`} loading="lazy" />
-      //         )}
-      //       </div>
-      //     );
-      //   })}
-      // </Slider>
-      <Slider slidesToShow={1} arrowsScroll={1} className="slider" dots arrows>
-                {data.images && data.images.map((item, index) => {
-                  const url = typeof item === 'object' ? item.url : item;
-                  const isVideo = url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm');
-                  
-                  return (
-                    <div key={index} className={`slider-item ${isVideo ? 'video-item' : ''}`}>
-                      {isVideo ? (
-                        <video 
-                          controls
-                          playsInline
-                          controlsList="nodownload"
-                          className="slider-video"
-                          
-                        >
-                          <source src={url} type={url.toLowerCase().endsWith('.mp4') ? 'video/mp4' : 'video/webm'} />
-                          Your browser does not support the video tag.
-                        </video>
-                      ) : (
-                        <img src={url} alt={`Gig content $
-                          {index+ 1}`} />
-                      )}
-                    </div>
-                  );
-                })}
-              </Slider>
+      <Slider
+        slidesToShow={1}
+        slidesToScroll={1}
+        className="slider"
+        dots={data.images.length > 1}
+        arrows={data.images.length > 1}
+        infinite={data.images.length > 1}
+      >
+        {data.images &&
+          data.images.map((item, index) => {
+            const url = typeof item === "object" ? item.url : item;
+            const isVideo =
+              url.toLowerCase().endsWith(".mp4") ||
+              url.toLowerCase().endsWith(".webm");
+
+            return (
+              <div
+                key={index}
+                className={`slider-item ${isVideo ? "video-item" : ""}`}
+              >
+                {isVideo ? (
+                  <video
+                    controls
+                    playsInline
+                    controlsList="nodownload"
+                    className="slider-video"
+                  >
+                    <source
+                      src={url}
+                      type={
+                        url.toLowerCase().endsWith(".mp4")
+                          ? "video/mp4"
+                          : "video/webm"
+                      }
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <img
+                    src={url}
+                    alt={`Gig content $
+                          {index+ 1}`}
+                  />
+                )}
+              </div>
+            );
+          })}
+      </Slider>
     );
   }, [data?.images]);
 
   // Memoize the features list to prevent unnecessary re-renders
   const FeaturesList = useMemo(() => {
     if (!data?.features) return null;
-    
+
     return (
       <div className="features">
         {data.features.map((feature) => (
@@ -330,7 +338,7 @@ function Gig() {
   // Memoize the recommended gigs to prevent unnecessary re-renders
   const RecommendedGigsList = useMemo(() => {
     if (!recommendedGigs || recommendedGigs.length === 0) return null;
-    
+
     return (
       <div className="recommended-gigs">
         {recommendedGigs.slice(0, 4).map((gig) => (
@@ -348,8 +356,8 @@ function Gig() {
         <div className="error-container">
           <h2>Something went wrong!</h2>
           <p>{error.message || "Failed to load gig details"}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="retry-button"
           >
             Try Again
@@ -361,7 +369,10 @@ function Gig() {
             <div className="breadcrumbs">
               <Link to="/">DevXcom</Link> {" > "}
               <Link to={`/gigs?cat=${data.cat}`}>{data.cat}</Link> {" > "}
-              <span>{data.title.substring(0, 30)}{data.title.length > 30 ? "..." : ""}</span>
+              <span>
+                {data.title.substring(0, 30)}
+                {data.title.length > 30 ? "..." : ""}
+              </span>
             </div>
             <h1>{data.title}</h1>
             {isLoadingUser ? (
@@ -386,7 +397,11 @@ function Gig() {
                         {Array(rating)
                           .fill()
                           .map((_, i) => (
-                            <img src="/img/star.png" alt="rating star" key={i} />
+                            <img
+                              src="/img/star.png"
+                              alt="rating star"
+                              key={i}
+                            />
                           ))}
                         <span>{rating}</span>
                       </div>
@@ -395,14 +410,12 @@ function Gig() {
                 </div>
               </div>
             )}
-            
-            <div className="slider-container">
-              {SliderContent}
-            </div>
-            
+
+            <div className="slider-container">{SliderContent}</div>
+
             <h2>About This Gig</h2>
-                <p>{data.desc}</p>
-            
+            <p>{data.desc}</p>
+
             {isLoadingUser ? (
               <div className="seller skeleton">
                 <div className="skeleton-title"></div>
@@ -422,15 +435,17 @@ function Gig() {
             ) : (
               <div className="seller">
                 <h2>About The Seller</h2>
-              <div className="user">
-                <img 
-                  src={dataUser.img || "/img/noavatar.jpg"} 
-                  alt="" 
-                  loading="lazy"
-                />
-                <div className="info">
+                <div className="user">
+                  <img
+                    src={dataUser.img || "/img/noavatar.jpg"}
+                    alt=""
+                    loading="lazy"
+                  />
+                  <div className="info">
                     <span>{dataUser.username}</span>
-                    <span className="followers">{dataUser.followersCount || 0} followers</span>
+                    <span className="followers">
+                      {dataUser.followersCount || 0} followers
+                    </span>
                     {rating && (
                       <div className="stars">
                         {Array(rating)
@@ -442,14 +457,16 @@ function Gig() {
                       </div>
                     )}
                     <div className="seller-actions">
-                        <button 
-                          onClick={handleMessage}
-                          disabled={createConversationMutation.isLoading}
-                        >
-                          {createConversationMutation.isLoading ? "Creating..." : "Message Seller"}
-                        </button>
-                        <FollowButton userId={userId} size="medium" />
-                      </div>
+                      <button
+                        onClick={handleMessage}
+                        disabled={createConversationMutation.isLoading}
+                      >
+                        {createConversationMutation.isLoading
+                          ? "Creating..."
+                          : "Message Seller"}
+                      </button>
+                      <FollowButton userId={userId} size="medium" />
+                    </div>
                   </div>
                 </div>
                 <div className="box">
@@ -480,9 +497,9 @@ function Gig() {
                 </div>
               </div>
             )}
-            
+
             <Reviews gigId={id} gigUserId={userId} />
-            
+
             {/* Recommended Gigs Section */}
             <div className="recommended-section">
               <h2>You might also like</h2>
@@ -494,20 +511,22 @@ function Gig() {
               ) : errorRecommendations ? (
                 <div className="error-recommendations">
                   <p>Unable to load recommendations</p>
-                  <button 
-                    onClick={() => window.location.reload()} 
+                  <button
+                    onClick={() => window.location.reload()}
                     className="retry-button"
                   >
                     Try Again
                   </button>
                 </div>
-              ) : RecommendedGigsList || (
-                <div className="no-recommendations">
-                  <p>No recommendations available at the moment</p>
-                  <p className="secondary-text">
-                    Check back later for more gigs
-                  </p>
-                </div>
+              ) : (
+                RecommendedGigsList || (
+                  <div className="no-recommendations">
+                    <p>No recommendations available at the moment</p>
+                    <p className="secondary-text">
+                      Check back later for more gigs
+                    </p>
+                  </div>
+                )
               )}
             </div>
           </div>
@@ -517,15 +536,22 @@ function Gig() {
               <h2>$ {data.price}</h2>
             </div>
             <div className="gig-actions">
-              <button 
+              <button
                 className={`action-btn save-btn ${isSaved ? "saved" : ""}`}
                 onClick={handleSaveGig}
                 title={isSaved ? "Unsave" : "Save"}
               >
-                <img src={isSaved ? "/img/bookmark-fill.png" : "/img/bookmark-line.png"} alt="Save" />
+                <img
+                  src={
+                    isSaved
+                      ? "/img/bookmark-fill.png"
+                      : "/img/bookmark-line.png"
+                  }
+                  alt="Save"
+                />
                 {isSaved ? "Saved" : "Save"}
               </button>
-              <button 
+              <button
                 className="action-btn share-btn"
                 onClick={handleShareGig}
                 title="Share"
@@ -546,9 +572,9 @@ function Gig() {
                 <span>{data.revisionNumber} Revisions</span>
               </div>
             </div>
-            
+
             {FeaturesList}
-            
+
             <Link to={`/pay/${id}`}>
               <button>Continue</button>
             </Link>

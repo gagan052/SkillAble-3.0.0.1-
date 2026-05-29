@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./Slide.scss";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
+
+import * as ReactSlick from "react-slick";
+const Slider = ReactSlick.default;
+
 import "slick-carousel/slick/slick-theme.css";
 
 const Slide = ({ children, slidesToShow, arrowsScroll, autoplay = true }) => {
@@ -39,6 +41,9 @@ const Slide = ({ children, slidesToShow, arrowsScroll, autoplay = true }) => {
       window.removeEventListener('resize', updateSlidesCount);
     };
   }, [slidesToShow, arrowsScroll]);
+
+
+  console.log("Slider =", Slider);
 
   return (
     <div className="slide">

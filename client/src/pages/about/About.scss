@@ -67,7 +67,8 @@
             transition: color 0.3s ease;
 
             &:hover {
-              color: darken(#1dbf73, 10%);
+              // color: darken(#1dbf73, 10%);
+              color: #17a567;
               text-decoration: underline;
             }
           }
@@ -123,7 +124,8 @@
             color: white;
 
             &:hover {
-              background-color: darken(#1dbf73, 10%);
+                  // background-color: darken(#1dbf73, 10%);
+                  background-color: #17a567;
             }
           }
 
